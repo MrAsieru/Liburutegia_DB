@@ -5,9 +5,12 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 import Eredua.NotifikazioMotak;
 
@@ -30,6 +33,7 @@ import java.util.Observer;
 import javax.swing.JTable;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JSeparator;
@@ -41,7 +45,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
 	private JPanel pnlTabMaileguak;
-	private JPanel pnlTabAutore;
+	private JPanel pnlTabIdazleak;
 	private JPanel pnlTabKatalogoa;
 	private JPanel pnlTabErabiltzaile;
 	private JPanel pnlErabBotoi;
@@ -49,6 +53,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JButton btnErabPasahitza;
 	private JScrollPane scpErabTaula;
 	private JTable tblErab;
+	private DefaultTableModel dtmErab;
 	private JPanel pnlErabBilaketa;
 	private JLabel lblErabNANBilatu;
 	private JTextField txfErabNANBilatu;
@@ -72,11 +77,22 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JLabel lblKatGehArgit;
 	private JLabel lblKatGehIdazle;
 	private JButton btnKatGehSortu;
-	private JPanel panel;
+	private JPanel pnlKatEzaForm;
 	private JTextField txfKatEzaISBN;
 	private JButton btnKatEzaEzabatu;
 	private JComboBox cbxKatGehArgit;
 	private JComboBox cbxKatGehIdazle;
+	private JPanel pnlMaiHasi;
+	private JPanel pnlMaiBueltatu;
+	private JLabel lblMaiHasISBN;
+	private JTextField txfMaiHasISBN;
+	private JLabel lblMaiHasNAN;
+	private JTextField txfMaiHasNAN;
+	private JButton btnMaiHasiMailegatu;
+	private JLabel lblMaiBueISBN;
+	private JTextField txfMaiBueISBN;
+	private JButton btnMaiBueBueltatu;
+	private JPanel pnlTabArgitaletxeak;
 
 	/**
 	 * Launch the application.
@@ -99,7 +115,8 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	 */
 	public LiburuzainFrame(String pErabiltzailea) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 530, 300);
+		//TODO 
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -116,6 +133,10 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		//			arg[1,2,3,...] -> Datuak
 		// Datu egiturak:
 		// LIBURUZAIN_ERAB_LISTA_EGUNERATU: 				Erabiltzaile[]
+		// LIBURUZAIN_ERAB_SORTU_ONDO:						ezer
+		// LIBURUZAIN_ERAB_SORTU_TXARTO:					String
+		// LIBURUZAIN_ERAB_PASAHITZA_ONDO:					ezer
+		// LIBURUZAIN_ERAB_PASAHITZA_TXARTO:				String
 		// LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU: 	String[]
 		// LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU: 	String[]
 		// LIBURUZAIN_KAT_GEH_IDAZLE_LISTA_EGUNERATU: 		String[]
@@ -127,10 +148,12 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		if (o instanceof Object && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 			case LIBURUZAIN_ERAB_LISTA_EGUNERATU:
-				
+				JOptionPane.showMessageDialog(contentPane, "Pasahitza ondo aldatu egin da", "Pasahitza aldatuta", JOptionPane.PLAIN_MESSAGE);
 				break;
 			case LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU:
-				
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin da pasahitza aldatu:\n"+(String)((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				}
 				break;
 			case LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU:
 				
@@ -158,28 +181,56 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		
 	}
 	
+	//TODO
+	/*private void erabiltzaileListaEguneratu(Erabiltzaile[] pLista) {
+		dtmErab.setRowCount(0);
+		for (erab in pLista) {
+			dtmErab.addRow(new Object[] {erab.nan, erab.izena, erab.abizena, erab.jaiotzeData, erab.generoa});
+		}
+	}*/
+	
 	//GUI elementuak
 	private JTabbedPane getTabbedPane() {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+			tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 			tabbedPane.addTab("Erabiltzaileak", null, getPnlTabErabiltzaile(), null);
 			tabbedPane.addTab("Katalogoa", null, getPnlTabKatalogoa(), null);
 			tabbedPane.addTab("Maileguak", null, getPnlTabMaileguak(), null);
-			tabbedPane.addTab("Autore", null, getPnlTabAutore(), null);
+			tabbedPane.addTab("Idazleak", null, getPnlTabIdazleak(), null);
+			tabbedPane.addTab("Argitaletxeak", null, getPnlTabArgitaletxeak(), null);
 		}
 		return tabbedPane;
 	}
 	private JPanel getPnlTabMaileguak() {
 		if (pnlTabMaileguak == null) {
 			pnlTabMaileguak = new JPanel();
+			GridBagLayout gbl_pnlTabMaileguak = new GridBagLayout();
+			gbl_pnlTabMaileguak.columnWidths = new int[] {0};
+			gbl_pnlTabMaileguak.rowHeights = new int[] {106, 0};
+			gbl_pnlTabMaileguak.columnWeights = new double[]{1.0};
+			gbl_pnlTabMaileguak.rowWeights = new double[]{0.0, 0.0};
+			pnlTabMaileguak.setLayout(gbl_pnlTabMaileguak);
+			GridBagConstraints gbc_pnlMaiHasi = new GridBagConstraints();
+			gbc_pnlMaiHasi.anchor = GridBagConstraints.NORTHWEST;
+			gbc_pnlMaiHasi.insets = new Insets(0, 0, 5, 5);
+			gbc_pnlMaiHasi.gridx = 0;
+			gbc_pnlMaiHasi.gridy = 0;
+			pnlTabMaileguak.add(getPnlMaiHasi(), gbc_pnlMaiHasi);
+			GridBagConstraints gbc_pnlMaiBueltatu = new GridBagConstraints();
+			gbc_pnlMaiBueltatu.anchor = GridBagConstraints.NORTHWEST;
+			gbc_pnlMaiBueltatu.insets = new Insets(0, 0, 0, 5);
+			gbc_pnlMaiBueltatu.gridx = 0;
+			gbc_pnlMaiBueltatu.gridy = 1;
+			pnlTabMaileguak.add(getPnlMaiBueltatu(), gbc_pnlMaiBueltatu);
 		}
 		return pnlTabMaileguak;
 	}
-	private JPanel getPnlTabAutore() {
-		if (pnlTabAutore == null) {
-			pnlTabAutore = new JPanel();
+	private JPanel getPnlTabIdazleak() {
+		if (pnlTabIdazleak == null) {
+			pnlTabIdazleak = new JPanel();
 		}
-		return pnlTabAutore;
+		return pnlTabIdazleak;
 	}
 	private JPanel getPnlTabKatalogoa() {
 		if (pnlTabKatalogoa == null) {
@@ -233,12 +284,125 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO pop-up bat ireki erabiltzaile bat sortzeko					
+					//TODO pop-up bat ireki erabiltzaile bat sortzeko
+					erabiltzaileaSortuPopUp();
 				}
 			});
 		}
 		return btnErabSortu;
 	}
+	
+	private void erabiltzaileaSortuPopUp() {
+		JPanel panel = new JPanel();
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] {0};
+		gridBagLayout.rowHeights = new int[] {0};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(gridBagLayout);
+		GridBagConstraints gbc_lblNan = new GridBagConstraints();
+		gbc_lblNan.anchor = GridBagConstraints.WEST;
+		gbc_lblNan.insets = new Insets(0, 0, 5, 0);
+		gbc_lblNan.gridx = 0;
+		gbc_lblNan.gridy = 0;
+		JLabel lblNan = new JLabel("NAN:");
+		panel.add(lblNan, gbc_lblNan);
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.anchor = GridBagConstraints.WEST;
+		gbc_textField.insets = new Insets(0, 0, 5, 20);
+		gbc_textField.gridx = 0;
+		gbc_textField.gridy = 1;
+		JTextField txfPopNAN = new JTextField();
+		txfPopNAN.setColumns(10);
+		panel.add(txfPopNAN, gbc_textField);
+		GridBagConstraints gbc_lblIzena = new GridBagConstraints();
+		gbc_lblIzena.anchor = GridBagConstraints.WEST;
+		gbc_lblIzena.insets = new Insets(0, 0, 5, 0);
+		gbc_lblIzena.gridx = 0;
+		gbc_lblIzena.gridy = 2;
+		JLabel lblIzena = new JLabel("Izena:");
+		panel.add(lblIzena, gbc_lblIzena);
+		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
+		gbc_textField_1.anchor = GridBagConstraints.WEST;
+		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_1.gridx = 0;
+		gbc_textField_1.gridy = 3;
+		JTextField txfPopIzena = new JTextField();
+		txfPopIzena.setColumns(10);
+		panel.add(txfPopIzena, gbc_textField_1);
+		GridBagConstraints gbc_lblGeneroa = new GridBagConstraints();
+		gbc_lblGeneroa.anchor = GridBagConstraints.WEST;
+		gbc_lblGeneroa.insets = new Insets(0, 0, 5, 0);
+		gbc_lblGeneroa.gridx = 0;
+		gbc_lblGeneroa.gridy = 4;
+		JLabel lblGeneroa = new JLabel("Generoa:");
+		panel.add(lblGeneroa, gbc_lblGeneroa);
+		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
+		gbc_textField_3.anchor = GridBagConstraints.WEST;
+		gbc_textField_3.gridx = 0;
+		gbc_textField_3.gridy = 5;
+		JTextField txfPopGeneroa = new JTextField();
+		txfPopGeneroa.setColumns(10);
+		panel.add(txfPopGeneroa, gbc_textField_3);
+		GridBagConstraints gbc_lblPasahitza = new GridBagConstraints();
+		gbc_lblPasahitza.anchor = GridBagConstraints.WEST;
+		gbc_lblPasahitza.insets = new Insets(0, 0, 5, 0);
+		gbc_lblPasahitza.gridx = 1;
+		gbc_lblPasahitza.gridy = 0;
+		JLabel lblPasahitza = new JLabel("Pasahitza:");
+		panel.add(lblPasahitza, gbc_lblPasahitza);
+		GridBagConstraints gbc_passwordField = new GridBagConstraints();
+		gbc_passwordField.anchor = GridBagConstraints.WEST;
+		gbc_passwordField.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordField.gridx = 1;
+		gbc_passwordField.gridy = 1;
+		JPasswordField pwfPopPasahitza = new JPasswordField();
+		pwfPopPasahitza.setColumns(10);
+		panel.add(pwfPopPasahitza, gbc_passwordField);
+		GridBagConstraints gbc_lblAbizena = new GridBagConstraints();
+		gbc_lblAbizena.anchor = GridBagConstraints.WEST;
+		gbc_lblAbizena.insets = new Insets(0, 0, 5, 0);
+		gbc_lblAbizena.gridx = 1;
+		gbc_lblAbizena.gridy = 2;
+		JLabel lblAbizena = new JLabel("Abizena:");
+		panel.add(lblAbizena, gbc_lblAbizena);
+		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
+		gbc_textField_2.anchor = GridBagConstraints.WEST;
+		gbc_textField_2.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_2.gridx = 1;
+		gbc_textField_2.gridy = 3;
+		JTextField txfPopAbizena = new JTextField();
+		txfPopAbizena.setColumns(10);
+		GridBagConstraints gbc_jaio = new GridBagConstraints();
+		gbc_jaio.anchor = GridBagConstraints.WEST;
+		gbc_jaio.insets = new Insets(0, 0, 5, 0);
+		gbc_jaio.gridx = 1;
+		gbc_jaio.gridy = 4;
+		JLabel lblPopJaioD = new JLabel("Jaiotze data:");
+		panel.add(lblPopJaioD, gbc_jaio);
+		GridBagConstraints gbc_txfJaiotzeData = new GridBagConstraints();
+		gbc_txfJaiotzeData.anchor = GridBagConstraints.WEST;
+		gbc_txfJaiotzeData.gridx = 1;
+		gbc_txfJaiotzeData.gridy = 5;
+		JTextField txfJaiotzeData = new HintTextField("YYYY-MM-DD");
+		txfJaiotzeData.setColumns(10);
+		panel.add(txfJaiotzeData, gbc_txfJaiotzeData);
+		
+		panel.add(txfPopAbizena, gbc_textField_2);
+		
+		int aukera = JOptionPane.showConfirmDialog(this, panel, "Sortu erabiltzailea", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (aukera == 0) {
+			/*Erabiltzailea erab = new Erabiltzailea(txfPopNAN.getText(), 
+												   txfPopIzena.getText(), 
+												   txfPopAbizena.getText(), 
+												   txfJaiotzeData.getText(), 
+												   txfPopGeneroa.getText(), 
+												   new String(pwfPopPasahitza.getPassword()));*/
+			//TODO Liburuzaina.getInstantzia().addErabiltzaileArrunta(erab);
+		}
+		
+	}
+	
 	private JButton getBtnErabPasahitza() {
 		if (btnErabPasahitza == null) {
 			btnErabPasahitza = new JButton("Pasahitza eguneratu");
@@ -246,23 +410,28 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO erabiltzaile aukeraketa logika					
+					//TODO erabiltzaile aukeraketa logika
+					String pasahitza = JOptionPane.showInputDialog(contentPane, "Pasahitza berria sortu", "Pasahitza berria", JOptionPane.PLAIN_MESSAGE);
+					//TODO Liburuzaina.getInstantzia().aldatuPasahitza(NAN, pasahitza);
 				}
 			});
 		}
 		return btnErabPasahitza;
 	}
+	
 	private JScrollPane getScpErabTaula() {
 		if (scpErabTaula == null) {
 			scpErabTaula = new JScrollPane();
-			scpErabTaula.setViewportView(getTable_1());
+			scpErabTaula.setViewportView(getTblErab());
 		}
 		return scpErabTaula;
 	}
-	private JTable getTable_1() {
+	private JTable getTblErab() {
 		if (tblErab == null) {
-			tblErab = new JTable(new Object[][] {}, 
-					new String[] {"NAN", "Izena","Abizena","JaiotzeD","Generoa"});
+			dtmErab = new DefaultTableModel(new Object[][] {}, 
+					 						new String[] {"NAN", "Izena","Abizena","JaiotzeD","Generoa"});
+			tblErab = new JTable(dtmErab);
+			//TODO Liburuzain.getInstantzia().getErabiltzaileak();
 		}
 		return tblErab;
 	}
@@ -387,7 +556,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO nan edo izen-abizen bilaketa gauzatu					
+					//TODO Liburuzain.getInstantzia().getErabiltzaileak(txfErabNANBilatu.getText(), txfErabIzenaBilatu.getText(), txfErabAbizenaBilatu.getText());
 				}
 			});
 		}
@@ -400,7 +569,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO bilaketa garbitu					
+					//TODO Liburuzain.getInstantzia().getErabiltzaileak();					
 				}
 			});
 		}
@@ -496,7 +665,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 			FlowLayout flowLayout = (FlowLayout) pnlKatalogoaEzabatu.getLayout();
 			flowLayout.setAlignment(FlowLayout.LEFT);
 			pnlKatalogoaEzabatu.setBorder(BorderFactory.createTitledBorder("Liburu bat ezabatu:"));
-			pnlKatalogoaEzabatu.add(getPanel());
+			pnlKatalogoaEzabatu.add(getPnlKatEzaForm());
 		}
 		return pnlKatalogoaEzabatu;
 	}
@@ -556,15 +725,15 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		}
 		return btnKatGehSortu;
 	}
-	private JPanel getPanel() {
-		if (panel == null) {
-			panel = new JPanel();
-			panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-			panel.add(getLblKatEzaISBN());
-			panel.add(getTxfKatEzaISBN());
-			panel.add(getBtnKatEzaEzabatu());
+	private JPanel getPnlKatEzaForm() {
+		if (pnlKatEzaForm == null) {
+			pnlKatEzaForm = new JPanel();
+			pnlKatEzaForm.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+			pnlKatEzaForm.add(getLblKatEzaISBN());
+			pnlKatEzaForm.add(getTxfKatEzaISBN());
+			pnlKatEzaForm.add(getBtnKatEzaEzabatu());
 		}
-		return panel;
+		return pnlKatEzaForm;
 	}
 	private JLabel getLblKatEzaISBN() {
 		if (lblKatEzaISBN == null) {
@@ -596,5 +765,135 @@ public class LiburuzainFrame extends JFrame implements Observer {
 			cbxKatGehIdazle = new JComboBox();
 		}
 		return cbxKatGehIdazle;
+	}
+	private JPanel getPnlMaiHasi() {
+		if (pnlMaiHasi == null) {
+			pnlMaiHasi = new JPanel();
+			GridBagLayout gbl_pnlMaiHasi = new GridBagLayout();
+			gbl_pnlMaiHasi.columnWidths = new int[] {0, 0};
+			gbl_pnlMaiHasi.rowHeights = new int[] {0, 0, 0};
+			gbl_pnlMaiHasi.columnWeights = new double[]{0.0, 0.0};
+			gbl_pnlMaiHasi.rowWeights = new double[]{0.0, 0.0, 0.0};
+			pnlMaiHasi.setLayout(gbl_pnlMaiHasi);
+			GridBagConstraints gbc_lblMaiHasISBN = new GridBagConstraints();
+			gbc_lblMaiHasISBN.anchor = GridBagConstraints.WEST;
+			gbc_lblMaiHasISBN.insets = new Insets(0, 0, 5, 5);
+			gbc_lblMaiHasISBN.gridx = 0;
+			gbc_lblMaiHasISBN.gridy = 0;
+			pnlMaiHasi.add(getLblMaiHasISBN(), gbc_lblMaiHasISBN);
+			GridBagConstraints gbc_txfMaiHasISBN = new GridBagConstraints();
+			gbc_txfMaiHasISBN.insets = new Insets(0, 0, 5, 10);
+			gbc_txfMaiHasISBN.anchor = GridBagConstraints.WEST;
+			gbc_txfMaiHasISBN.gridx = 0;
+			gbc_txfMaiHasISBN.gridy = 1;
+			pnlMaiHasi.add(getTxfMaiHasISBN(), gbc_txfMaiHasISBN);
+			GridBagConstraints gbc_lblMaiHasNAN = new GridBagConstraints();
+			gbc_lblMaiHasNAN.anchor = GridBagConstraints.WEST;
+			gbc_lblMaiHasNAN.insets = new Insets(0, 0, 5, 0);
+			gbc_lblMaiHasNAN.gridx = 1;
+			gbc_lblMaiHasNAN.gridy = 0;
+			pnlMaiHasi.add(getLblMaiHasNAN(), gbc_lblMaiHasNAN);
+			GridBagConstraints gbc_txfMaiHasNAN = new GridBagConstraints();
+			gbc_txfMaiHasNAN.insets = new Insets(0, 0, 5, 0);
+			gbc_txfMaiHasNAN.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfMaiHasNAN.gridx = 1;
+			gbc_txfMaiHasNAN.gridy = 1;
+			pnlMaiHasi.add(getTxfMaiHasNAN(), gbc_txfMaiHasNAN);
+			GridBagConstraints gbc_btnMaiHasiMailegatu = new GridBagConstraints();
+			gbc_btnMaiHasiMailegatu.anchor = GridBagConstraints.WEST;
+			gbc_btnMaiHasiMailegatu.insets = new Insets(0, 0, 0, 5);
+			gbc_btnMaiHasiMailegatu.gridx = 0;
+			gbc_btnMaiHasiMailegatu.gridy = 2;
+			pnlMaiHasi.add(getBtnMaiHasiMailegatu(), gbc_btnMaiHasiMailegatu);
+			pnlMaiHasi.setBorder(BorderFactory.createTitledBorder("Mailegua hasi:"));
+		}
+		return pnlMaiHasi;
+	}
+	private JPanel getPnlMaiBueltatu() {
+		if (pnlMaiBueltatu == null) {
+			pnlMaiBueltatu = new JPanel();
+			GridBagLayout gbl_pnlMaiBueltatu = new GridBagLayout();
+			gbl_pnlMaiBueltatu.columnWidths = new int[]{0, 0, 0};
+			gbl_pnlMaiBueltatu.rowHeights = new int[]{0, 0, 0, 0};
+			gbl_pnlMaiBueltatu.columnWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+			gbl_pnlMaiBueltatu.rowWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+			pnlMaiBueltatu.setLayout(gbl_pnlMaiBueltatu);
+			pnlMaiBueltatu.setBorder(BorderFactory.createTitledBorder("Mailegua bueltatu:"));
+			GridBagConstraints gbc_lblMaiBueISBN = new GridBagConstraints();
+			gbc_lblMaiBueISBN.anchor = GridBagConstraints.WEST;
+			gbc_lblMaiBueISBN.insets = new Insets(0, 0, 5, 0);
+			gbc_lblMaiBueISBN.gridx = 0;
+			gbc_lblMaiBueISBN.gridy = 0;
+			pnlMaiBueltatu.add(getLblMaiBueISBN(), gbc_lblMaiBueISBN);
+			GridBagConstraints gbc_txfMaiBueISBN = new GridBagConstraints();
+			gbc_txfMaiBueISBN.insets = new Insets(0, 0, 5, 0);
+			gbc_txfMaiBueISBN.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfMaiBueISBN.gridx = 0;
+			gbc_txfMaiBueISBN.gridy = 1;
+			pnlMaiBueltatu.add(getTxfMaiBueISBN(), gbc_txfMaiBueISBN);
+			GridBagConstraints gbc_btnMaiBueBueltatu = new GridBagConstraints();
+			gbc_btnMaiBueBueltatu.anchor = GridBagConstraints.WEST;
+			gbc_btnMaiBueBueltatu.gridx = 0;
+			gbc_btnMaiBueBueltatu.gridy = 2;
+			pnlMaiBueltatu.add(getBtnMaiBueBueltatu(), gbc_btnMaiBueBueltatu);
+		}
+		return pnlMaiBueltatu;
+	}
+	private JLabel getLblMaiHasISBN() {
+		if (lblMaiHasISBN == null) {
+			lblMaiHasISBN = new JLabel("ISBN:");
+		}
+		return lblMaiHasISBN;
+	}
+	private JTextField getTxfMaiHasISBN() {
+		if (txfMaiHasISBN == null) {
+			txfMaiHasISBN = new JTextField();
+			txfMaiHasISBN.setColumns(10);
+		}
+		return txfMaiHasISBN;
+	}
+	private JLabel getLblMaiHasNAN() {
+		if (lblMaiHasNAN == null) {
+			lblMaiHasNAN = new JLabel("NAN:");
+		}
+		return lblMaiHasNAN;
+	}
+	private JTextField getTxfMaiHasNAN() {
+		if (txfMaiHasNAN == null) {
+			txfMaiHasNAN = new JTextField();
+			txfMaiHasNAN.setColumns(10);
+		}
+		return txfMaiHasNAN;
+	}
+	private JButton getBtnMaiHasiMailegatu() {
+		if (btnMaiHasiMailegatu == null) {
+			btnMaiHasiMailegatu = new JButton("Mailegatu");
+		}
+		return btnMaiHasiMailegatu;
+	}
+	private JLabel getLblMaiBueISBN() {
+		if (lblMaiBueISBN == null) {
+			lblMaiBueISBN = new JLabel("ISBN:");
+		}
+		return lblMaiBueISBN;
+	}
+	private JTextField getTxfMaiBueISBN() {
+		if (txfMaiBueISBN == null) {
+			txfMaiBueISBN = new JTextField();
+			txfMaiBueISBN.setColumns(13);
+		}
+		return txfMaiBueISBN;
+	}
+	private JButton getBtnMaiBueBueltatu() {
+		if (btnMaiBueBueltatu == null) {
+			btnMaiBueBueltatu = new JButton("Bueltatu");
+		}
+		return btnMaiBueBueltatu;
+	}
+	private JPanel getPnlTabArgitaletxeak() {
+		if (pnlTabArgitaletxeak == null) {
+			pnlTabArgitaletxeak = new JPanel();
+		}
+		return pnlTabArgitaletxeak;
 	}
 }

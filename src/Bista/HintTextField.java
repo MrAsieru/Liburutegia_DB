@@ -8,9 +8,11 @@ import javax.swing.JTextField;
 public class HintTextField extends JTextField {	
 	
 	Font gainFont = new Font("Tahoma", Font.PLAIN, 11);	
-	Font lostFont = new Font("Tahoma", Font.ITALIC, 11);	
+	Font lostFont = new Font("Tahoma", Font.ITALIC, 11);
+	String hint;
 	
-	public HintTextField(final String hint) {	
+	public HintTextField(final String hint) {
+		this.hint = hint;
 		setText(hint);	
 		setFont(lostFont);	
 		setForeground(Color.GRAY);	
@@ -42,5 +44,16 @@ public class HintTextField extends JTextField {
 			}	
 		});	
 	
-	}	
+	}
+	
+	@Override
+	public String getText() {
+		// TODO Auto-generated method stub
+		String text = super.getText();
+		if (!text.equals(hint)) {
+			return text;
+		} else {
+			return "";
+		}
+	}
 }
