@@ -5,7 +5,6 @@ import java.util.Observer;
 
 public class Login extends Observable{
 	private ErabiltzaileMota erab;
-	
 	public Login(String pErabiltzailea, String pPasahitza, Observer pO) {
 		this.addObserver(pO);
 		System.out.println("[Eredua.Login]: Saioa hasteko eskatuta, erab: %s, pasahitza: %s".format(pErabiltzailea, pPasahitza));
