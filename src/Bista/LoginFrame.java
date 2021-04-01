@@ -1,6 +1,5 @@
 package Bista;
 
-import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -20,13 +19,12 @@ import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
-import java.awt.Window.Type;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Observable;
 import java.util.Observer;
 
-public class Login extends JFrame implements Observer{
+public class LoginFrame extends JFrame implements Observer{
 
 	private JPanel contentPane;
 	private JPanel pnlBotoiak;
@@ -44,7 +42,7 @@ public class Login extends JFrame implements Observer{
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
+					LoginFrame frame = new LoginFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +54,7 @@ public class Login extends JFrame implements Observer{
 	/**
 	 * Create the frame.
 	 */
-	public Login() {
+	public LoginFrame() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 350, 150);
 		setTitle("Liburutegia: login");
@@ -108,7 +106,7 @@ public class Login extends JFrame implements Observer{
 	}
 	private JLabel getLblLoginErab() {
 		if (lblLoginErab == null) {
-			lblLoginErab = new JLabel("Erabiltzailea:");
+			lblLoginErab = new JLabel("NAN:");
 		}
 		return lblLoginErab;
 	}
@@ -132,7 +130,6 @@ public class Login extends JFrame implements Observer{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					logeatu();
 				}
 			});
@@ -156,7 +153,6 @@ public class Login extends JFrame implements Observer{
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					// TODO Auto-generated method stub
 					logeatu();
 				}
 			});
@@ -176,12 +172,23 @@ public class Login extends JFrame implements Observer{
 			((Object[]) arg).length == 2 && 
 			((Object[]) arg)[0] instanceof ErabiltzaileMota && 
 			((Object[]) arg)[1] instanceof String) {
-			if (((Object[]) arg)[0] == ErabiltzaileMota.ADMIN) {
-				System.out.println("[Bista.Login]: Admin bezala logeatuta, admin bista irekiko da");
-				setVisible(false);
-				new Bista.AdminFrame((String)((Object[]) arg)[1]);
+			if (((Object[]) arg)[0] == ErabiltzaileMota.LIBURUZAIN) {
+				int aukera = JOptionPane.showOptionDialog(this, 
+														  "Liburuzain edo erabiltzaile arrunt bat bezala sartu nahi zara?", 
+														  "Saio mota aukeratu", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,  
+														  new String[] {"Liburuzain", "Arrunta"}, "Liburuzain");
+				if (aukera == 0) {
+					System.out.println("[Bista.Login]: Liburuzain bezala logeatuta, liburuzain bista irekiko da");
+					setVisible(false);
+					new Bista.LiburuzainFrame((String)((Object[]) arg)[1]);
+				} else {
+					System.out.println("[Bista.Login]: Liburuzain bezala logeatuta, bista arrunta irekiko da");
+					setVisible(false);
+					new Bista.ErabiltzaileFrame((String)((Object[]) arg)[1]);
+				}
+				
 			} else if (((Object[]) arg)[0] == ErabiltzaileMota.ARRUNTA) {
-				System.out.println("[Bista.Login]: Erabiltzaile arrunt bezala logeatuta, bista irekiko da");
+				System.out.println("[Bista.Login]: Erabiltzaile arrunt bezala logeatuta, bista arrunta irekiko da");
 				setVisible(false);
 				new Bista.ErabiltzaileFrame((String)((Object[]) arg)[1]);
 			} else if (((Object[]) arg)[0] == ErabiltzaileMota.OKERRA) {

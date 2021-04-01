@@ -1,7 +1,7 @@
 package Eredua;
 
 public enum ErabiltzaileMota {
-	ADMIN,
+	LIBURUZAIN,
 	ARRUNTA,
 	OKERRA
 }
