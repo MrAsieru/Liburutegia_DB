@@ -1,9 +1,9 @@
 package Egitura;
 
 public class Idazlea {
-    public int      IdaleZenbakia;
-    public String   Izena;
-    public String   Abizena;
-    public String   Genero;
-    public String   Herrialdea;
+    public int id;
+    public String izena;
+    public String abizena;
+    public String generoa;
+    public String herrialdea;
 }

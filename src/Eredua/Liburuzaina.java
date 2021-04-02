@@ -34,6 +34,18 @@ public class Liburuzaina extends Observable{
     public void getLiburuak() {
     	//TODO
     }
+    
+    public void getMaileguak() {
+    	//TODO
+    }
+    
+    public void getIdazleak() {
+    	//TODO
+    }
+    
+    public void getArgitaletxeak() {
+    	//TODO
+    }
 
     public void updatePasahitza(String NAN, String pPasahitza){
         //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
