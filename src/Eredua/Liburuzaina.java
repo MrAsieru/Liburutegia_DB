@@ -1,10 +1,11 @@
 package Eredua;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 
-import Egitura.Erabiltzailea;
-import Egitura.Liburua;
+import Egitura.*;
 
 public class Liburuzaina extends Observable{
 
@@ -28,99 +29,95 @@ public class Liburuzaina extends Observable{
     }
     
     public void getErabiltzaileak() {
-    	//TODO
+        SQLManager.getManager().getErabiltzaileak();
     }
     
     public void getLiburuak() {
-    	//TODO
+        SQLManager.getManager().getLiburuak();
     }
     
     public void getMaileguak() {
-    	//TODO
+        SQLManager.getManager().getMaileguak();
     }
     
     public void getIdazleak() {
-    	//TODO
+        SQLManager.getManager().getIdazleak();
     }
     
     public void getArgitaletxeak() {
-    	//TODO
-    }
-
-    public void updatePasahitza(String NAN, String pPasahitza){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+       SQLManager.getManager().getArgitaletxeak();
     }
 
     public void IzenaAldatu(String pIzena){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().IzenaAldatu(this.nan, pIzena);
     }
 
-    public void AbizenaAldatu(String pNAN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+    public void AbizenaAldatu(String pAbizena){
+        SQLManager.getManager().AbizenaAldatu(this.nan, pAbizena);
     }
 
-    public void JaiotzeDataAldatu(String pNAN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+    public void JaiotzeDataAldatu(Date pDate){
+        SQLManager.getManager().JaiotzeDataAldatu(this.nan, pDate);
     }
 
-    public void GeneroaAldatu(String pNAN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+    public void GeneroaAldatu(String pGeneroa){
+        SQLManager.getManager().GeneroaAldatu(this.nan, pGeneroa);
     }
 
     public void addLiburu(Liburua pLiburua){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().addLiburu(pLiburua);
     }
 
     public void removeLiburu(long ISBN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().removeLiburu(ISBN);
     }
 
     public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().addErabiltzaileArrunta(pErabiltzaile, pPasahitza);
     }
 
     public void removeErabiltzaile(String pNAN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().removeErabiltzaile(pNAN);
     }
 
     public void removeAutorea(String pIdazleZenbakia){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().removeAutorea(pIdazleZenbakia);
     }
 
     public void updateAutoreIzena(String pIdazleZenbakia, String pIzena){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().updateAutoreIzena(pIdazleZenbakia, pIzena);
     }
 
     public void updateAutoreAbizena(String pIdazleZenbakia, String pAbizena){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().updateAutoreAbizena(pIdazleZenbakia, pAbizena);
     }
 
     public void updateAutoreGenero(String pIdazleZenbakia, String pGenero){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().updateAutoreGenero(pIdazleZenbakia, pGenero);
     }
 
     public void updateAutoreHerrialdea(String pIdazleZenbakia, String pHerrialdea){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().updateAutoreHerrialdea(pIdazleZenbakia, pHerrialdea);
     }
 
     public void removeArgitaletzea(String pIFK){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().removeArgitaletzea(pIFK);
     }
 
     public void updateArgitaletzeIzena(String pIFK, String pIzena){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().updateArgitaletzeIzena(pIFK, pIzena);
     }
 
     public void updateArgitaletzeHelbidea(String pIFK, String pHelbidea){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().updateArgitaletzeHelbidea(pIFK, pHelbidea);
     }
 
     public void addMailegua(String NAN, long pISBN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().addMailegua(NAN, pISBN);
     }
 
     public void removeMailegua(long pISBN){
-        //SQLManager.getManager().updatePasahitza(this.NAN, pPasahitza);
+        SQLManager.getManager().removeMailegua(pISBN);
     }
 
 	public void getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
