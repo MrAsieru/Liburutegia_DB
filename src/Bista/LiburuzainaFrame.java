@@ -12,6 +12,11 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
+import Egitura.Argitaletxea;
+import Egitura.Idazlea;
+import Egitura.Erabiltzailea;
+import Egitura.Liburua;
+import Eredua.Liburuzaina;
 import Eredua.NotifikazioMotak;
 
 import javax.swing.JTabbedPane;
@@ -40,7 +45,7 @@ import javax.swing.JSeparator;
 import javax.swing.JTextPane;
 import javax.swing.JComboBox;
 
-public class LiburuzainFrame extends JFrame implements Observer {
+public class LiburuzainaFrame extends JFrame implements Observer {
 
 	private JPanel contentPane;
 	private JTabbedPane tabbedPane;
@@ -65,23 +70,21 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JButton btnErabBilaketaBilatu;
 	private JButton btnErabBilaketaGarbitu;
 	private JLabel lblErabAbizenaBilatu;
-	private JPanel pnlKatalogoaGehitu;
-	private JPanel pnlKatalogoaEzabatu;
 	private JLabel lblKatGehISBN;
 	private JLabel lblKatEzaISBN;
 	private JTextField txfKatGehISBN;
 	private JLabel lblKatGehIzena;
 	private JTextField txfKatGehIzena;
 	private JLabel lblKatGehLeng;
-	private JComboBox cbxKatGehLeng;
+	private JComboBox<String> cbxKatGehLeng;
 	private JLabel lblKatGehArgit;
 	private JLabel lblKatGehIdazle;
 	private JButton btnKatGehSortu;
 	private JPanel pnlKatEzaForm;
 	private JTextField txfKatEzaISBN;
 	private JButton btnKatEzaEzabatu;
-	private JComboBox cbxKatGehArgit;
-	private JComboBox cbxKatGehIdazle;
+	private JComboBox<ComboItem<String>> cbxKatGehArgit;
+	private JComboBox<ComboItem<Integer>> cbxKatGehIdazle;
 	private JPanel pnlMaiHasi;
 	private JPanel pnlMaiBueltatu;
 	private JLabel lblMaiHasISBN;
@@ -93,6 +96,12 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JTextField txfMaiBueISBN;
 	private JButton btnMaiBueBueltatu;
 	private JPanel pnlTabArgitaletxeak;
+	private JPanel pnlKatBotoi;
+	private JScrollPane scpKatTaula;
+	private JTable tblKat;
+	private DefaultTableModel dtmKat;
+	private JButton btnKatGehitu;
+	private JButton btnKatKendu;
 
 	/**
 	 * Launch the application.
@@ -101,7 +110,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LiburuzainFrame frame = new LiburuzainFrame("main");
+					LiburuzainaFrame frame = new LiburuzainaFrame("main");
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -113,10 +122,11 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	/**
 	 * Create the frame.
 	 */
-	public LiburuzainFrame(String pErabiltzailea) {
+	public LiburuzainaFrame(String pErabiltzailea) {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 530, 300);
-		//TODO 
+		Liburuzaina.getInstantzia().erabiltzaileEzarri(pErabiltzailea);
+		Liburuzaina.getInstantzia().addObserver(this);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -137,6 +147,7 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		// LIBURUZAIN_ERAB_SORTU_TXARTO:					String
 		// LIBURUZAIN_ERAB_PASAHITZA_ONDO:					ezer
 		// LIBURUZAIN_ERAB_PASAHITZA_TXARTO:				String
+		// LIBURUZAIN_KAT_TAULA_EGUNERATUA					Liburua[]
 		// LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU: 	String[]
 		// LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU: 	String[]
 		// LIBURUZAIN_KAT_GEH_IDAZLE_LISTA_EGUNERATU: 		String[]
@@ -144,16 +155,38 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		// LIBURUZAIN_KAT_GEH_TXARTO_SORTUTA: 				String
 		// LIBURUZAIN_KAT_EZA_ONDO_EZABATUTA: 				ezer
 		// LIBURUZAIN_KAT_EZA_TXARTO_EZABATUTA:				String
-		//TODO: Klasea jarri
-		if (o instanceof Object && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
+		if (o instanceof Liburuzaina && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 			case LIBURUZAIN_ERAB_LISTA_EGUNERATU:
+				if (((Object[])arg)[1] instanceof Erabiltzailea[]){
+					System.out.println("[Bista.Liburuzaina]: Erabiltzaileen taula eguneratu da");
+					erabiltzaileListaEguneratu((Erabiltzailea[]) ((Object[])arg)[1]);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_LISTA_EGUNERATU ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_ERAB_SORTU_ONDO:
+				JOptionPane.showMessageDialog(contentPane, "Erabiltzailea ondo sortu da", "Erabiltzailea sortuta", JOptionPane.PLAIN_MESSAGE);
+				break;
+			case LIBURUZAIN_ERAB_SORTU_TXARTO:
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da erabiltzailea sortu:\n"+(String)((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_SORTU_TXARTO ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_ERAB_PASAHITZA_ONDO:
 				JOptionPane.showMessageDialog(contentPane, "Pasahitza ondo aldatu egin da", "Pasahitza aldatuta", JOptionPane.PLAIN_MESSAGE);
 				break;
-			case LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU:
+			case LIBURUZAIN_ERAB_PASAHITZA_TXARTO:
 				if (((Object[])arg)[1] instanceof String) {
-					JOptionPane.showMessageDialog(contentPane, "Ezin da pasahitza aldatu:\n"+(String)((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
-				}
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da pasahitza aldatu:\n"+(String)((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_PASAHITZA_TXARTO ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_KAT_TAULA_EGUNERATUA:
+				if (((Object[])arg)[1] instanceof Liburua[]) {
+					System.out.println("[Bista.Liburuzaina]: Katalogoaren taula eguneratu da");
+					katalogoaListaEguneratu((Liburua[]) ((Object[])arg)[1]);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_KAT_TAULA_EGUNERATUA ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU:
+
 				break;
 			case LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU:
 				
@@ -181,13 +214,63 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		
 	}
 	
-	//TODO
-	/*private void erabiltzaileListaEguneratu(Erabiltzaile[] pLista) {
+	private void erabiltzaileListaEguneratu(Erabiltzailea[] pLista) {
 		dtmErab.setRowCount(0);
-		for (erab in pLista) {
+		for (Erabiltzailea erab:pLista) {
 			dtmErab.addRow(new Object[] {erab.nan, erab.izena, erab.abizena, erab.jaiotzeData, erab.generoa});
 		}
-	}*/
+	}
+	
+	private void katalogoaListaEguneratu(Liburua[] pLista) {
+		dtmKat.setRowCount(0);
+		for (Liburua lib:pLista) {
+			dtmKat.addRow(new Object[] {lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, (lib.erreserbatua)?"Erreserbatuta":((lib.mailegatuta)?"Mailegatuta":"Eskuragarri"), lib.erabiltzaileaNAN});
+		}
+	}
+	
+	private void katalogoaLengoaiakEguneratu(String[] pLista) {
+		cbxKatGehLeng.removeAll();
+		for (String leng:pLista) {
+			cbxKatGehLeng.addItem(leng);
+		}
+	}
+	
+	private void katalogoaArgitaletxeakEguneratu(Argitaletxea[] pLista) {
+		cbxKatGehArgit.removeAll();
+		for(Argitaletxea arg:pLista) {
+			cbxKatGehArgit.addItem(new ComboItem<String>(arg.Izena, arg.IFK));
+		}
+	}
+	
+	private void katalogoaIdazleakEguneratu(Idazlea[] pLista) {
+		cbxKatGehIdazle.removeAll();
+		for(Idazlea idl:pLista) {
+			cbxKatGehIdazle.addItem(new ComboItem<Integer>(idl.Izena, idl.IdaleZenbakia));
+		}
+	}
+	
+	private class ComboItem<T> {
+		private String key;
+		private T value;
+		
+		public ComboItem(String pKey, T pValue) {
+			this.key = pKey;
+			this.value = pValue;
+		}
+		
+		@Override
+		public String toString() {
+			return key;
+		}
+		
+		public String getKey() {
+			return key;
+		}
+		
+		public T getValue() {
+			return value;
+		}
+	}
 	
 	//GUI elementuak
 	private JTabbedPane getTabbedPane() {
@@ -235,25 +318,9 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JPanel getPnlTabKatalogoa() {
 		if (pnlTabKatalogoa == null) {
 			pnlTabKatalogoa = new JPanel();
-			GridBagLayout gbl_pnlTabKatalogoa = new GridBagLayout();
-			gbl_pnlTabKatalogoa.columnWidths = new int[] {0};
-			gbl_pnlTabKatalogoa.rowHeights = new int[] {10, 0};
-			gbl_pnlTabKatalogoa.columnWeights = new double[]{1.0};
-			gbl_pnlTabKatalogoa.rowWeights = new double[]{1.0, 1.0};
-			pnlTabKatalogoa.setLayout(gbl_pnlTabKatalogoa);
-			GridBagConstraints gbc_pnlKatalogoaGehitu = new GridBagConstraints();
-			gbc_pnlKatalogoaGehitu.fill = GridBagConstraints.HORIZONTAL;
-			gbc_pnlKatalogoaGehitu.anchor = GridBagConstraints.NORTH;
-			gbc_pnlKatalogoaGehitu.insets = new Insets(0, 0, 0, 5);
-			gbc_pnlKatalogoaGehitu.gridx = 0;
-			gbc_pnlKatalogoaGehitu.gridy = 0;
-			pnlTabKatalogoa.add(getPnlKatalogoaGehitu(), gbc_pnlKatalogoaGehitu);
-			GridBagConstraints gbc_pnlKatalogoaEzabatu = new GridBagConstraints();
-			gbc_pnlKatalogoaEzabatu.fill = GridBagConstraints.HORIZONTAL;
-			gbc_pnlKatalogoaEzabatu.anchor = GridBagConstraints.NORTH;
-			gbc_pnlKatalogoaEzabatu.gridx = 0;
-			gbc_pnlKatalogoaEzabatu.gridy = 1;
-			pnlTabKatalogoa.add(getPnlKatalogoaEzabatu(), gbc_pnlKatalogoaEzabatu);
+			pnlTabKatalogoa.setLayout(new BorderLayout(0, 0));
+			pnlTabKatalogoa.add(getPnlKatBotoi(), BorderLayout.NORTH);
+			pnlTabKatalogoa.add(getScpKatTaula(), BorderLayout.CENTER);
 		}
 		return pnlTabKatalogoa;
 	}
@@ -284,15 +351,15 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO pop-up bat ireki erabiltzaile bat sortzeko
-					erabiltzaileaSortuPopUp();
+					System.out.println("[Kontrolatzailea]: (Erabiltzaile panela) btnErabSortu klikatuta");
+					popUpErabiltzaileaSortu();
 				}
 			});
 		}
 		return btnErabSortu;
 	}
 	
-	private void erabiltzaileaSortuPopUp() {
+	private void popUpErabiltzaileaSortu() {
 		JPanel panel = new JPanel();
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] {0};
@@ -392,13 +459,16 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		
 		int aukera = JOptionPane.showConfirmDialog(this, panel, "Sortu erabiltzailea", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		if (aukera == 0) {
-			/*Erabiltzailea erab = new Erabiltzailea(txfPopNAN.getText(), 
-												   txfPopIzena.getText(), 
-												   txfPopAbizena.getText(), 
-												   txfJaiotzeData.getText(), 
-												   txfPopGeneroa.getText(), 
-												   new String(pwfPopPasahitza.getPassword()));*/
-			//TODO Liburuzaina.getInstantzia().addErabiltzaileArrunta(erab);
+			Erabiltzailea erab = new Erabiltzailea();
+			erab.nan = txfPopNAN.getText();
+			erab.izena = txfPopIzena.getText();
+			erab.abizena = txfPopAbizena.getText();
+			erab.jaiotzeData = txfJaiotzeData.getText();
+			erab.generoa = txfPopGeneroa.getText();
+			System.out.println(String.format("[Kontrolatzailea]: (Erabiltzailea sortu Pop-Up) Erabiltzailea sortzeko klikatuta. Nan:%s, Izena:%s, Abizena:%s, JaiotzeData:%s, Generoa:%s, Pasahitza:%s", erab.nan, erab.izena, erab.abizena, erab.jaiotzeData, erab.generoa, new String(pwfPopPasahitza.getPassword())));
+			Liburuzaina.getInstantzia().addErabiltzaileArrunta(erab, new String(pwfPopPasahitza.getPassword()));
+		} else {
+			System.out.println("[Kontrolatzailea]: (Erabiltzailea sortu Pop-Up) Ateratzeko klikatuta");
 		}
 		
 	}
@@ -410,9 +480,16 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO erabiltzaile aukeraketa logika
-					String pasahitza = JOptionPane.showInputDialog(contentPane, "Pasahitza berria sortu", "Pasahitza berria", JOptionPane.PLAIN_MESSAGE);
-					//TODO Liburuzaina.getInstantzia().aldatuPasahitza(NAN, pasahitza);
+					System.out.println("[Kontrolatzailea]: (Erabiltzaile panela) btnErabPasahitza klikatuta");
+					if (tblErab.getSelectedRow() >= 0) {
+						String pasahitza = JOptionPane.showInputDialog(contentPane, String.format("Pasahitza berria sortu %s erabiltzailearentzat:", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0)), "Pasahitza berria", JOptionPane.PLAIN_MESSAGE);
+						if (pasahitza != null) {
+							System.out.println(String.format("[Kontrolatzailea]: (Pasahitza aldatu Pop-Up) pasahitza aldatzeko klikatu. NAN:%s, Pasahitza:%s", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), pasahitza));
+							Liburuzaina.getInstantzia().aldatuPasahitza((String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), pasahitza);
+						} else System.out.println("[Kontrolatzailea]: (Pasahitza aldatu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Pasahitza aldatzeko lehenengo erabiltzaile bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}
 				}
 			});
 		}
@@ -429,9 +506,14 @@ public class LiburuzainFrame extends JFrame implements Observer {
 	private JTable getTblErab() {
 		if (tblErab == null) {
 			dtmErab = new DefaultTableModel(new Object[][] {}, 
-					 						new String[] {"NAN", "Izena","Abizena","JaiotzeD","Generoa"});
+					 						new String[] {"NAN", "Izena","Abizena","JaiotzeD","Generoa"}) {
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
 			tblErab = new JTable(dtmErab);
-			//TODO Liburuzain.getInstantzia().getErabiltzaileak();
+			Liburuzaina.getInstantzia().getErabiltzaileak();
 		}
 		return tblErab;
 	}
@@ -556,7 +638,8 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO Liburuzain.getInstantzia().getErabiltzaileak(txfErabNANBilatu.getText(), txfErabIzenaBilatu.getText(), txfErabAbizenaBilatu.getText());
+					System.out.println(String.format("[Kontrolatzailea]: (Erabiltzaile panela) btnErabBilaketaBilatu klikatuta. NAN:%s, Izena:%s, Abizena:%s", txfErabNANBilatu.getText(), txfErabIzenaBilatu.getText(), txfErabAbizenaBilatu.getText()));
+					Liburuzaina.getInstantzia().getErabiltzaileak(txfErabNANBilatu.getText(), txfErabIzenaBilatu.getText(), txfErabAbizenaBilatu.getText());
 				}
 			});
 		}
@@ -569,7 +652,11 @@ public class LiburuzainFrame extends JFrame implements Observer {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					//TODO Liburuzain.getInstantzia().getErabiltzaileak();					
+					System.out.println("[Kontrolatzailea]: (Erabiltzaile panela) btnErabBilaketaGarbitu klikatuta");
+					getTxfErabNANBilatu().setText("");
+					getTxfErabIzenaBilatu().setText("");
+					getTxfErabAbizenaBilatu().setText("");
+					Liburuzaina.getInstantzia().getErabiltzaileak();				
 				}
 			});
 		}
@@ -581,190 +668,131 @@ public class LiburuzainFrame extends JFrame implements Observer {
 		}
 		return lblErabAbizenaBilatu;
 	}
-	private JPanel getPnlKatalogoaGehitu() {
-		if (pnlKatalogoaGehitu == null) {
-			pnlKatalogoaGehitu = new JPanel();
-			GridBagLayout gbl_pnlKatalogoaGehitu = new GridBagLayout();
-			gbl_pnlKatalogoaGehitu.columnWidths = new int[]{180, 70, 0};
-			gbl_pnlKatalogoaGehitu.rowHeights = new int[]{15, 0, 0, 0, 0, 0, 0};
-			gbl_pnlKatalogoaGehitu.columnWeights = new double[]{0.0, 1.0, Double.MIN_VALUE};
-			gbl_pnlKatalogoaGehitu.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-			pnlKatalogoaGehitu.setLayout(gbl_pnlKatalogoaGehitu);
-			pnlKatalogoaGehitu.setBorder(BorderFactory.createTitledBorder("Liburu bat gehitu:"));
-			GridBagConstraints gbc_lblKatGehISBN = new GridBagConstraints();
-			gbc_lblKatGehISBN.insets = new Insets(0, 0, 5, 5);
-			gbc_lblKatGehISBN.anchor = GridBagConstraints.NORTHWEST;
-			gbc_lblKatGehISBN.gridx = 0;
-			gbc_lblKatGehISBN.gridy = 0;
-			pnlKatalogoaGehitu.add(getLblKatGehISBN(), gbc_lblKatGehISBN);
-			GridBagConstraints gbc_lblKatGehArgit = new GridBagConstraints();
-			gbc_lblKatGehArgit.anchor = GridBagConstraints.WEST;
-			gbc_lblKatGehArgit.insets = new Insets(0, 0, 5, 0);
-			gbc_lblKatGehArgit.gridx = 1;
-			gbc_lblKatGehArgit.gridy = 0;
-			pnlKatalogoaGehitu.add(getLblKatGehArgit(), gbc_lblKatGehArgit);
-			GridBagConstraints gbc_lblKatGehIdazle = new GridBagConstraints();
-			gbc_lblKatGehIdazle.anchor = GridBagConstraints.WEST;
-			gbc_lblKatGehIdazle.insets = new Insets(0, 0, 5, 0);
-			gbc_lblKatGehIdazle.gridx = 1;
-			gbc_lblKatGehIdazle.gridy = 2;
-			pnlKatalogoaGehitu.add(getLblKatGehIdazle(), gbc_lblKatGehIdazle);
-			GridBagConstraints gbc_cbxKatGehArgit = new GridBagConstraints();
-			gbc_cbxKatGehArgit.insets = new Insets(0, 0, 5, 0);
-			gbc_cbxKatGehArgit.fill = GridBagConstraints.HORIZONTAL;
-			gbc_cbxKatGehArgit.gridx = 1;
-			gbc_cbxKatGehArgit.gridy = 1;
-			pnlKatalogoaGehitu.add(getCbxKatGehArgit(), gbc_cbxKatGehArgit);
-			GridBagConstraints gbc_cbxKatGehIdazle = new GridBagConstraints();
-			gbc_cbxKatGehIdazle.insets = new Insets(0, 0, 5, 0);
-			gbc_cbxKatGehIdazle.fill = GridBagConstraints.HORIZONTAL;
-			gbc_cbxKatGehIdazle.gridx = 1;
-			gbc_cbxKatGehIdazle.gridy = 3;
-			pnlKatalogoaGehitu.add(getCbxKatGehIdazle(), gbc_cbxKatGehIdazle);
-			GridBagConstraints gbc_btnKatGehSortu = new GridBagConstraints();
-			gbc_btnKatGehSortu.gridx = 1;
-			gbc_btnKatGehSortu.gridy = 5;
-			pnlKatalogoaGehitu.add(getBtnKatGehSortu(), gbc_btnKatGehSortu);
-			GridBagConstraints gbc_cbxKatGehLeng = new GridBagConstraints();
-			gbc_cbxKatGehLeng.insets = new Insets(0, 0, 0, 5);
-			gbc_cbxKatGehLeng.fill = GridBagConstraints.HORIZONTAL;
-			gbc_cbxKatGehLeng.gridx = 0;
-			gbc_cbxKatGehLeng.gridy = 5;
-			pnlKatalogoaGehitu.add(getCbxKatGehLeng(), gbc_cbxKatGehLeng);
-			GridBagConstraints gbc_lblKatGehLeng = new GridBagConstraints();
-			gbc_lblKatGehLeng.anchor = GridBagConstraints.WEST;
-			gbc_lblKatGehLeng.insets = new Insets(0, 0, 5, 5);
-			gbc_lblKatGehLeng.gridx = 0;
-			gbc_lblKatGehLeng.gridy = 4;
-			pnlKatalogoaGehitu.add(getLblKatGehLeng(), gbc_lblKatGehLeng);
-			GridBagConstraints gbc_txfKatGehIzena = new GridBagConstraints();
-			gbc_txfKatGehIzena.insets = new Insets(0, 0, 5, 5);
-			gbc_txfKatGehIzena.fill = GridBagConstraints.HORIZONTAL;
-			gbc_txfKatGehIzena.gridx = 0;
-			gbc_txfKatGehIzena.gridy = 3;
-			pnlKatalogoaGehitu.add(getTxfKatGehIzena(), gbc_txfKatGehIzena);
-			GridBagConstraints gbc_lblKatGehIzena = new GridBagConstraints();
-			gbc_lblKatGehIzena.anchor = GridBagConstraints.NORTHWEST;
-			gbc_lblKatGehIzena.insets = new Insets(0, 0, 5, 5);
-			gbc_lblKatGehIzena.gridx = 0;
-			gbc_lblKatGehIzena.gridy = 2;
-			pnlKatalogoaGehitu.add(getLblKatGehIzena(), gbc_lblKatGehIzena);
-			GridBagConstraints gbc_txfKatGehISBN = new GridBagConstraints();
-			gbc_txfKatGehISBN.fill = GridBagConstraints.HORIZONTAL;
-			gbc_txfKatGehISBN.anchor = GridBagConstraints.WEST;
-			gbc_txfKatGehISBN.insets = new Insets(0, 0, 5, 5);
-			gbc_txfKatGehISBN.gridx = 0;
-			gbc_txfKatGehISBN.gridy = 1;
-			pnlKatalogoaGehitu.add(getTxfKatGehISBN(), gbc_txfKatGehISBN);
-		}
-		return pnlKatalogoaGehitu;
+	private void popUpKatalogoaLiburuaGehitu() {
+		JPanel panel = new JPanel();
+		GridBagLayout gbl_pnlKatalogoaGehitu = new GridBagLayout();
+		gbl_pnlKatalogoaGehitu.columnWidths = new int[] {0, 0};
+		gbl_pnlKatalogoaGehitu.rowHeights = new int[] {0, 0, 0, 0, 0, 0};
+		gbl_pnlKatalogoaGehitu.columnWeights = new double[]{0.0, 1.0};
+		gbl_pnlKatalogoaGehitu.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(gbl_pnlKatalogoaGehitu);
+		GridBagConstraints gbc_lblKatGehISBN = new GridBagConstraints();
+		gbc_lblKatGehISBN.insets = new Insets(0, 0, 5, 5);
+		gbc_lblKatGehISBN.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblKatGehISBN.gridx = 0;
+		gbc_lblKatGehISBN.gridy = 0;
+		JLabel lblKatGehISBN = new JLabel("ISBN:");
+		panel.add(lblKatGehISBN, gbc_lblKatGehISBN);
+		GridBagConstraints gbc_lblKatGehArgit = new GridBagConstraints();
+		gbc_lblKatGehArgit.anchor = GridBagConstraints.WEST;
+		gbc_lblKatGehArgit.insets = new Insets(0, 0, 5, 0);
+		gbc_lblKatGehArgit.gridx = 1;
+		gbc_lblKatGehArgit.gridy = 0;
+		JLabel lblKatGehArgit = new JLabel("Argitaletxea:");
+		panel.add(lblKatGehArgit, gbc_lblKatGehArgit);
+		GridBagConstraints gbc_lblKatGehIdazle = new GridBagConstraints();
+		gbc_lblKatGehIdazle.anchor = GridBagConstraints.WEST;
+		gbc_lblKatGehIdazle.insets = new Insets(0, 0, 5, 0);
+		gbc_lblKatGehIdazle.gridx = 1;
+		gbc_lblKatGehIdazle.gridy = 2;
+		JLabel lblKatGehIdazle = new JLabel("Idazlea:");
+		panel.add(lblKatGehIdazle, gbc_lblKatGehIdazle);
+		GridBagConstraints gbc_cbxKatGehArgit = new GridBagConstraints();
+		gbc_cbxKatGehArgit.weightx = 0.5;
+		gbc_cbxKatGehArgit.insets = new Insets(0, 0, 5, 0);
+		gbc_cbxKatGehArgit.fill = GridBagConstraints.HORIZONTAL;
+		gbc_cbxKatGehArgit.gridx = 1;
+		gbc_cbxKatGehArgit.gridy = 1;
+		cbxKatGehArgit = new JComboBox();
+		panel.add(cbxKatGehArgit, gbc_cbxKatGehArgit);
+		GridBagConstraints gbc_cbxKatGehIdazle = new GridBagConstraints();
+		gbc_cbxKatGehIdazle.insets = new Insets(0, 0, 5, 0);
+		gbc_cbxKatGehIdazle.fill = GridBagConstraints.HORIZONTAL;
+		gbc_cbxKatGehIdazle.gridx = 1;
+		gbc_cbxKatGehIdazle.gridy = 3;
+		cbxKatGehIdazle = new JComboBox();
+		panel.add(cbxKatGehIdazle, gbc_cbxKatGehIdazle);
+		GridBagConstraints gbc_cbxKatGehLeng = new GridBagConstraints();
+		gbc_cbxKatGehLeng.insets = new Insets(0, 0, 0, 5);
+		gbc_cbxKatGehLeng.fill = GridBagConstraints.HORIZONTAL;
+		gbc_cbxKatGehLeng.gridx = 0;
+		gbc_cbxKatGehLeng.gridy = 5;
+		cbxKatGehLeng = new JComboBox();
+		panel.add(cbxKatGehLeng, gbc_cbxKatGehLeng);
+		GridBagConstraints gbc_lblKatGehLeng = new GridBagConstraints();
+		gbc_lblKatGehLeng.anchor = GridBagConstraints.WEST;
+		gbc_lblKatGehLeng.insets = new Insets(0, 0, 5, 5);
+		gbc_lblKatGehLeng.gridx = 0;
+		gbc_lblKatGehLeng.gridy = 4;
+		JLabel lblKatGehLeng = new JLabel("Lengoaia:");
+		panel.add(lblKatGehLeng, gbc_lblKatGehLeng);
+		GridBagConstraints gbc_txfKatGehIzena = new GridBagConstraints();
+		gbc_txfKatGehIzena.insets = new Insets(0, 0, 5, 5);
+		gbc_txfKatGehIzena.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txfKatGehIzena.gridx = 0;
+		gbc_txfKatGehIzena.gridy = 3;
+		JTextField txfKatGehIzena = new JTextField();
+		txfKatGehIzena.setColumns(10);
+		panel.add(txfKatGehIzena, gbc_txfKatGehIzena);
+		GridBagConstraints gbc_lblKatGehIzena = new GridBagConstraints();
+		gbc_lblKatGehIzena.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblKatGehIzena.insets = new Insets(0, 0, 5, 5);
+		gbc_lblKatGehIzena.gridx = 0;
+		gbc_lblKatGehIzena.gridy = 2;
+		JLabel lblKatGehIzena = new JLabel("Izena:");
+		panel.add(lblKatGehIzena, gbc_lblKatGehIzena);
+		GridBagConstraints gbc_txfKatGehISBN = new GridBagConstraints();
+		gbc_txfKatGehISBN.weightx = 0.5;
+		gbc_txfKatGehISBN.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txfKatGehISBN.anchor = GridBagConstraints.WEST;
+		gbc_txfKatGehISBN.insets = new Insets(0, 0, 5, 5);
+		gbc_txfKatGehISBN.gridx = 0;
+		gbc_txfKatGehISBN.gridy = 1;
+		JTextField txfKatGehISBN = new JTextField();
+		txfKatGehISBN.setColumns(13);
+		panel.add(txfKatGehISBN, gbc_txfKatGehISBN);
+		
+		int aukera = JOptionPane.showConfirmDialog(this, panel, "Liburua gehitu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (aukera == 0) {
+			try {
+				Liburua lib = new Liburua();
+				lib.isbn = Long.parseLong(txfKatGehISBN.getText());
+				lib.izena = txfKatGehIzena.getText();
+				lib.lengoaia = (String) cbxKatGehLeng.getSelectedItem();
+				lib.argitaletxeaIFK = ((ComboItem<String>)cbxKatGehArgit.getSelectedItem()).getValue();
+				lib.idazleaZnb = ((ComboItem<Integer>)cbxKatGehIdazle.getSelectedItem()).getValue();
+				System.out.println(String.format("[Kontrolatzailea]: (Liburua gehitu Pop-Up) datuak bidali. ISBN:%d, Izena:%s, Lengoaia:%s, Argitaletxea:%s, Idazlea:%d", lib.isbn, lib.izena, lib.lengoaia, lib.argitaletxeaIFK, lib.idazleaZnb));
+				Liburuzaina.getInstantzia().addLiburu(lib);
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(contentPane, "ISBN kode balioduna sartu", "Errorea", JOptionPane.ERROR_MESSAGE);
+			} catch (NullPointerException npe) {
+				JOptionPane.showMessageDialog(contentPane, "Eremu guztiak bete behar dira", "Errorea", JOptionPane.ERROR_MESSAGE);
+			}
+		} else System.out.println("[Kontrolatzailea]: (Liburua gehitu Pop-Up) lehioa itxi");
 	}
-	private JPanel getPnlKatalogoaEzabatu() {
-		if (pnlKatalogoaEzabatu == null) {
-			pnlKatalogoaEzabatu = new JPanel();
-			FlowLayout flowLayout = (FlowLayout) pnlKatalogoaEzabatu.getLayout();
-			flowLayout.setAlignment(FlowLayout.LEFT);
-			pnlKatalogoaEzabatu.setBorder(BorderFactory.createTitledBorder("Liburu bat ezabatu:"));
-			pnlKatalogoaEzabatu.add(getPnlKatEzaForm());
-		}
-		return pnlKatalogoaEzabatu;
-	}
-	private JLabel getLblKatGehISBN() {
-		if (lblKatGehISBN == null) {
-			lblKatGehISBN = new JLabel("ISBN:");
-		}
-		return lblKatGehISBN;
-	}
-	private JTextField getTxfKatGehISBN() {
-		if (txfKatGehISBN == null) {
-			txfKatGehISBN = new JTextField();
-			txfKatGehISBN.setColumns(13);
-		}
-		return txfKatGehISBN;
-	}
-	private JLabel getLblKatGehIzena() {
-		if (lblKatGehIzena == null) {
-			lblKatGehIzena = new JLabel("Izena:");
-		}
-		return lblKatGehIzena;
-	}
-	private JTextField getTxfKatGehIzena() {
-		if (txfKatGehIzena == null) {
-			txfKatGehIzena = new JTextField();
-			txfKatGehIzena.setColumns(10);
-		}
-		return txfKatGehIzena;
-	}
-	private JLabel getLblKatGehLeng() {
-		if (lblKatGehLeng == null) {
-			lblKatGehLeng = new JLabel("Lengoaia:");
-		}
-		return lblKatGehLeng;
-	}
-	private JComboBox getCbxKatGehLeng() {
-		if (cbxKatGehLeng == null) {
-			cbxKatGehLeng = new JComboBox();
-		}
-		return cbxKatGehLeng;
-	}
-	private JLabel getLblKatGehArgit() {
-		if (lblKatGehArgit == null) {
-			lblKatGehArgit = new JLabel("Argitaletxea:");
-		}
-		return lblKatGehArgit;
-	}
-	private JLabel getLblKatGehIdazle() {
-		if (lblKatGehIdazle == null) {
-			lblKatGehIdazle = new JLabel("Idazlea:");
-		}
-		return lblKatGehIdazle;
-	}
-	private JButton getBtnKatGehSortu() {
-		if (btnKatGehSortu == null) {
-			btnKatGehSortu = new JButton("Sortu");
-		}
-		return btnKatGehSortu;
-	}
-	private JPanel getPnlKatEzaForm() {
-		if (pnlKatEzaForm == null) {
-			pnlKatEzaForm = new JPanel();
-			pnlKatEzaForm.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-			pnlKatEzaForm.add(getLblKatEzaISBN());
-			pnlKatEzaForm.add(getTxfKatEzaISBN());
-			pnlKatEzaForm.add(getBtnKatEzaEzabatu());
-		}
-		return pnlKatEzaForm;
-	}
-	private JLabel getLblKatEzaISBN() {
-		if (lblKatEzaISBN == null) {
-			lblKatEzaISBN = new JLabel("ISBN:");
-		}
-		return lblKatEzaISBN;
-	}
-	private JTextField getTxfKatEzaISBN() {
-		if (txfKatEzaISBN == null) {
-			txfKatEzaISBN = new JTextField();
-			txfKatEzaISBN.setColumns(13);
-		}
-		return txfKatEzaISBN;
-	}
-	private JButton getBtnKatEzaEzabatu() {
-		if (btnKatEzaEzabatu == null) {
-			btnKatEzaEzabatu = new JButton("Ezabatu");
-		}
-		return btnKatEzaEzabatu;
-	}
-	private JComboBox getCbxKatGehArgit() {
-		if (cbxKatGehArgit == null) {
-			cbxKatGehArgit = new JComboBox();
-		}
-		return cbxKatGehArgit;
-	}
-	private JComboBox getCbxKatGehIdazle() {
-		if (cbxKatGehIdazle == null) {
-			cbxKatGehIdazle = new JComboBox();
-		}
-		return cbxKatGehIdazle;
+	private void popUpKatalogoaLiburuaKendu() {
+		JPanel panel = new JPanel();
+		FlowLayout flowLayout = (FlowLayout) panel.getLayout();
+		flowLayout.setAlignment(FlowLayout.LEFT);
+		JPanel pnlKatEzaForm = new JPanel();
+		pnlKatEzaForm.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JLabel lblKatEzaISBN = new JLabel("ISBN:");
+		pnlKatEzaForm.add(lblKatEzaISBN);
+		JTextField txfKatEzaISBN = new JTextField();
+		txfKatEzaISBN.setColumns(13);
+		pnlKatEzaForm.add(txfKatEzaISBN);
+		panel.add(pnlKatEzaForm);
+		
+		int aukera = JOptionPane.showConfirmDialog(this, panel, "Liburua kendu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (aukera == 0) {
+			try {
+				long isbn = Long.parseLong(txfKatEzaISBN.getText());
+				System.out.println(String.format("[Kontrolatzailea]: (Liburua kendu Pop-Up) datuak bidali. ISBN:%d", isbn));
+				Liburuzaina.getInstantzia().removeLiburu(isbn);
+			} catch (NumberFormatException nfe) {
+				JOptionPane.showMessageDialog(contentPane, "ISBN kode balioduna sartu", "Errorea", JOptionPane.ERROR_MESSAGE);
+			}			
+		} else System.out.println("[Kontrolatzailea]: (Liburua kendu Pop-Up) lehioa itxi");
 	}
 	private JPanel getPnlMaiHasi() {
 		if (pnlMaiHasi == null) {
@@ -895,5 +923,65 @@ public class LiburuzainFrame extends JFrame implements Observer {
 			pnlTabArgitaletxeak = new JPanel();
 		}
 		return pnlTabArgitaletxeak;
+	}
+	private JPanel getPnlKatBotoi() {
+		if (pnlKatBotoi == null) {
+			pnlKatBotoi = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) pnlKatBotoi.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			pnlKatBotoi.add(getBtnKatGehitu());
+			pnlKatBotoi.add(getBtnKatKendu());
+		}
+		return pnlKatBotoi;
+	}
+	private JScrollPane getScpKatTaula() {
+		if (scpKatTaula == null) {
+			scpKatTaula = new JScrollPane();
+			scpKatTaula.setViewportView(getTblKat());
+		}
+		return scpKatTaula;
+	}
+	private JTable getTblKat() {
+		if (tblKat == null) {
+			
+			dtmKat = new DefaultTableModel(new Object[][] {}, 
+										   new String[] {"ISBN", "Izena", "Arg. data", "Lengoaia", "Egoera", "NAN"}) {
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					return false;
+				}
+			};
+			tblKat = new JTable(dtmKat);
+			Liburuzaina.getInstantzia().getLiburuak();
+		}
+		return tblKat;
+	}
+	private JButton getBtnKatGehitu() {
+		if (btnKatGehitu == null) {
+			btnKatGehitu = new JButton("LiburuaGehitu");
+			btnKatGehitu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Katalogoa panela) Liburua gehitzeko pop-up irekitzeko klikatuta");
+					popUpKatalogoaLiburuaGehitu();
+				}
+			});
+		}
+		return btnKatGehitu;
+	}
+	private JButton getBtnKatKendu() {
+		if (btnKatKendu == null) {
+			btnKatKendu = new JButton("Liburua kendu");
+			btnKatKendu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Katalogoa panela) Liburua kentzeko pop-up irekitzeko klikatuta");
+					popUpKatalogoaLiburuaKendu();
+				}
+			});
+		}
+		return btnKatKendu;
 	}
 }

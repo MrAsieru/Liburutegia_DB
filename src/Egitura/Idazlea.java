@@ -1,6 +1,6 @@
 package Egitura;
 
-public class Autorea {
+public class Idazlea {
     public int      IdaleZenbakia;
     public String   Izena;
     public String   Abizena;

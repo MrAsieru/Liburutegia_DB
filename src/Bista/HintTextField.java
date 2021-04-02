@@ -20,8 +20,8 @@ public class HintTextField extends JTextField {
 	
 			@Override	
 			public void focusGained(FocusEvent e) {	
-				if (getText().equals(hint)) {	
-					setText("");	
+				if (getText().equals(hint) || getText().equals("")) {	
+					setText(null);	
 					setFont(gainFont);	
 				} else {	
 					setText(getText());	
@@ -48,12 +48,25 @@ public class HintTextField extends JTextField {
 	
 	@Override
 	public String getText() {
-		// TODO Auto-generated method stub
 		String text = super.getText();
-		if (!text.equals(hint)) {
-			return text;
-		} else {
+		if (text.equals(hint)) {
 			return "";
+		} else {
+			return text;
+		}
+	}
+
+	@Override
+	public void setText(String t) {
+		if (t == null) {
+			super.setText("");
+		}
+		else if (t.equals("")) {
+			super.setText(hint);
+			setFont(lostFont);	
+			setForeground(Color.GRAY);
+		} else {
+			super.setText(t);		
 		}
 	}
 }

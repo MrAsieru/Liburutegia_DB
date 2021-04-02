@@ -3,13 +3,13 @@ package Egitura;
 import java.util.Date;
 
 public class Liburua {
-    public String  ErabiltzaileaNAN;
-    public String  Izena;
-    public Date    ArgitaratzeEguna;
-    public String  Hizkuntza;
-    public int     Prezioa;
-    public int     Mailegua;
-    public boolean Erreserbatua;
-    public int     IdazleZenbakia;
-    public String  ArgitaletzeIFK;
+    public long isbn;
+    public String izena;
+    public String argitaratzeData;
+    public int idazleaZnb;
+    public String lengoaia;
+    public String argitaletxeaIFK;
+    public boolean mailegatuta;
+    public boolean erreserbatua;
+    public String erabiltzaileaNAN;
 }

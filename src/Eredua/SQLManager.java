@@ -1,6 +1,6 @@
 package Eredua;
 
-import Egitura.Erabiltzaile;
+import Egitura.Erabiltzailea;
 import Egitura.Liburua;
 
 public class SQLManager {
@@ -46,7 +46,7 @@ public class SQLManager {
 
     }
 
-    public void addErabiltzaileArrunta(Erabiltzaile pErabiltzaile){
+    public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile){
 
     }
 

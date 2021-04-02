@@ -167,7 +167,6 @@ public class LoginFrame extends JFrame implements Observer{
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
 		if (o instanceof Eredua.Login && arg instanceof Object[] && 
 			((Object[]) arg).length == 2 && 
 			((Object[]) arg)[0] instanceof ErabiltzaileMota && 
@@ -180,7 +179,7 @@ public class LoginFrame extends JFrame implements Observer{
 				if (aukera == 0) {
 					System.out.println("[Bista.Login]: Liburuzain bezala logeatuta, liburuzain bista irekiko da");
 					setVisible(false);
-					new Bista.LiburuzainFrame((String)((Object[]) arg)[1]);
+					new Bista.LiburuzainaFrame((String)((Object[]) arg)[1]);
 				} else {
 					System.out.println("[Bista.Login]: Liburuzain bezala logeatuta, bista arrunta irekiko da");
 					setVisible(false);

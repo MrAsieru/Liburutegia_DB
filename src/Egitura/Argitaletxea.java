@@ -1,6 +1,6 @@
 package Egitura;
 
-public class Argitaletze {
+public class Argitaletxea {
     public String IFK;
     public String Izena;
     public String Helbidea;
