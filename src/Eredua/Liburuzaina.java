@@ -79,6 +79,10 @@ public class Liburuzaina extends Observable{
     public void removeErabiltzaile(String pNAN){
         SQLManager.getManager().removeErabiltzaile(pNAN);
     }
+    
+    public void addIdazlea(Idazlea pIdl) {
+    	//TODO
+    }
 
     public void removeAutorea(String pIdazleZenbakia){
         SQLManager.getManager().removeAutorea(pIdazleZenbakia);
@@ -98,6 +102,10 @@ public class Liburuzaina extends Observable{
 
     public void updateAutoreHerrialdea(String pIdazleZenbakia, String pHerrialdea){
         SQLManager.getManager().updateAutoreHerrialdea(pIdazleZenbakia, pHerrialdea);
+    }
+    
+    public void addArgitaletxea(Argitaletxea arg) {
+    	//TODO
     }
 
     public void removeArgitaletzea(String pIFK){

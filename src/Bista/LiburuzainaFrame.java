@@ -64,31 +64,9 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 	private JButton btnErabBilaketaBilatu;
 	private JButton btnErabBilaketaGarbitu;
 	private JLabel lblErabAbizenaBilatu;
-	private JLabel lblKatGehISBN;
-	private JLabel lblKatEzaISBN;
-	private JTextField txfKatGehISBN;
-	private JLabel lblKatGehIzena;
-	private JTextField txfKatGehIzena;
-	private JLabel lblKatGehLeng;
 	private JComboBox<String> cbxKatGehLeng;
-	private JLabel lblKatGehArgit;
-	private JLabel lblKatGehIdazle;
-	private JButton btnKatGehSortu;
-	private JPanel pnlKatEzaForm;
-	private JTextField txfKatEzaISBN;
-	private JButton btnKatEzaEzabatu;
 	private JComboBox<ComboItem<String>> cbxKatGehArgit;
 	private JComboBox<ComboItem<Integer>> cbxKatGehIdazle;
-	private JPanel pnlMaiHasi;
-	private JPanel pnlMaiBueltatu;
-	private JLabel lblMaiHasISBN;
-	private JTextField txfMaiHasISBN;
-	private JLabel lblMaiHasNAN;
-	private JTextField txfMaiHasNAN;
-	private JButton btnMaiHasiMailegatu;
-	private JLabel lblMaiBueISBN;
-	private JTextField txfMaiBueISBN;
-	private JButton btnMaiBueBueltatu;
 	private JPanel pnlTabArgitaletxeak;
 	private JPanel pnlKatBotoi;
 	private JScrollPane scpKatTaula;
@@ -175,6 +153,16 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		// LIBURUZAIN_MAI_HASI_TXARTO:						String
 		// LIBURUZAIN_MAI_BUELTATU_ONDO:					ezer
 		// LIBURUZAIN_MAI_BUELTATU_TXARTO:					String
+		// LIBURUZAIN_IDL_TAULA_EGUNERATU:					Idazlea[]
+		// LIBURUZAIN_IDL_GEH_ONDO:							ezer
+		// LIBURUZAIN_IDL_GEH_TXARTO:						String
+		// LIBURUZAIN_IDL_KEN_ONDO:							ezer
+		// LIBURUZAIN_IDL_KEN_TXARTO:						String
+		// LIBURUZAIN_ARG_TAULA_EGUNERATU:					Argitaletxea[]
+		// LIBURUZAIN_ARG_GEH_ONDO:							ezer
+		// LIBURUZAIN_ARG_GEH_TXARTO:						String
+		// LIBURUZAIN_ARG_KEN_ONDO:							ezer
+		// LIBURUZAIN_ARG_KEN_TXARTO:						String
 		if (o instanceof Liburuzaina && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 			case LIBURUZAIN_ERAB_LISTA_EGUNERATU:
@@ -267,6 +255,50 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 					JOptionPane.showMessageDialog(contentPane, "Ezin izan da mailegua bueltatu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
 				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_MAI_BUELTATU_TXARTO ez du eskatutakoa jaso");
 				break;
+			case LIBURUZAIN_IDL_TAULA_EGUNERATU:
+				if (((Object[])arg)[1] instanceof Idazlea[]){
+					System.out.println("[Bista.Liburuzaina]: Idazleen taula eguneratu da");
+					idazleakTaulaEguneratu((Idazlea[]) ((Object[])arg)[1]);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_IDL_TAULA_EGUNERATU ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_IDL_GEH_ONDO:
+				JOptionPane.showMessageDialog(contentPane, "Idazlea ondo gorde da", "Idazlea ondo sortuta", JOptionPane.PLAIN_MESSAGE);
+				break;
+			case LIBURUZAIN_IDL_GEH_TXARTO:
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da idazlea sortu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_IDL_GEH_TXARTO ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_IDL_KEN_ONDO:
+				JOptionPane.showMessageDialog(contentPane, "Idazlea ondo kendu da", "Idazlea ondo kenduta", JOptionPane.PLAIN_MESSAGE);
+				break;
+			case LIBURUZAIN_IDL_KEN_TXARTO:
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da idazlea kendu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_IDL_KEN_TXARTO ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_ARG_TAULA_EGUNERATU:
+				if (((Object[])arg)[1] instanceof Argitaletxea[]){
+					System.out.println("[Bista.Liburuzaina]: Argitaletxeen taula eguneratu da");
+					argitaletxeakTaulaEguneratu((Argitaletxea[]) ((Object[])arg)[1]);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ARG_TAULA_EGUNERATU ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_ARG_GEH_ONDO:
+				JOptionPane.showMessageDialog(contentPane, "Argitaletxea ondo gorde da", "Argitaletxea ondo sortuta", JOptionPane.PLAIN_MESSAGE);
+				break;
+			case LIBURUZAIN_ARG_GEH_TXARTO:
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da argitaletxea sortu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ARG_GEH_TXARTO ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_ARG_KEN_ONDO:
+				JOptionPane.showMessageDialog(contentPane, "Argitaletxea ondo kendu da", "Argitaletxea ondo kenduta", JOptionPane.PLAIN_MESSAGE);
+				break;
+			case LIBURUZAIN_ARG_KEN_TXARTO:
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da argitaletxea kendu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ARG_KEN_TXARTO ez du eskatutakoa jaso");
+				break;
 			default:
 				System.out.println(String.format("[Bista.Liburuzaina]: Ez da ezagutzen notifikazio mota: %s", ((NotifikazioMotak) ((Object[])arg)[0]).name()));
 				break;
@@ -313,6 +345,20 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		dtmMai.setRowCount(0);
 		for (Mailegua mai:pLista) {
 			dtmMai.addRow(new Object[] {mai.isbn, mai.liburuaIzena, mai.nan, mai.erabiltzaileaIzena});
+		}
+	}
+	
+	private void idazleakTaulaEguneratu(Idazlea[] pLista) {
+		dtmIdl.setRowCount(0);
+		for (Idazlea idl:pLista) {
+			dtmIdl.addRow(new Object[] {idl.id, idl.izena, idl.abizena, idl.generoa, idl.herrialdea});
+		}
+	}
+	
+	private void argitaletxeakTaulaEguneratu(Argitaletxea[] pLista) {
+		dtmArg.setRowCount(0);
+		for (Argitaletxea arg:pLista) {
+			dtmArg.addRow(new Object[] {arg.IFK, arg.Izena, arg.Helbidea});
 		}
 	}
 	
@@ -1076,12 +1122,120 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 	private JButton getBtnIdlSortu() {
 		if (btnIdlSortu == null) {
 			btnIdlSortu = new JButton("Idazlea gehitu");
+			btnIdlSortu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Idazleak panela) btnIdlSortu klikatuta");
+					popUpIdazleaSortu();					
+				}
+			});
 		}
 		return btnIdlSortu;
 	}
+	
+	private void popUpIdazleaSortu() {
+		JPanel panel = new JPanel();
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] {0};
+		gridBagLayout.rowHeights = new int[] {0};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(gridBagLayout);
+		GridBagConstraints gbc_lblIzena = new GridBagConstraints();
+		gbc_lblIzena.anchor = GridBagConstraints.WEST;
+		gbc_lblIzena.insets = new Insets(0, 0, 5, 0);
+		gbc_lblIzena.gridx = 0;
+		gbc_lblIzena.gridy = 0;
+		JLabel lblIzena = new JLabel("Izena:");
+		panel.add(lblIzena, gbc_lblIzena);
+		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
+		gbc_textField_1.anchor = GridBagConstraints.WEST;
+		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_1.gridx = 0;
+		gbc_textField_1.gridy = 1;
+		JTextField txfPopIzena = new JTextField();
+		txfPopIzena.setColumns(10);
+		panel.add(txfPopIzena, gbc_textField_1);
+		GridBagConstraints gbc_lblGeneroa = new GridBagConstraints();
+		gbc_lblGeneroa.anchor = GridBagConstraints.WEST;
+		gbc_lblGeneroa.insets = new Insets(0, 0, 5, 0);
+		gbc_lblGeneroa.gridx = 0;
+		gbc_lblGeneroa.gridy = 4;
+		JLabel lblGeneroa = new JLabel("Generoa:");
+		panel.add(lblGeneroa, gbc_lblGeneroa);
+		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
+		gbc_textField_3.anchor = GridBagConstraints.WEST;
+		gbc_textField_3.gridx = 0;
+		gbc_textField_3.gridy = 5;
+		JTextField txfPopGeneroa = new JTextField();
+		txfPopGeneroa.setColumns(10);
+		panel.add(txfPopGeneroa, gbc_textField_3);
+		GridBagConstraints gbc_lblAbizena = new GridBagConstraints();
+		gbc_lblAbizena.anchor = GridBagConstraints.WEST;
+		gbc_lblAbizena.insets = new Insets(0, 0, 5, 0);
+		gbc_lblAbizena.gridx = 1;
+		gbc_lblAbizena.gridy = 0;
+		JLabel lblAbizena = new JLabel("Abizena:");
+		panel.add(lblAbizena, gbc_lblAbizena);
+		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
+		gbc_textField_2.anchor = GridBagConstraints.WEST;
+		gbc_textField_2.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_2.gridx = 1;
+		gbc_textField_2.gridy = 1;
+		JTextField txfPopAbizena = new JTextField();
+		txfPopAbizena.setColumns(10);
+		GridBagConstraints gbc_jaio = new GridBagConstraints();
+		gbc_jaio.anchor = GridBagConstraints.WEST;
+		gbc_jaio.insets = new Insets(0, 0, 5, 0);
+		gbc_jaio.gridx = 1;
+		gbc_jaio.gridy = 4;
+		JLabel lblPopJaioD = new JLabel("Herrialdea:");
+		panel.add(lblPopJaioD, gbc_jaio);
+		GridBagConstraints gbc_txfHerrialdea = new GridBagConstraints();
+		gbc_txfHerrialdea.anchor = GridBagConstraints.WEST;
+		gbc_txfHerrialdea.gridx = 1;
+		gbc_txfHerrialdea.gridy = 5;
+		JTextField txfPopHerrialdea = new JTextField();
+		txfPopHerrialdea.setColumns(10);
+		panel.add(txfPopHerrialdea, gbc_txfHerrialdea);
+		
+		panel.add(txfPopAbizena, gbc_textField_2);
+		
+		int aukera = JOptionPane.showConfirmDialog(this, panel, "Sortu idazlea", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (aukera == 0) {
+			Idazlea idl = new Idazlea();
+			idl.izena = txfPopIzena.getText();
+			idl.abizena = txfPopAbizena.getText();
+			idl.generoa = txfPopGeneroa.getText();
+			idl.herrialdea = txfPopHerrialdea.getText();
+			System.out.println(String.format("[Kontrolatzailea]: (Idazlea sortu Pop-Up) Idazlea sortzeko klikatuta. Izena:%s, Abizenak:%s, Generoa:%s, Herrialdea:%s", idl.izena, idl.abizena, idl.generoa, idl.herrialdea));
+			Liburuzaina.getInstantzia().addIdazlea(idl);
+		} else {
+			System.out.println("[Kontrolatzailea]: (Idazlea sortu Pop-Up) Ateratzeko klikatuta");
+		}
+		
+	}
+	
 	private JButton getBtnIdlEzabatu() {
 		if (btnIdlEzabatu == null) {
 			btnIdlEzabatu = new JButton("Idazlea kendu");
+			btnIdlEzabatu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Idazleak panela) btnIdlEzabatu klikatuta");
+					if (tblIdl.getSelectedRow() >= 0) {
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("ID: %d duen %s %s idazlea ezabatu nahi duzu?", (int) tblIdl.getValueAt(tblIdl.getSelectedRow(), 0), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 1), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 2)), "Idazlea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (aukera == 0) {
+							System.out.println(String.format("[Kontrolatzailea]: (Idazlea ezabatu Pop-Up) idazlea kentzeko klikatu. ID:%s, Izen-abizenak:%s %s", (int) tblIdl.getValueAt(tblIdl.getSelectedRow(), 0), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 1), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 2)));
+							Liburuzaina.getInstantzia().removeAutorea((String) tblErab.getValueAt(tblErab.getSelectedRow(), 0));
+						} else System.out.println("[Kontrolatzailea]: (Idazlea ezabatu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Idazle bat ezabatu ahal izateko lehenengo idazle bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}					
+				}
+			});
 		}
 		return btnIdlEzabatu;
 	}
@@ -1140,12 +1294,105 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 	private JButton getBtnArgGehitu() {
 		if (btnArgGehitu == null) {
 			btnArgGehitu = new JButton("Argitaletxea gehitu");
+			btnArgGehitu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Argitaletxeak panela) btnArgGehitu klikatuta");
+					popUpArgitaletxeaSortu();
+				}
+			});
 		}
 		return btnArgGehitu;
 	}
+	
+	private void popUpArgitaletxeaSortu() {
+		JPanel panel = new JPanel();
+		GridBagLayout gridBagLayout = new GridBagLayout();
+		gridBagLayout.columnWidths = new int[] {0};
+		gridBagLayout.rowHeights = new int[] {0};
+		gridBagLayout.columnWeights = new double[]{0.0, 0.0};
+		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+		panel.setLayout(gridBagLayout);
+		GridBagConstraints gbc_lblIzena = new GridBagConstraints();
+		gbc_lblIzena.anchor = GridBagConstraints.WEST;
+		gbc_lblIzena.insets = new Insets(0, 0, 5, 0);
+		gbc_lblIzena.gridx = 0;
+		gbc_lblIzena.gridy = 0;
+		JLabel lblIzena = new JLabel("Izena:");
+		panel.add(lblIzena, gbc_lblIzena);
+		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
+		gbc_textField_1.anchor = GridBagConstraints.WEST;
+		gbc_textField_1.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_1.gridx = 0;
+		gbc_textField_1.gridy = 1;
+		JTextField txfPopIzena = new JTextField();
+		txfPopIzena.setColumns(10);
+		panel.add(txfPopIzena, gbc_textField_1);
+		GridBagConstraints gbc_lblIFK = new GridBagConstraints();
+		gbc_lblIFK.anchor = GridBagConstraints.WEST;
+		gbc_lblIFK.insets = new Insets(0, 0, 5, 0);
+		gbc_lblIFK.gridx = 0;
+		gbc_lblIFK.gridy = 4;
+		JLabel lblIFK = new JLabel("IFK:");
+		panel.add(lblIFK, gbc_lblIFK);
+		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
+		gbc_textField_3.anchor = GridBagConstraints.WEST;
+		gbc_textField_3.gridx = 0;
+		gbc_textField_3.gridy = 5;
+		JTextField txfPopIFK = new JTextField();
+		txfPopIFK.setColumns(10);
+		panel.add(txfPopIFK, gbc_textField_3);
+		GridBagConstraints gbc_lblHerrialdea = new GridBagConstraints();
+		gbc_lblHerrialdea.anchor = GridBagConstraints.WEST;
+		gbc_lblHerrialdea.insets = new Insets(0, 0, 5, 0);
+		gbc_lblHerrialdea.gridx = 1;
+		gbc_lblHerrialdea.gridy = 0;
+		JLabel lblHelbidea = new JLabel("Helbidea:");
+		panel.add(lblHelbidea, gbc_lblHerrialdea);
+		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
+		gbc_textField_2.anchor = GridBagConstraints.WEST;
+		gbc_textField_2.insets = new Insets(0, 0, 5, 0);
+		gbc_textField_2.gridx = 1;
+		gbc_textField_2.gridy = 1;
+		JTextField txfPopHelbidea = new JTextField();
+		txfPopHelbidea.setColumns(10);
+		panel.add(txfPopHelbidea, gbc_textField_2);
+		
+		int aukera = JOptionPane.showConfirmDialog(this, panel, "Sortu argitaletxea", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		if (aukera == 0) {
+			Argitaletxea arg = new Argitaletxea();
+			arg.Izena = txfPopIzena.getText();
+			arg.Helbidea = txfPopHelbidea.getText();
+			arg.IFK = txfPopIFK.getText();
+			System.out.println(String.format("[Kontrolatzailea]: (Argitaletxea sortu Pop-Up) Argitaletxea sortzeko klikatuta. Izena:%s, Helbidea:%s, IFK:%s", arg.Izena, arg.Helbidea, arg.IFK));
+			Liburuzaina.getInstantzia().addArgitaletxea(arg);
+		} else {
+			System.out.println("[Kontrolatzailea]: (Argitaletxea sortu Pop-Up) Ateratzeko klikatuta");
+		}
+		
+	}
+	
 	private JButton getBtnArgKendu() {
 		if (btnArgKendu == null) {
 			btnArgKendu = new JButton("Argitaletxea kendu");
+			btnArgKendu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Argitaletxeak panela) btnArgKendu klikatuta");
+					if (tblArg.getSelectedRow() >= 0) {
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("IFK: %s duen %s argitaletxea ezabatu nahi duzu?", (String) tblArg.getValueAt(tblArg.getSelectedRow(), 0), (String) tblArg.getValueAt(tblArg.getSelectedRow(), 1)), "Argitaletxea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (aukera == 0) {
+							System.out.println(String.format("[Kontrolatzailea]: (Argitaletxea ezabatu Pop-Up) argitaletxea kentzeko klikatu. IFK:%s, Izena:%s", (String) tblArg.getValueAt(tblArg.getSelectedRow(), 0), (String) tblArg.getValueAt(tblArg.getSelectedRow(), 1)));
+							Liburuzaina.getInstantzia().removeArgitaletzea((String) tblArg.getValueAt(tblArg.getSelectedRow(), 0));
+						} else System.out.println("[Kontrolatzailea]: (Argitaletxea ezabatu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Argitaletxe bat ezabatu ahal izateko lehenengo argitaletxe bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}
+					
+				}
+			});
 		}
 		return btnArgKendu;
 	}
