@@ -32,6 +32,10 @@ public class Liburuzaina extends Observable{
         SQLManager.getManager().getErabiltzaileak();
     }
     
+    public void getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
+		//TODO erabiltzaileak filtroekin bilatu eta bueltatu	
+	}
+    
     public void getLiburuak() {
         SQLManager.getManager().getLiburuak();
     }
@@ -127,10 +131,6 @@ public class Liburuzaina extends Observable{
     public void removeMailegua(long pISBN){
         SQLManager.getManager().removeMailegua(pISBN);
     }
-
-	public void getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
-		//TODO erabiltzaileak filtroekin bilatu eta bueltatu	
-	}
 	
 	public void aldatuPasahitza(String pNan, String pPasahitza) {
 		//TODO erabiltzailearen pasahitza aldatu eta bueltatu

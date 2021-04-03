@@ -9,6 +9,7 @@ public class Liburua {
     public int idazleaZnb;
     public String lengoaia;
     public String argitaletxeaIFK;
+    public String argitaletxeaIzena;
     public boolean mailegatuta;
     public boolean erreserbatua;
     public String erabiltzaileaNAN;

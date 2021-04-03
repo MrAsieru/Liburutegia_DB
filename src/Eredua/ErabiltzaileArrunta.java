@@ -1,8 +1,10 @@
 package Eredua;
 
 import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 
-public class ErabiltzaileArrunta {
+public class ErabiltzaileArrunta extends Observable {
 
     private String nan;
     private static ErabiltzaileArrunta instantzia;
@@ -16,9 +18,31 @@ public class ErabiltzaileArrunta {
         }
         return instantzia;
     }
+    
+    public void erabiltzaileEzarri(String pNan) {
+    	if (nan == null) {
+    		nan = pNan;
+    	}
+    }
 
     public void PasahitzaAldatu(String NAN, String pPasahitza){
-
+    	//TODO
+    }
+    
+    public void getKatalogoa() {
+    	//TODO
+    }
+    
+    public void getKatalogoa(String pIzena, String pDataBehe, String pDataGoi, String pLengoaia, boolean pEskuragarri) {
+    	//TODO
+    }
+    
+    public void liburuaErreserbatu(long pIsbn) {
+    	//TODO
+    }
+    
+    public void getKolekzioak() {
+    	//TODO
     }
 
     public void IzenaAldatu(String pIzena){
