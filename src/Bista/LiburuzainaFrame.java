@@ -22,7 +22,7 @@ import Eredua.NotifikazioMotak;
 import javax.swing.JTabbedPane;
 import java.awt.FlowLayout;
 import javax.swing.JLabel;
-
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
@@ -92,6 +92,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 	private DefaultTableModel dtmArg;
 	private JButton btnArgGehitu;
 	private JButton btnArgKendu;
+	private JButton btnErabEzabatu;
 
 	/**
 	 * Launch the application.
@@ -116,6 +117,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 530, 300);
 		setTitle("Liburuzain saioa: "+pErabiltzailea);
+		setIconImage(new ImageIcon("res/icon.png").getImage());
 		Liburuzaina.getInstantzia().erabiltzaileEzarri(pErabiltzailea);
 		Liburuzaina.getInstantzia().addObserver(this);
 		contentPane = new JPanel();
@@ -139,6 +141,8 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		// LIBURUZAIN_ERAB_SORTU_TXARTO:					String
 		// LIBURUZAIN_ERAB_PASAHITZA_ONDO:					ezer
 		// LIBURUZAIN_ERAB_PASAHITZA_TXARTO:				String
+		// LIBURUZAIN_ERAB_EZA_ONDO							ezer
+		// LIBURUZAIN_ERAB_EZA_TXARTO						String
 		// LIBURUZAIN_KAT_TAULA_EGUNERATUA					Liburua[]
 		// LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU: 	String[]
 		// LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU: 	String[]
@@ -186,6 +190,12 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				if (((Object[])arg)[1] instanceof String) {
 					JOptionPane.showMessageDialog(contentPane, "Ezin izan da pasahitza aldatu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
 				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_PASAHITZA_TXARTO ez du eskatutakoa jaso");
+				break;
+			case LIBURUZAIN_ERAB_EZA_ONDO:
+
+				break;
+			case LIBURUZAIN_ERAB_EZA_TXARTO:
+
 				break;
 			case LIBURUZAIN_KAT_TAULA_EGUNERATU:
 				if (((Object[])arg)[1] instanceof Liburua[]) {
@@ -442,6 +452,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 			pnlErabBotoi.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 5));
 			pnlErabBotoi.add(getBtnErabSortu());
 			pnlErabBotoi.add(getBtnErabPasahitza());
+			pnlErabBotoi.add(getBtnErabEzabatu());
 		}
 		return pnlErabBotoi;
 	}
@@ -854,6 +865,8 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		panel.add(txfKatGehISBN, gbc_txfKatGehISBN);
 		
 		int aukera = JOptionPane.showConfirmDialog(this, panel, "Liburua gehitu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+		Liburuzaina.getInstantzia().getLengoaiak();
+
 		if (aukera == 0) {
 			try {
 				Liburua lib = new Liburua();
@@ -1395,5 +1408,27 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 			});
 		}
 		return btnArgKendu;
+	}
+	private JButton getBtnErabEzabatu() {
+		if (btnErabEzabatu == null) {
+			btnErabEzabatu = new JButton("Ezabatu");
+			btnErabEzabatu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Erabiltzaileak panela) btnErabEzabatu klikatuta");
+					if (tblErab.getSelectedRow() >= 0) {
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("NAN: %s duen %s %s erabiltzailea ezabatu nahi duzu?", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 1), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 2)), "Argitaletxea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (aukera == 0) {
+							System.out.println(String.format("[Kontrolatzailea]: (Erabiltzailea ezabatu Pop-Up) erabiltzailea kentzeko klikatu. NAN:%s, Izena:%s, Abizena:%s", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 1), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 2)));
+							Liburuzaina.getInstantzia().removeErabiltzailea((String) tblErab.getValueAt(tblErab.getSelectedRow(), 0));
+						} else System.out.println("[Kontrolatzailea]: (Erabiltzailea ezabatu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Erabiltzaile bat ezabatu ahal izateko lehenengo erabiltzaile bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+		}
+		return btnErabEzabatu;
 	}
 }

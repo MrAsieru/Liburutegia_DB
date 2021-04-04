@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import Egitura.Erabiltzailea;
@@ -28,6 +30,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -35,6 +38,7 @@ import javax.swing.JComboBox;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Dimension;
 
 public class ErabiltzaileFrame extends JFrame implements Observer {
 
@@ -66,13 +70,22 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JPanel pnlKatPopLeng;
 	private JSeparator separator_2;
 	private JPanel pnlKolTaulak;
-	private JScrollPane scpKol1;
-	private JScrollPane scpKol2;
-	private JTable tblKol1;
 	private DefaultTableModel dtmKol1;
-	private JTable tblKol2;
 	private DefaultTableModel dtmKol2;
 	private JButton btnKatErreserba;
+	private JPanel pnlKontua;
+	private JPanel pnlKolKolekzioakBotoi;
+	private JPanel pnlKolLiburuakBotoi;
+	private JButton btnKolKolekzioaSortu;
+	private JButton btnKolKolekzioaEzabatu;
+	private JButton btnKolLiburuaGehitu;
+	private JButton btnKolLiburuaKendu;
+	private JScrollPane scpKolKolekzioak;
+	private JScrollPane scpKolLiburuak;
+	private JTable tblKolKolekzioak;
+	private DefaultTableModel dtmKolKolekzioak;
+	private JTable tblKolLiburuak;
+	private DefaultTableModel dtmKolLiburuak;
 
 	/**
 	 * Launch the application.
@@ -97,6 +110,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setTitle("Erabiltzaile saioa: "+pErabiltzailea);
+		setIconImage(new ImageIcon("res/icon.png").getImage());
 		ErabiltzaileArrunta.getInstantzia().erabiltzaileEzarri(pErabiltzailea);
 		ErabiltzaileArrunta.getInstantzia().addObserver(this);
 		contentPane = new JPanel();
@@ -134,6 +148,36 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 						JOptionPane.showMessageDialog(contentPane, "Ezin izan da liburua erreserbatu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_ERRESERBA_TXARTO ez du eskatutakoa jaso");
 					break;
+				case ERABARR_KOL_KOLEKZIOAK_EGUNERATU:
+					
+					break;
+				case ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:
+					
+					break;
+				case ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO:
+					
+					break;
+				case ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO:
+					
+					break;
+				case ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO:
+					
+					break;
+				case ERABARR_KOL_LIBURUAK_EGUNERATU:
+					
+					break;
+				case ERABARR_KOL_LIBURUA_GEHITU_ONDO:
+					
+					break;
+				case ERABARR_KOL_LIBURUA_GEHITU_TXARTO:
+					
+					break;
+				case ERABARR_KOL_LIBURUA_KENDU_ONDO:
+					
+					break;
+				case ERABARR_KOL_LIBURUA_KENDU_TXARTO:
+					
+					break;
 				default:
 					System.out.println(String.format("[Bista.Erabiltzailea]: Ez da ezagutzen notifikazio mota: %s", ((NotifikazioMotak) ((Object[])arg)[0]).name()));
 					break;
@@ -153,6 +197,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 			tabbedPane.addTab("Katalogoa", null, getPnlKatalogoa(), null);
 			tabbedPane.addTab("Kolekzioak", null, getPnlKolekzioak(), null);
+			tabbedPane.addTab("Nire kontua", null, getPnlKontua(), null);
 		}
 		return tabbedPane;
 	}
@@ -168,6 +213,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JPanel getPnlKolekzioak() {
 		if (pnlKolekzioak == null) {
 			pnlKolekzioak = new JPanel();
+			pnlKolekzioak.setLayout(new BorderLayout(0, 0));
 			pnlKolekzioak.add(getPnlKolTaulak());
 		}
 		return pnlKolekzioak;
@@ -491,51 +537,199 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JPanel getPnlKolTaulak() {
 		if (pnlKolTaulak == null) {
 			pnlKolTaulak = new JPanel();
-			pnlKolTaulak.add(getScpKol1());
-			pnlKolTaulak.add(getScpKol2());
+			GridBagLayout gbl_pnlKolTaulak = new GridBagLayout();
+			gbl_pnlKolTaulak.columnWidths = new int[] {0, 0};
+			gbl_pnlKolTaulak.rowHeights = new int[] {0, 0};
+			gbl_pnlKolTaulak.columnWeights = new double[]{0.0, 0.0};
+			gbl_pnlKolTaulak.rowWeights = new double[]{0.0, 1.0};
+			pnlKolTaulak.setLayout(gbl_pnlKolTaulak);
+			GridBagConstraints gbc_pnlKolKolekzioakBotoi = new GridBagConstraints();
+			gbc_pnlKolKolekzioakBotoi.anchor = GridBagConstraints.WEST;
+			gbc_pnlKolKolekzioakBotoi.insets = new Insets(0, 0, 5, 5);
+			gbc_pnlKolKolekzioakBotoi.gridx = 0;
+			gbc_pnlKolKolekzioakBotoi.gridy = 0;
+			pnlKolTaulak.add(getPnlKolKolekzioakBotoi(), gbc_pnlKolKolekzioakBotoi);
+			GridBagConstraints gbc_pnlKolLiburuakBotoi = new GridBagConstraints();
+			gbc_pnlKolLiburuakBotoi.anchor = GridBagConstraints.WEST;
+			gbc_pnlKolLiburuakBotoi.insets = new Insets(0, 0, 5, 0);
+			gbc_pnlKolLiburuakBotoi.gridx = 1;
+			gbc_pnlKolLiburuakBotoi.gridy = 0;
+			pnlKolTaulak.add(getPnlKolLiburuakBotoi(), gbc_pnlKolLiburuakBotoi);
+			GridBagConstraints gbc_scpKolKolekzioak = new GridBagConstraints();
+			gbc_scpKolKolekzioak.weightx = 0.33;
+			gbc_scpKolKolekzioak.insets = new Insets(0, 0, 5, 5);
+			gbc_scpKolKolekzioak.fill = GridBagConstraints.BOTH;
+			gbc_scpKolKolekzioak.gridx = 0;
+			gbc_scpKolKolekzioak.gridy = 1;
+			pnlKolTaulak.add(getScpKolKolekzioak(), gbc_scpKolKolekzioak);
+			GridBagConstraints gbc_scpKolLiburuak = new GridBagConstraints();
+			gbc_scpKolLiburuak.weightx = 0.66;
+			gbc_scpKolLiburuak.anchor = GridBagConstraints.WEST;
+			gbc_scpKolLiburuak.insets = new Insets(0, 0, 5, 0);
+			gbc_scpKolLiburuak.fill = GridBagConstraints.BOTH;
+			gbc_scpKolLiburuak.gridx = 1;
+			gbc_scpKolLiburuak.gridy = 1;
+			pnlKolTaulak.add(getScpKolLiburuak(), gbc_scpKolLiburuak);
 		}
 		return pnlKolTaulak;
 	}
-	private JScrollPane getScpKol1() {
-		if (scpKol1 == null) {
-			scpKol1 = new JScrollPane();
-			scpKol1.setViewportView(getTblKol1());
+	private JPanel getPnlKontua() {
+		if (pnlKontua == null) {
+			pnlKontua = new JPanel();
 		}
-		return scpKol1;
+		return pnlKontua;
 	}
-	private JScrollPane getScpKol2() {
-		if (scpKol2 == null) {
-			scpKol2 = new JScrollPane();
-			scpKol2.setViewportView(getTblKol2());
+	private JPanel getPnlKolKolekzioakBotoi() {
+		if (pnlKolKolekzioakBotoi == null) {
+			pnlKolKolekzioakBotoi = new JPanel();
+			FlowLayout flowLayout = (FlowLayout) pnlKolKolekzioakBotoi.getLayout();
+			flowLayout.setAlignment(FlowLayout.LEFT);
+			pnlKolKolekzioakBotoi.add(getBtnKolKolekzioaSortu());
+			pnlKolKolekzioakBotoi.add(getBtnKolKolekzioaEzabatu());
 		}
-		return scpKol2;
+		return pnlKolKolekzioakBotoi;
 	}
-	private JTable getTblKol1() {
-		if (tblKol1 == null) {		
-			dtmKol1 = new DefaultTableModel(new Object[][] {}, 
-					   new String[] {}) {
+	private JPanel getPnlKolLiburuakBotoi() {
+		if (pnlKolLiburuakBotoi == null) {
+			pnlKolLiburuakBotoi = new JPanel();
+			pnlKolLiburuakBotoi.add(getBtnKolLiburuaGehitu());
+			pnlKolLiburuakBotoi.add(getBtnKolLiburuaKendu());
+		}
+		return pnlKolLiburuakBotoi;
+	}
+	private JButton getBtnKolKolekzioaSortu() {
+		if (btnKolKolekzioaSortu == null) {
+			btnKolKolekzioaSortu = new JButton("Sortu");
+			btnKolKolekzioaSortu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolKolekzioaSortu klikatuta");
+					String izena = JOptionPane.showInputDialog(contentPane, "Kolekzio berriaren izena sartu:", "Kolekzio berria", JOptionPane.PLAIN_MESSAGE);
+					if (izena != null) {
+						System.out.println(String.format("[Kontrolatzailea]: (Kolekzioa gehitu Pop-Up) kolekzioa sortzeko klikatu. Izena:%s", izena));
+						ErabiltzaileArrunta.getInstantzia().sortuKolekzioa(izena);
+					} else System.out.println("[Kontrolatzailea]: (Kolekzioa gehitu Pop-Up) ateratzeko klikatu");					
+				}
+			});
+		}
+		return btnKolKolekzioaSortu;
+	}
+	private JButton getBtnKolKolekzioaEzabatu() {
+		if (btnKolKolekzioaEzabatu == null) {
+			btnKolKolekzioaEzabatu = new JButton("Ezabatu");
+			btnKolKolekzioaEzabatu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {	
+					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolKolekzioaEzabatu klikatuta");
+					if (tblKolKolekzioak.getSelectedRow() >= 0) {
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("%s kolekzioa ezabatu nahi duzu?", (String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0)), "Kolekzioa ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (aukera == 0) {
+							System.out.println(String.format("[Kontrolatzailea]: (Kolekzioa ezabatu Pop-Up) kolekzioa kentzeko klikatu. Izena:%s", (String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0)));
+							ErabiltzaileArrunta.getInstantzia().removeKolekzioa((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0));
+						} else System.out.println("[Kontrolatzailea]: (Kolekzioa ezabatu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Kolekzio bat ezabatu ahal izateko lehenengo kolekzio bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+		}
+		return btnKolKolekzioaEzabatu;
+	}
+	private JButton getBtnKolLiburuaGehitu() {
+		if (btnKolLiburuaGehitu == null) {
+			btnKolLiburuaGehitu = new JButton("Gehitu");
+			btnKolLiburuaGehitu.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolLiburuaGehitu klikatuta");
+					String isbn = JOptionPane.showInputDialog(contentPane, "Liburuaren ISBN-a sartu:", "Liburua gehitu", JOptionPane.PLAIN_MESSAGE);
+					if (isbn != null) {
+						try {
+							long isbn_l = Long.parseLong(isbn);
+							System.out.println(String.format("[Kontrolatzailea]: (Liburua gehitu Pop-Up) liburua gehitzeko klikatu. ISBN:%d", isbn_l));
+							ErabiltzaileArrunta.getInstantzia().addLiburuaKolekziora((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0), isbn_l);
+						} catch (NumberFormatException nfe) {
+							JOptionPane.showMessageDialog(contentPane, "ISBN kode balioduna sartu", "Errorea", JOptionPane.ERROR_MESSAGE);
+						} catch (ArrayIndexOutOfBoundsException aioobe) {
+							JOptionPane.showMessageDialog(contentPane, "Lehenengoz kolekzio bat aukeratu", "Errorea", JOptionPane.ERROR_MESSAGE);
+						}
+						
+					} else System.out.println("[Kontrolatzailea]: (Liburua gehitu Pop-Up) ateratzeko klikatu");					
+				}
+			});
+		}
+		return btnKolLiburuaGehitu;
+	}
+	private JButton getBtnKolLiburuaKendu() {
+		if (btnKolLiburuaKendu == null) {
+			btnKolLiburuaKendu = new JButton("Kendu");
+			btnKolLiburuaKendu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolLiburuaKendu klikatuta");
+					if (tblKolKolekzioak.getSelectedRow() >= 0 && tblKolLiburuak.getSelectedRow() >= 0) {
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("%s liburua %s kolekziotik ezabatu nahi duzu?",(String) tblKolLiburuak.getValueAt(tblKolLiburuak.getSelectedRow(), 1) ,(String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0)), "Liburua ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (aukera == 0) {
+							System.out.println(String.format("[Kontrolatzailea]: (Liburua ezabatu Pop-Up) liburua kentzeko klikatu. ISBN:%S, Izena:%s", (long) tblKolLiburuak.getValueAt(tblKolLiburuak.getSelectedRow(), 0), (String) tblKolLiburuak.getValueAt(tblKolLiburuak.getSelectedRow(), 1)));
+							ErabiltzaileArrunta.getInstantzia().removeLiburuaKolekzioan((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0), (long) tblKolLiburuak.getValueAt(tblKolLiburuak.getSelectedRow(), 0));
+						} else System.out.println("[Kontrolatzailea]: (Liburua ezabatu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Liburu bat ezabatu ahal izateko lehenengo kolekzio eta liburu bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}					
+				}
+			});
+		}
+		return btnKolLiburuaKendu;
+	}
+	private JScrollPane getScpKolKolekzioak() {
+		if (scpKolKolekzioak == null) {
+			scpKolKolekzioak = new JScrollPane();
+			scpKolKolekzioak.setViewportView(getTblKolKolekzioak());
+		}
+		return scpKolKolekzioak;
+	}
+	private JScrollPane getScpKolLiburuak() {
+		if (scpKolLiburuak == null) {
+			scpKolLiburuak = new JScrollPane();
+			scpKolLiburuak.setViewportView(getTblKolLiburuak());
+		}
+		return scpKolLiburuak;
+	}
+	private JTable getTblKolKolekzioak() {
+		if (tblKolKolekzioak == null) {
+			dtmKolKolekzioak = new DefaultTableModel(new Object[][] {}, 
+					   new String[] {"Izena", "Kantitatea"}) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
 				}
 			};
-			tblKol1 = new JTable(dtmKol1);
+			tblKolKolekzioak = new JTable(dtmKolKolekzioak);
+			tblKolKolekzioak.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) {
+					ErabiltzaileArrunta.getInstantzia().getKolekziokoLiburuak((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0));					
+				}
+			});
 			ErabiltzaileArrunta.getInstantzia().getKolekzioak();
 		}
-		return tblKol1;
+		return tblKolKolekzioak;
 	}
-	private JTable getTblKol2() {
-		if (tblKol2 == null) {
-			dtmKol2 = new DefaultTableModel(new Object[][] {}, 
+	private JTable getTblKolLiburuak() {
+		if (tblKolLiburuak == null) {
+			dtmKolLiburuak = new DefaultTableModel(new Object[][] {}, 
 					   new String[] {"ISBN", "Izena", "Eskuragarri"}) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
 				}
 			};
-			tblKol2 = new JTable(dtmKol2);
-			ErabiltzaileArrunta.getInstantzia().getKatalogoa();
+			tblKolLiburuak = new JTable(dtmKolLiburuak);
 		}
-		return tblKol2;
+		return tblKolLiburuak;
 	}
 }
