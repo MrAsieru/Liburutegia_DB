@@ -192,10 +192,10 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_PASAHITZA_TXARTO ez du eskatutakoa jaso");
 				break;
 			case LIBURUZAIN_ERAB_EZA_ONDO:
-
+				// TODO
 				break;
 			case LIBURUZAIN_ERAB_EZA_TXARTO:
-
+				// TODO
 				break;
 			case LIBURUZAIN_KAT_TAULA_EGUNERATU:
 				if (((Object[])arg)[1] instanceof Liburua[]) {

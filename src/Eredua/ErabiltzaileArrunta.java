@@ -42,46 +42,52 @@ public class ErabiltzaileArrunta extends Observable {
     }
     
     public void getKolekzioak() {
-    	//TODO
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KOL_KOLEKZIOAK_EGUNERATU
     }
     
     public void getKolekziokoLiburuak(String pKolekzioa) {
-    	//TODO
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KOL_LIBURUAK_EGUNERATU
     }
 
     public void sortuKolekzioa(String pIzena){
         SQLManager.getManager().sortuKolekzioa(this.nan, pIzena);
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KOL_KOLEKZIOA_SORTU_ONDO
+        // ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO
     }
 
     public void removeKolekzioa(String pKolekzioIzena){
         SQLManager.getManager().removeKolekzioa(this.nan, pKolekzioIzena);
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO
+        // ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO
     }
 
     public void addLiburuaKolekziora(String pKolekzioIzena, long pISBN){
         SQLManager.getManager().addLiburuakKolekziora(this.nan, pKolekzioIzena, pISBN);
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KOL_LIBURUA_GEHITU_ONDO
+        // ERABARR_KOL_LIBURUA_GEHITU_TXARTO
     }
 
     public void removeLiburuaKolekzioan(String pKolekzioIzena, long pISBN){
         SQLManager.getManager().removeLiburuakKolekziora(this.nan, pKolekzioIzena, pISBN);
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KOL_LIBURUA_KENDU_ONDO
+        // ERABARR_KOL_LIBURUA_KENDU_TXARTO
     }
 
-    public void izenaAldatu(String pIzena){
-        SQLManager.getManager().IzenaAldatu(this.nan, pIzena);
+    public void getErabiltzaileInformazioa(){
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KON_INFORMAZIOA_EGUNERATU
     }
 
-    public void abizenaAldatu(String pAbizena){
-        SQLManager.getManager().AbizenaAldatu(this.nan, pAbizena);
-    }
-
-    public void jaiotzeDataAldatu(Date pDate){
-        SQLManager.getManager().JaiotzeDataAldatu(this.nan, pDate);
-    }
-
-    public void generoaAldatu(String pGeneroa){
-        SQLManager.getManager().GeneroaAldatu(this.nan, pGeneroa);
-    }
-
-    public void pasahitzaAldatu(String NAN, String pPasahitza){
-        //TODO
+    public void erabiltzaileInformazioaEguneratu(String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){
+        //TODO (null elementua ez bada aldatu)
+        //TODO erabili behar diren notifikazio motak:
+        // ERABARR_KON_ALDAKETA_ONDO
+        // ERABARR_KON_ALDAKETA_TXARTO
     }
 }

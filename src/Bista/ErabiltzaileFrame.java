@@ -8,6 +8,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -23,6 +25,8 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -34,11 +38,15 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
+import java.util.stream.Collectors;
+import javax.swing.JPasswordField;
+import javax.swing.text.JTextComponent;
 
 public class ErabiltzaileFrame extends JFrame implements Observer {
 
@@ -86,6 +94,21 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private DefaultTableModel dtmKolKolekzioak;
 	private JTable tblKolLiburuak;
 	private DefaultTableModel dtmKolLiburuak;
+	private JPanel pnlKonInfo;
+	private JPanel pnlKonBotoi;
+	private JLabel lblKonNan;
+	private JTextField txfKonNan;
+	private JLabel lblKonPasahitza;
+	private JPasswordField psfKonPasahitza;
+	private JLabel lblKonIzena;
+	private JTextField txfKonIzena;
+	private JLabel lblKonAbizena;
+	private JTextField txfKonAbizena;
+	private JLabel lblKonGeneroa;
+	private JTextField txfKonGeneroa;
+	private JLabel lblKonJaiotzeData;
+	private JTextField txfKonJaioData;
+	private JButton btnKolEguneratu;
 
 	/**
 	 * Launch the application.
@@ -143,8 +166,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					JOptionPane.showMessageDialog(contentPane, "Erreserba ondo gorde da", "Erreserba ondo gordeta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KAT_ERRESERBA_TXARTO:
-					if (((Object[])arg)[1] instanceof Erabiltzailea) {
-						Erabiltzailea erab = (Erabiltzailea) ((Object[])arg)[1];
+					if (((Object[])arg)[1] instanceof String) {
 						JOptionPane.showMessageDialog(contentPane, "Ezin izan da liburua erreserbatu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_ERRESERBA_TXARTO ez du eskatutakoa jaso");
 					break;
@@ -152,13 +174,15 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					
 					break;
 				case ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:
-					
+					JOptionPane.showMessageDialog(contentPane, "Kolekzioa ondo sortu da", "Kolekzioa ondo sortuta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO:
-					
+					if (((Object[])arg)[1] instanceof String) {
+						JOptionPane.showMessageDialog(contentPane, "Ezin izan da kolekzioa gorde:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO:
-					
+					JOptionPane.showMessageDialog(contentPane, "Kolekzioa ondo ezabatu da", "Kolekzioa ondo ezabatuta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO:
 					
@@ -167,15 +191,24 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					
 					break;
 				case ERABARR_KOL_LIBURUA_GEHITU_ONDO:
-					
+					JOptionPane.showMessageDialog(contentPane, "Liburua ondo gehitu da", "Liburua ondo gehituta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_LIBURUA_GEHITU_TXARTO:
 					
 					break;
 				case ERABARR_KOL_LIBURUA_KENDU_ONDO:
-					
+					JOptionPane.showMessageDialog(contentPane, "Liburua ondo kendu da", "Liburua ondo kenduta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_LIBURUA_KENDU_TXARTO:
+					
+					break;
+				case ERABARR_KON_INFORMAZIOA_EGUNERATU:
+					
+					break;
+				case ERABARR_KON_ALDAKETA_ONDO:
+					
+					break;
+				case ERABARR_KON_ALDAKETA_TXARTO:
 					
 					break;
 				default:
@@ -198,6 +231,15 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			tabbedPane.addTab("Katalogoa", null, getPnlKatalogoa(), null);
 			tabbedPane.addTab("Kolekzioak", null, getPnlKolekzioak(), null);
 			tabbedPane.addTab("Nire kontua", null, getPnlKontua(), null);
+			tabbedPane.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					if (tabbedPane.getSelectedIndex() == 2) {
+						System.out.println("[Kontrolatzailea]: Nire kontua panela irekita, informazioa eskatu da.");
+						ErabiltzaileArrunta.getInstantzia().getErabiltzaileInformazioa();
+					}					
+				}
+			});
 		}
 		return tabbedPane;
 	}
@@ -576,6 +618,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JPanel getPnlKontua() {
 		if (pnlKontua == null) {
 			pnlKontua = new JPanel();
+			pnlKontua.setLayout(new BorderLayout(0, 0));
+			pnlKontua.add(getPnlKonInfo(), BorderLayout.CENTER);
+			pnlKontua.add(getPnlKonBotoi(), BorderLayout.SOUTH);
 		}
 		return pnlKontua;
 	}
@@ -731,5 +776,207 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			tblKolLiburuak = new JTable(dtmKolLiburuak);
 		}
 		return tblKolLiburuak;
+	}
+	private JPanel getPnlKonInfo() {
+		if (pnlKonInfo == null) {
+			pnlKonInfo = new JPanel();
+			GridBagLayout gbl_pnlKonInfo = new GridBagLayout();
+			gbl_pnlKonInfo.columnWidths = new int[] {0, 0};
+			gbl_pnlKonInfo.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0};
+			gbl_pnlKonInfo.columnWeights = new double[]{0.0, 0.0};
+			gbl_pnlKonInfo.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+			pnlKonInfo.setLayout(gbl_pnlKonInfo);
+			GridBagConstraints gbc_lblKonNan = new GridBagConstraints();
+			gbc_lblKonNan.anchor = GridBagConstraints.WEST;
+			gbc_lblKonNan.insets = new Insets(0, 0, 5, 5);
+			gbc_lblKonNan.gridx = 0;
+			gbc_lblKonNan.gridy = 0;
+			pnlKonInfo.add(getLblKonNan(), gbc_lblKonNan);
+			GridBagConstraints gbc_lblKonPasahitza = new GridBagConstraints();
+			gbc_lblKonPasahitza.anchor = GridBagConstraints.WEST;
+			gbc_lblKonPasahitza.insets = new Insets(0, 0, 5, 0);
+			gbc_lblKonPasahitza.gridx = 1;
+			gbc_lblKonPasahitza.gridy = 0;
+			pnlKonInfo.add(getLblKonPasahitza(), gbc_lblKonPasahitza);
+			GridBagConstraints gbc_txfKonNan = new GridBagConstraints();
+			gbc_txfKonNan.insets = new Insets(0, 0, 5, 5);
+			gbc_txfKonNan.anchor = GridBagConstraints.WEST;
+			gbc_txfKonNan.gridx = 0;
+			gbc_txfKonNan.gridy = 1;
+			pnlKonInfo.add(getTxfKonNan(), gbc_txfKonNan);
+			GridBagConstraints gbc_psfKonPasahitza = new GridBagConstraints();
+			gbc_psfKonPasahitza.insets = new Insets(0, 0, 5, 0);
+			gbc_psfKonPasahitza.fill = GridBagConstraints.HORIZONTAL;
+			gbc_psfKonPasahitza.gridx = 1;
+			gbc_psfKonPasahitza.gridy = 1;
+			pnlKonInfo.add(getPsfKonPasahitza(), gbc_psfKonPasahitza);
+			GridBagConstraints gbc_lblKonIzena = new GridBagConstraints();
+			gbc_lblKonIzena.anchor = GridBagConstraints.WEST;
+			gbc_lblKonIzena.insets = new Insets(0, 0, 5, 5);
+			gbc_lblKonIzena.gridx = 0;
+			gbc_lblKonIzena.gridy = 2;
+			pnlKonInfo.add(getLblKonIzena(), gbc_lblKonIzena);
+			GridBagConstraints gbc_lblKonAbizena = new GridBagConstraints();
+			gbc_lblKonAbizena.anchor = GridBagConstraints.WEST;
+			gbc_lblKonAbizena.insets = new Insets(0, 0, 5, 0);
+			gbc_lblKonAbizena.gridx = 1;
+			gbc_lblKonAbizena.gridy = 2;
+			pnlKonInfo.add(getLblKonAbizena(), gbc_lblKonAbizena);
+			GridBagConstraints gbc_txfKonIzena = new GridBagConstraints();
+			gbc_txfKonIzena.insets = new Insets(0, 0, 5, 5);
+			gbc_txfKonIzena.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfKonIzena.gridx = 0;
+			gbc_txfKonIzena.gridy = 3;
+			pnlKonInfo.add(getTxfKonIzena(), gbc_txfKonIzena);
+			GridBagConstraints gbc_txfKonAbizena = new GridBagConstraints();
+			gbc_txfKonAbizena.insets = new Insets(0, 0, 5, 0);
+			gbc_txfKonAbizena.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfKonAbizena.gridx = 1;
+			gbc_txfKonAbizena.gridy = 3;
+			pnlKonInfo.add(getTxfKonAbizena(), gbc_txfKonAbizena);
+			GridBagConstraints gbc_lblKonGeneroa = new GridBagConstraints();
+			gbc_lblKonGeneroa.anchor = GridBagConstraints.WEST;
+			gbc_lblKonGeneroa.insets = new Insets(0, 0, 5, 5);
+			gbc_lblKonGeneroa.gridx = 0;
+			gbc_lblKonGeneroa.gridy = 4;
+			pnlKonInfo.add(getLblKonGeneroa(), gbc_lblKonGeneroa);
+			GridBagConstraints gbc_lblKonJaiotzeData = new GridBagConstraints();
+			gbc_lblKonJaiotzeData.anchor = GridBagConstraints.WEST;
+			gbc_lblKonJaiotzeData.insets = new Insets(0, 0, 5, 0);
+			gbc_lblKonJaiotzeData.gridx = 1;
+			gbc_lblKonJaiotzeData.gridy = 4;
+			pnlKonInfo.add(getLblKonJaiotzeData(), gbc_lblKonJaiotzeData);
+			GridBagConstraints gbc_txfKonGeneroa = new GridBagConstraints();
+			gbc_txfKonGeneroa.insets = new Insets(0, 0, 0, 5);
+			gbc_txfKonGeneroa.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfKonGeneroa.gridx = 0;
+			gbc_txfKonGeneroa.gridy = 5;
+			pnlKonInfo.add(getTxfKonGeneroa(), gbc_txfKonGeneroa);
+			GridBagConstraints gbc_txfKonJaioData = new GridBagConstraints();
+			gbc_txfKonJaioData.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfKonJaioData.gridx = 1;
+			gbc_txfKonJaioData.gridy = 5;
+			pnlKonInfo.add(getTxfKonJaioData(), gbc_txfKonJaioData);
+		}
+		return pnlKonInfo;
+	}
+	private JPanel getPnlKonBotoi() {
+		if (pnlKonBotoi == null) {
+			pnlKonBotoi = new JPanel();
+			pnlKonBotoi.add(getBtnKolEguneratu());
+		}
+		return pnlKonBotoi;
+	}
+	private JLabel getLblKonNan() {
+		if (lblKonNan == null) {
+			lblKonNan = new JLabel("NAN:");
+		}
+		return lblKonNan;
+	}
+	private JTextField getTxfKonNan() {
+		if (txfKonNan == null) {
+			txfKonNan = new JTextField();
+			txfKonNan.setEditable(false);
+			txfKonNan.setColumns(10);
+			txfKonNan.setName("NAN");
+		}
+		return txfKonNan;
+	}
+	private JLabel getLblKonPasahitza() {
+		if (lblKonPasahitza == null) {
+			lblKonPasahitza = new JLabel("Pasahitza:");
+		}
+		return lblKonPasahitza;
+	}
+	private JPasswordField getPsfKonPasahitza() {
+		if (psfKonPasahitza == null) {
+			psfKonPasahitza = new JPasswordField();
+		}
+		return psfKonPasahitza;
+	}
+	private JLabel getLblKonIzena() {
+		if (lblKonIzena == null) {
+			lblKonIzena = new JLabel("Izena:");
+		}
+		return lblKonIzena;
+	}
+	private JTextField getTxfKonIzena() {
+		if (txfKonIzena == null) {
+			txfKonIzena = new JTextField();
+			txfKonIzena.setColumns(10);
+			txfKonIzena.setName("Izena");
+		}
+		return txfKonIzena;
+	}
+	private JLabel getLblKonAbizena() {
+		if (lblKonAbizena == null) {
+			lblKonAbizena = new JLabel("Abizena:");
+		}
+		return lblKonAbizena;
+	}
+	private JTextField getTxfKonAbizena() {
+		if (txfKonAbizena == null) {
+			txfKonAbizena = new JTextField();
+			txfKonAbizena.setColumns(10);
+			txfKonAbizena.setName("Abizena");
+		}
+		return txfKonAbizena;
+	}
+	private JLabel getLblKonGeneroa() {
+		if (lblKonGeneroa == null) {
+			lblKonGeneroa = new JLabel("Generoa:");
+		}
+		return lblKonGeneroa;
+	}
+	private JTextField getTxfKonGeneroa() {
+		if (txfKonGeneroa == null) {
+			txfKonGeneroa = new JTextField();
+			txfKonGeneroa.setColumns(10);
+			txfKonGeneroa.setName("Generoa");
+		}
+		return txfKonGeneroa;
+	}
+	private JLabel getLblKonJaiotzeData() {
+		if (lblKonJaiotzeData == null) {
+			lblKonJaiotzeData = new JLabel("Jaiotze data:");
+		}
+		return lblKonJaiotzeData;
+	}
+	private JTextField getTxfKonJaioData() {
+		if (txfKonJaioData == null) {
+			txfKonJaioData = new JTextField();
+			txfKonJaioData.setColumns(10);
+			txfKonJaioData.setName("Jaiotze data");
+		}
+		return txfKonJaioData;
+	}
+	private JButton getBtnKolEguneratu() {
+		if (btnKolEguneratu == null) {
+			btnKolEguneratu = new JButton("Datuak eguneratu");
+			btnKolEguneratu.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[Kontrolatzailea]: (Kontua panela) btnKolEguneratu klikatuta");
+					JTextComponent[] elementuak = new JTextComponent[] {psfKonPasahitza, txfKonIzena, txfKonAbizena, txfKonGeneroa, txfKonJaioData};
+					List<JTextComponent> aldaketak = Arrays.stream(elementuak).filter(p -> (p.getText() != null && !p.getText().equals(""))).collect(Collectors.toList());
+					if (aldaketak.size() > 0) {
+						String mezua = "Egingo diren aldaketak:\n";
+						for (JTextComponent com: aldaketak){
+							if (!(com instanceof JPasswordField)) mezua += com.getName()+": "+com.getText()+"\n";
+							else mezua += "Pasahitza\n";
+						}
+						int aukera = JOptionPane.showConfirmDialog(contentPane, mezua, "Datuak eguneratu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						if (aukera == 0) {
+							System.out.println(String.format("[Kontrolatzailea]: (Datuak eguneratu Pop-Up) datuak eguneratzeko klikatu. Izena:%s, Abizena:%s, Pasahitza:%s, Generoa:%s, JaiotzeData:%s", txfKonIzena.getText(), txfKonAbizena.getText(), new String(psfKonPasahitza.getPassword()), txfKonGeneroa.getText(), txfKonJaioData.getText()));
+							ErabiltzaileArrunta.getInstantzia().erabiltzaileInformazioaEguneratu(txfKonIzena.getText(), txfKonAbizena.getText(), new String(psfKonPasahitza.getPassword()), txfKonGeneroa.getText(), txfKonJaioData.getText());
+						} else System.out.println("[Kontrolatzailea]: Datuak eguneratu Pop-Up) ateratzeko klikatu");
+					} else {
+						JOptionPane.showMessageDialog(contentPane, "Ez dira aldaketak egin", "Errorea", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+			});
+		}
+		return btnKolEguneratu;
 	}
 }
