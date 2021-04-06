@@ -152,9 +152,23 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		//			arg[1,2,3,...] -> Datuak
 		// Datu egiturak:
 		// ERABARR_KAT_TAULA_EGUNERATU: 				Erabiltzailea[]
-		//ERABARR_KAT_ERRESERBA_ONDO:					ezer
+		// ERABARR_KAT_ERRESERBA_ONDO:					ezer
 		// ERABARR_KAT_ERRESERBA_TXARTO:				String
-		if (o instanceof Liburuzaina && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
+		// ERABARR_KOL_KOLEKZIOAK_EGUNERATU:			String[], int[]
+		// ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:			ezer
+		// ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO:			String
+		// ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO:			ezer
+		// ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO:		String
+		// ERABARR_KOL_LIBURUAK_EGUNERATU:				Liburua[]
+		// ERABARR_KOL_LIBURUA_GEHITU_ONDO:				ezer
+		// ERABARR_KOL_LIBURUA_GEHITU_TXARTO:			String
+		// ERABARR_KOL_LIBURUA_KENDU_ONDO:				ezer
+		// ERABARR_KOL_LIBURUA_KENDU_TXARTO:			String
+		// ERABARR_KON_INFORMAZIOA_EGUNERATU:			String[] non nan, izena, abizena, generoa, jaiotze data
+		// ERABARR_KON_ALDAKETA_ONDO:					ezer
+		// ERABARR_KON_ALDAKETA_TXARTO:					String
+
+		if (o instanceof ErabiltzaileArrunta && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 				case ERABARR_KAT_TAULA_EGUNERATU:
 					if (((Object[])arg)[1] instanceof Liburua[]){
@@ -171,7 +185,10 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_ERRESERBA_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOAK_EGUNERATU:
-					
+					if (((Object[])arg)[1] instanceof String[] && ((Object[])arg)[2] instanceof int[]){
+						System.out.println("[Bista.Erabiltzailea]: Kolekzio lista eguneratu da");
+						katalogoaListaEguneratu((Liburua[]) ((Object[])arg)[1]);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOAK_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:
 					JOptionPane.showMessageDialog(contentPane, "Kolekzioa ondo sortu da", "Kolekzioa ondo sortuta", JOptionPane.PLAIN_MESSAGE);
@@ -185,31 +202,45 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					JOptionPane.showMessageDialog(contentPane, "Kolekzioa ondo ezabatu da", "Kolekzioa ondo ezabatuta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO:
-					
+					if (((Object[])arg)[1] instanceof String) {
+						JOptionPane.showMessageDialog(contentPane, "Ezin izan da kolekzioa ezabatu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_LIBURUAK_EGUNERATU:
-					
+					if (((Object[])arg)[1] instanceof Liburua[]){
+						System.out.println("[Bista.Erabiltzailea]: Kolekzioaren liburu lista eguneratu da");
+						katalogoaListaEguneratu((Liburua[]) ((Object[])arg)[1]);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOAK_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_LIBURUA_GEHITU_ONDO:
 					JOptionPane.showMessageDialog(contentPane, "Liburua ondo gehitu da", "Liburua ondo gehituta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_LIBURUA_GEHITU_TXARTO:
-					
+					if (((Object[])arg)[1] instanceof String) {
+						JOptionPane.showMessageDialog(contentPane, "Ezin izan da liburua gehitu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_LIBURUA_GEHITU_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_LIBURUA_KENDU_ONDO:
 					JOptionPane.showMessageDialog(contentPane, "Liburua ondo kendu da", "Liburua ondo kenduta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KOL_LIBURUA_KENDU_TXARTO:
-					
+					if (((Object[])arg)[1] instanceof String) {
+						JOptionPane.showMessageDialog(contentPane, "Ezin izan da liburua kendu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_LIBURUA_KENDU_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KON_INFORMAZIOA_EGUNERATU:
-					
+					if (((Object[])arg)[1] instanceof String[]){
+						System.out.println("[Bista.Erabiltzailea]: Kontua informazioa eguneratu da");
+						kolekzioaLiburuListaEguneratu((Liburua[]) ((Object[])arg)[1]);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KON_INFORMAZIOA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KON_ALDAKETA_ONDO:
-					
+					JOptionPane.showMessageDialog(contentPane, "Datuak ondo eguneratu egin dira.", "Ondo eguneratuta", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case ERABARR_KON_ALDAKETA_TXARTO:
-					
+					if (((Object[])arg)[1] instanceof String) {
+						JOptionPane.showMessageDialog(contentPane, "Ezin izan dira datuak eguneratu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KON_ALDAKETA_TXARTO ez du eskatutakoa jaso");
 					break;
 				default:
 					System.out.println(String.format("[Bista.Erabiltzailea]: Ez da ezagutzen notifikazio mota: %s", ((NotifikazioMotak) ((Object[])arg)[0]).name()));
@@ -222,6 +253,30 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		dtmKat.setRowCount(0);
 		for (Liburua lib: pLista){
 			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena, (!lib.mailegatuta && !lib.erreserbatua)});
+		}
+	}
+	
+	private void kolekzioaKolekzioListaEguneratu(String[] pListaIze, int[] pListaKant) {
+		dtmKol1.setRowCount(0);
+		if (pListaIze.length == pListaKant.length) {
+			for (int i = 0; i < pListaIze.length; i++) {
+				dtmKol1.addRow(new Object[] {pListaIze[i], pListaKant[i]});
+			}
+		}
+	}
+	
+	private void kolekzioaLiburuListaEguneratu(Liburua[] pLista) {
+		dtmKol2.setRowCount(0);
+		for (Liburua lib:pLista) {
+			dtmKol1.addRow(new Object[] {lib.isbn, lib.izena, (!lib.erreserbatua && !lib.mailegatuta)});
+		}
+	}
+	
+	private void kontuaInformazioaKargatu(String[] pLista) {
+		txfKonNan.setText(pLista[0]);
+		HintTextField[] eremuak =  new HintTextField[] {(HintTextField) txfKonIzena, (HintTextField)txfKonAbizena, (HintTextField)txfKonGeneroa, (HintTextField)txfKonJaioData};
+		for (int i = 0; i < eremuak.length; i++) {
+			eremuak[i].setHint(pLista[i+1]);
 		}
 	}
 
@@ -902,7 +957,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTextField getTxfKonIzena() {
 		if (txfKonIzena == null) {
-			txfKonIzena = new JTextField();
+			txfKonIzena = new HintTextField("");
 			txfKonIzena.setColumns(10);
 			txfKonIzena.setName("Izena");
 		}
@@ -916,7 +971,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTextField getTxfKonAbizena() {
 		if (txfKonAbizena == null) {
-			txfKonAbizena = new JTextField();
+			txfKonAbizena = new HintTextField("");
 			txfKonAbizena.setColumns(10);
 			txfKonAbizena.setName("Abizena");
 		}
@@ -930,7 +985,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTextField getTxfKonGeneroa() {
 		if (txfKonGeneroa == null) {
-			txfKonGeneroa = new JTextField();
+			txfKonGeneroa = new HintTextField("");
 			txfKonGeneroa.setColumns(10);
 			txfKonGeneroa.setName("Generoa");
 		}
@@ -944,7 +999,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTextField getTxfKonJaioData() {
 		if (txfKonJaioData == null) {
-			txfKonJaioData = new JTextField();
+			txfKonJaioData = new HintTextField("");
 			txfKonJaioData.setColumns(10);
 			txfKonJaioData.setName("Jaiotze data");
 		}

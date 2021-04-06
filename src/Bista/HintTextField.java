@@ -69,4 +69,17 @@ public class HintTextField extends JTextField {
 			super.setText(t);		
 		}
 	}
+	
+	public void setHint(String pHint) {
+		if (getText().equals(hint)|| getText().length()==0) {	
+			setText(pHint);	
+			setFont(lostFont);	
+			setForeground(Color.GRAY);	
+		} else {	
+			setText(getText());	
+			setFont(gainFont);	
+			setForeground(Color.BLACK);	
+		}
+		this.hint = pHint;
+	}
 }
