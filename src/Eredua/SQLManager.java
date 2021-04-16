@@ -39,6 +39,7 @@ public class SQLManager {
 
 
     public void IzenaAldatu(String pNAN, String pIzena){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -50,6 +51,7 @@ public class SQLManager {
     }
 
     public void AbizenaAldatu(String pNAN, String pAbizena){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -61,6 +63,7 @@ public class SQLManager {
     }
 
     public void JaiotzeDataAldatu(String pNAN, Date pJaiotzeData){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -72,6 +75,7 @@ public class SQLManager {
     }
 
     public void GeneroaAldatu(String pNAN, String pGeneroa){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -82,40 +86,149 @@ public class SQLManager {
         }
     }
 
+    public void aldatuPasahitza(String pNAN, String pPasahitza){
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+    }
+
+    public ArrayList<Liburua> getKatalogoa(){
+        ArrayList<Liburua> listaLiburuak = new ArrayList<>();
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+        return listaLiburuak;
+    }
+
+    public ArrayList<Liburua> getKatalogoa(String pIzena, String pDataBehe, String pDataGoi, String pLengoaia, boolean pEskuragarri) {
+        ArrayList<Liburua> listaErabiltzaileak = new ArrayList<>();
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+        return listaErabiltzaileak;
+    }
+
     /**Liburuzaina**/
 
     public ArrayList<Erabiltzailea> getErabiltzaileak() {
         ArrayList<Erabiltzailea> listaErabiltzaileak = new ArrayList<>();
         //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+        return listaErabiltzaileak;
+    }
+
+    public ArrayList<Erabiltzailea> getErabiltzaileak(String pNan, String pIzena, String pAbizena){
+        ArrayList<Erabiltzailea> listaErabiltzaileak = new ArrayList<>();
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
         return listaErabiltzaileak;
     }
 
     public ArrayList<Liburua> getLiburuak() {
         ArrayList<Liburua> listaLiburuak = new ArrayList<>();
         //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
         return listaLiburuak;
     }
 
     public ArrayList<Mailegua> getMaileguak() {
         ArrayList<Mailegua> listaMaileguak = new ArrayList<>();
         //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
         return listaMaileguak;
     }
 
     public ArrayList<Idazlea> getIdazleak() {
         ArrayList<Idazlea> listaIdazleak = new ArrayList<>();
         //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
         return listaIdazleak;
     }
 
     public ArrayList<Argitaletxea> getArgitaletxeak() {
         ArrayList<Argitaletxea> listaIdazleak = new ArrayList<>();
         //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
         return listaIdazleak;
 
     }
+    
+    public ArrayList<String> getLengoaiak(){
+        ArrayList<String> listaIdazleak = new ArrayList<>();
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+        return listaIdazleak;
+    }
 
     public void addLiburu(Liburua pLiburua){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -128,6 +241,7 @@ public class SQLManager {
     }
 
     public void removeLiburu(long ISBN){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -139,6 +253,7 @@ public class SQLManager {
     }
 
     public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -150,6 +265,19 @@ public class SQLManager {
     }
 
     public void removeErabiltzaile(String pNAN){
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+    }
+    
+    public void addAutorea(Idazlea pIdz){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -161,6 +289,7 @@ public class SQLManager {
     }
 
     public void removeAutorea(String pIdazleZenbakia){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -172,6 +301,7 @@ public class SQLManager {
     }
 
     public void updateAutoreIzena(String pIdazleZenbakia, String pIzena){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -183,6 +313,7 @@ public class SQLManager {
     }
 
     public void updateAutoreAbizena(String pIdazleZenbakia, String pAbizena){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -194,6 +325,7 @@ public class SQLManager {
     }
 
     public void updateAutoreGenero(String pIdazleZenbakia, String pGenero){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -205,6 +337,19 @@ public class SQLManager {
     }
 
     public void updateAutoreHerrialdea(String pIdazleZenbakia, String pHerrialdea){
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+    }
+
+    public void addArgitaletxea(Argitaletxea argitaletxea){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -216,6 +361,7 @@ public class SQLManager {
     }
 
     public void removeArgitaletzea(String pIFK){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -227,6 +373,7 @@ public class SQLManager {
     }
 
     public void updateArgitaletzeIzena(String pIFK, String pIzena){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -238,6 +385,7 @@ public class SQLManager {
     }
 
     public void updateArgitaletzeHelbidea(String pIFK, String pHelbidea){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -249,6 +397,7 @@ public class SQLManager {
     }
 
     public void addMailegua(String NAN, long pISBN){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -260,6 +409,7 @@ public class SQLManager {
     }
 
     public void removeMailegua(long pISBN){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -273,6 +423,7 @@ public class SQLManager {
     /**Erabiltzaile Arrunta**/
 
     public void sortuKolekzioa(String pNAN, String pIzena){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -284,6 +435,7 @@ public class SQLManager {
     }
 
     public void removeKolekzioa(String pKolekzioIzena, String pNAN){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -294,7 +446,36 @@ public class SQLManager {
         }
     }
 
+    public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN) {
+        ArrayList<LiburuKolekzio> listaIdazleak = new ArrayList<>();
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+        return listaIdazleak;
+    }
+
+    public ArrayList<Liburua> getKolekziokoLiburuak(String pNAN, String pKolekzioa) {
+        ArrayList<Liburua> listaIdazleak = new ArrayList<>();
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+        return listaIdazleak;
+    }
+
     public void addLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -306,6 +487,43 @@ public class SQLManager {
     }
 
     public void removeLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN){
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+    }
+
+    public void liburuaErreserbatu(String pNAN, long pIsbn) {
+        //TODO
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+    }
+
+    public void getErabiltzaileInformazioa(String pNAN){
+        //TODO esto para que?
+        try{
+            String komandoa = String.format("");
+            konexioa.prepareStatement(komandoa);
+        }
+        catch (SQLException e){
+            System.out.println("Errore bat egon da komandoan.");
+            e.printStackTrace();
+        }
+    }
+
+    public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);

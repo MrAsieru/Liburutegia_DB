@@ -36,6 +36,7 @@ public class Liburuzaina extends Observable{
     }
     
     public void getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
+        SQLManager.getManager().getErabiltzaileak(pNan, pIzena, pAbizena);
 		//TODO erabiltzaileak filtroekin bilatu eta bueltatu
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_ERAB_LISTA_EGUNERATU
@@ -50,6 +51,7 @@ public class Liburuzaina extends Observable{
     }
 
     public void aldatuPasahitza(String pNan, String pPasahitza) {
+        SQLManager.getManager().aldatuPasahitza(pNan, pPasahitza);
         //TODO erabiltzailearen pasahitza aldatu eta bueltatu
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_ERAB_PASAHITZA_ONDO
@@ -71,6 +73,7 @@ public class Liburuzaina extends Observable{
     }
 
     public void getLengoaiak() {
+        SQLManager.getManager().getLengoaiak();
         // Lista hemen sortu, ez da behar DB-n egotea
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU
@@ -123,6 +126,7 @@ public class Liburuzaina extends Observable{
     }
 
     public void addIdazlea(Idazlea pIdl) {
+        SQLManager.getManager().addAutorea(pIdl);
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_IDL_GEH_ONDO
         // LIBURUZAIN_IDL_GEH_TXARTO
@@ -145,6 +149,7 @@ public class Liburuzaina extends Observable{
     }
     
     public void addArgitaletxea(Argitaletxea arg) {
+        SQLManager.getManager().addArgitaletxea(arg);
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_ARG_GEH_ONDO
         // LIBURUZAIN_ARG_GEH_TXARTO

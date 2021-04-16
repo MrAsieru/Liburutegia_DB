@@ -26,27 +26,32 @@ public class ErabiltzaileArrunta extends Observable {
     }
     
     public void getKatalogoa() {
+        SQLManager.getManager().getKatalogoa();
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KAT_TAULA_EGUNERATU
     }
     
     public void getKatalogoa(String pIzena, String pDataBehe, String pDataGoi, String pLengoaia, boolean pEskuragarri) {
+        SQLManager.getManager().getKatalogoa(pIzena, pDataBehe, pDataGoi, pLengoaia, pEskuragarri);
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KAT_TAULA_EGUNERATU
     }
     
     public void liburuaErreserbatu(long pIsbn) {
+        SQLManager.getManager().liburuaErreserbatu(this.nan, pIsbn);
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KAT_ERRESERBA_ONDO
         // ERABARR_KAT_ERRESERBA_TXARTO
     }
     
     public void getKolekzioak() {
+        SQLManager.getManager().getKolekzioak(this.nan);
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KOL_KOLEKZIOAK_EGUNERATU
     }
-    
+
     public void getKolekziokoLiburuak(String pKolekzioa) {
+        SQLManager.getManager().getKolekziokoLiburuak(this.nan, pKolekzioa);
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KOL_LIBURUAK_EGUNERATU
     }
@@ -80,11 +85,13 @@ public class ErabiltzaileArrunta extends Observable {
     }
 
     public void getErabiltzaileInformazioa(){
+        SQLManager.getManager().getErabiltzaileInformazioa(this.nan);
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KON_INFORMAZIOA_EGUNERATU
     }
 
     public void erabiltzaileInformazioaEguneratu(String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){
+        SQLManager.getManager().erabiltzaileInformazioaEguneratu(this.nan, pIzena, pAbizena, pPasahitza, pGeneroa, pJaioData);
         //TODO (null elementua ez bada aldatu)
         //TODO erabili behar diren notifikazio motak:
         // ERABARR_KON_ALDAKETA_ONDO
