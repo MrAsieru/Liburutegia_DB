@@ -1,5 +1,16 @@
 package Eredua;
 
+/*
+ * datubasea sortzeko komandoak:
+ *  create database liburutegia;
+ *  use liburutegia;
+ *  create table Liburua (
+ *      ISBN integer(13),
+ *      Izena varchar(200),
+ *
+ *  )
+ */
+
 import Egitura.*;
 import java.util.ArrayList;
 import java.util.Date;
