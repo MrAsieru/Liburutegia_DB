@@ -144,9 +144,29 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
 	@Override
 	public void update(Observable o, Object arg) {
+		// arg -> Object[]:
+		//			arg[0] -> NotifikazioMotak,
+		//			arg[1,2,3,...] -> Datuak
+		// Datu egiturak:
+		// ERABARR_KAT_TAULA_EGUNERATU: 				Erabiltzailea[]
+		// ERABARR_KAT_ERRESERBA_ONDO:					ezer
+		// ERABARR_KAT_ERRESERBA_TXARTO:				String
+		// ERABARR_KOL_KOLEKZIOAK_EGUNERATU:			String[], int[]
+		// ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:			ezer
+		// ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO:			String
+		// ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO:			ezer
+		// ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO:		String
+		// ERABARR_KOL_LIBURUAK_EGUNERATU:				Liburua[]
+		// ERABARR_KOL_LIBURUA_GEHITU_ONDO:				ezer
+		// ERABARR_KOL_LIBURUA_GEHITU_TXARTO:			String
+		// ERABARR_KOL_LIBURUA_KENDU_ONDO:				ezer
+		// ERABARR_KOL_LIBURUA_KENDU_TXARTO:			String
+		// ERABARR_KON_INFORMAZIOA_EGUNERATU:			String[] non nan, izena, abizena, generoa, jaiotze data
+		// ERABARR_KON_ALDAKETA_ONDO:					ezer
+		// ERABARR_KON_ALDAKETA_TXARTO:					String
 
 		if (o instanceof ErabiltzaileArrunta && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
@@ -235,7 +255,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena, (!lib.mailegatuta && !lib.erreserbatua)});
 		}
 	}
-	
+
 	private void kolekzioaKolekzioListaEguneratu(String[] pListaIze, int[] pListaKant) {
 		dtmKol1.setRowCount(0);
 		if (pListaIze.length == pListaKant.length) {
@@ -244,14 +264,14 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			}
 		}
 	}
-	
+
 	private void kolekzioaLiburuListaEguneratu(Liburua[] pLista) {
 		dtmKol2.setRowCount(0);
 		for (Liburua lib:pLista) {
 			dtmKol1.addRow(new Object[] {lib.isbn, lib.izena, (!lib.erreserbatua && !lib.mailegatuta)});
 		}
 	}
-	
+
 	private void kontuaInformazioaKargatu(String[] pLista) {
 		txfKonNan.setText(pLista[0]);
 		HintTextField[] eremuak =  new HintTextField[] {(HintTextField) txfKonIzena, (HintTextField)txfKonAbizena, (HintTextField)txfKonGeneroa, (HintTextField)txfKonJaioData};
@@ -272,7 +292,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					if (tabbedPane.getSelectedIndex() == 2) {
 						System.out.println("[Kontrolatzailea]: Nire kontua panela irekita, informazioa eskatu da.");
 						ErabiltzaileArrunta.getInstantzia().getErabiltzaileInformazioa();
-					}					
+					}
 				}
 			});
 		}
@@ -303,9 +323,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		return scpKat;
 	}
 	private JTable getTblKat() {
-		if (tblKat == null) {			
-			dtmKat = new DefaultTableModel(new Object[][] {}, 
-					   new String[] {"ISBN", "Izena", "Arg. data", "Lengoaia", "Argitaletxea", "Eskuragarri"}) {
+		if (tblKat == null) {
+			dtmKat = new DefaultTableModel(new Object[][] {},
+					new String[] {"ISBN", "Izena", "Arg. data", "Lengoaia", "Argitaletxea", "Eskuragarri"}) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
@@ -331,17 +351,17 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (btnKatFiltratu == null) {
 			btnKatFiltratu = new JButton("Filtratu");
 			btnKatFiltratu.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Katalogoa panela) btnKatFiltratu klikatuta");
-					popUpKatalogoaFiltratu();					
+					popUpKatalogoaFiltratu();
 				}
 			});
 		}
 		return btnKatFiltratu;
 	}
-	
+
 	private void popUpKatalogoaFiltratu() {
 		if (pnlKatPopFiltratu == null) {
 			pnlKatPopFiltratu = new JPanel();
@@ -399,10 +419,10 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		int aukera = JOptionPane.showConfirmDialog(this, pnlKatPopFiltratu, "Katalogoa filtratu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		if (aukera == 0) {
 			System.out.println(String.format("[Kontrolatzailea]: (Filtroa Pop-Up) datuak bidali. Izena:%s, DataBehe:%s, DataGoi:%s, Lengoaia:%s, Eskuragarri:%s", txfKatPopIzena.getText(), txfKatPopArgBehe.getText(), txfPopKatArgGoi.getText(), (String) cbxKatPopLeng.getSelectedItem(), chbKatPopEsku.isSelected()));
-			ErabiltzaileArrunta.getInstantzia().getKatalogoa(txfKatPopIzena.getText(), txfKatPopArgBehe.getText(), txfPopKatArgGoi.getText(), (String) cbxKatPopLeng.getSelectedItem(), chbKatPopEsku.isSelected());		
+			ErabiltzaileArrunta.getInstantzia().getKatalogoa(txfKatPopIzena.getText(), txfKatPopArgBehe.getText(), txfPopKatArgGoi.getText(), (String) cbxKatPopLeng.getSelectedItem(), chbKatPopEsku.isSelected());
 		} else System.out.println("[Kontrolatzailea]: (Filtroa Pop-Up) lehioa itxi");
 	}
-	
+
 	private JSeparator getSeparator() {
 		if (separator == null) {
 			separator = new JSeparator();
@@ -575,16 +595,16 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		}
 		return separator_2;
 	}
-	
+
 	private JButton getBtnKatGarbitu() {
 		if (btnKatGarbitu == null) {
 			btnKatGarbitu = new JButton("Garbitu");
 			btnKatGarbitu.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Katalogoa panela) btnKatGarbitu klikatuta");
-					ErabiltzaileArrunta.getInstantzia().getKatalogoa();			
+					ErabiltzaileArrunta.getInstantzia().getKatalogoa();
 				}
 			});
 		}
@@ -594,7 +614,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (btnKatErreserba == null) {
 			btnKatErreserba = new JButton("Erreserbatu");
 			btnKatErreserba.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (tblKat.getSelectedRow() >= 0) {
@@ -605,7 +625,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 						} else System.out.println("[Kontrolatzailea]: (Liburua erreserbatu Pop-Up) ateratzeko klikatu");
 					} else {
 						JOptionPane.showMessageDialog(contentPane, "Erreserbatzeko liburu bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
-					}				
+					}
 				}
 			});
 		}
@@ -681,7 +701,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (btnKolKolekzioaSortu == null) {
 			btnKolKolekzioaSortu = new JButton("Sortu");
 			btnKolKolekzioaSortu.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolKolekzioaSortu klikatuta");
@@ -689,7 +709,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					if (izena != null) {
 						System.out.println(String.format("[Kontrolatzailea]: (Kolekzioa gehitu Pop-Up) kolekzioa sortzeko klikatu. Izena:%s", izena));
 						ErabiltzaileArrunta.getInstantzia().sortuKolekzioa(izena);
-					} else System.out.println("[Kontrolatzailea]: (Kolekzioa gehitu Pop-Up) ateratzeko klikatu");					
+					} else System.out.println("[Kontrolatzailea]: (Kolekzioa gehitu Pop-Up) ateratzeko klikatu");
 				}
 			});
 		}
@@ -699,9 +719,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (btnKolKolekzioaEzabatu == null) {
 			btnKolKolekzioaEzabatu = new JButton("Ezabatu");
 			btnKolKolekzioaEzabatu.addActionListener(new ActionListener() {
-				
+
 				@Override
-				public void actionPerformed(ActionEvent e) {	
+				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolKolekzioaEzabatu klikatuta");
 					if (tblKolKolekzioak.getSelectedRow() >= 0) {
 						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("%s kolekzioa ezabatu nahi duzu?", (String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0)), "Kolekzioa ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
@@ -735,8 +755,8 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 						} catch (ArrayIndexOutOfBoundsException aioobe) {
 							JOptionPane.showMessageDialog(contentPane, "Lehenengoz kolekzio bat aukeratu", "Errorea", JOptionPane.ERROR_MESSAGE);
 						}
-						
-					} else System.out.println("[Kontrolatzailea]: (Liburua gehitu Pop-Up) ateratzeko klikatu");					
+
+					} else System.out.println("[Kontrolatzailea]: (Liburua gehitu Pop-Up) ateratzeko klikatu");
 				}
 			});
 		}
@@ -746,7 +766,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (btnKolLiburuaKendu == null) {
 			btnKolLiburuaKendu = new JButton("Kendu");
 			btnKolLiburuaKendu.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Kolekzioak panela) btnKolLiburuaKendu klikatuta");
@@ -758,7 +778,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 						} else System.out.println("[Kontrolatzailea]: (Liburua ezabatu Pop-Up) ateratzeko klikatu");
 					} else {
 						JOptionPane.showMessageDialog(contentPane, "Liburu bat ezabatu ahal izateko lehenengo kolekzio eta liburu bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
-					}					
+					}
 				}
 			});
 		}
@@ -780,8 +800,8 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTable getTblKolKolekzioak() {
 		if (tblKolKolekzioak == null) {
-			dtmKolKolekzioak = new DefaultTableModel(new Object[][] {}, 
-					   new String[] {"Izena", "Kantitatea"}) {
+			dtmKolKolekzioak = new DefaultTableModel(new Object[][] {},
+					new String[] {"Izena", "Kantitatea"}) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
@@ -789,10 +809,10 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			};
 			tblKolKolekzioak = new JTable(dtmKolKolekzioak);
 			tblKolKolekzioak.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-				
+
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					ErabiltzaileArrunta.getInstantzia().getKolekziokoLiburuak((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0));					
+					ErabiltzaileArrunta.getInstantzia().getKolekziokoLiburuak((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0));
 				}
 			});
 			ErabiltzaileArrunta.getInstantzia().getKolekzioak();
@@ -801,8 +821,8 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTable getTblKolLiburuak() {
 		if (tblKolLiburuak == null) {
-			dtmKolLiburuak = new DefaultTableModel(new Object[][] {}, 
-					   new String[] {"ISBN", "Izena", "Eskuragarri"}) {
+			dtmKolLiburuak = new DefaultTableModel(new Object[][] {},
+					new String[] {"ISBN", "Izena", "Eskuragarri"}) {
 				@Override
 				public boolean isCellEditable(int row, int column) {
 					return false;
@@ -989,7 +1009,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (btnKolEguneratu == null) {
 			btnKolEguneratu = new JButton("Datuak eguneratu");
 			btnKolEguneratu.addActionListener(new ActionListener() {
-				
+
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Kontua panela) btnKolEguneratu klikatuta");
