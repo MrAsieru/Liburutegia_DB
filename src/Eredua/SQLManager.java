@@ -16,6 +16,10 @@ public class SQLManager {
 
     private static SQLManager SQLManager;
 
+    private SQLManager(){
+        konektatu();
+    }
+
     public static SQLManager getManager(){
         if(SQLManager==null){
             SQLManager = new SQLManager();
@@ -510,8 +514,10 @@ public class SQLManager {
         }
     }
 
-    public void getErabiltzaileInformazioa(String pNAN){
-        //TODO esto para que?
+    public String[] getErabiltzaileInformazioa(String pNAN){
+        //String[] non nan, izena, abizena, generoa, jaiotze data
+        String[] listaIdazleak = new String[4];
+        //TODO
         try{
             String komandoa = String.format("");
             konexioa.prepareStatement(komandoa);
@@ -520,6 +526,7 @@ public class SQLManager {
             System.out.println("Errore bat egon da komandoan.");
             e.printStackTrace();
         }
+        return listaIdazleak;
     }
 
     public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){
