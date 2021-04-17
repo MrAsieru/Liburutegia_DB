@@ -50,6 +50,13 @@ public class SQLManager {
         }
     }
 
+        /**Login**/
+
+    public ErabiltzaileMota checkLogin(String pNan, String pPasahitza){
+        //TODO
+        return null;
+    }
+
         /**Erabiltzaile guztiek erabiltzen duten metodoak**/
 
 

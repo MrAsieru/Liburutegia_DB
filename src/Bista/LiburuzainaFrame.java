@@ -192,10 +192,12 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_PASAHITZA_TXARTO ez du eskatutakoa jaso");
 				break;
 			case LIBURUZAIN_ERAB_EZA_ONDO:
-				// TODO
+				JOptionPane.showMessageDialog(contentPane, "Erabiltzailea ondo ezabatu egin da", "Pasahitza aldatuta", JOptionPane.PLAIN_MESSAGE);
 				break;
 			case LIBURUZAIN_ERAB_EZA_TXARTO:
-				// TODO
+				if (((Object[])arg)[1] instanceof String) {
+					JOptionPane.showMessageDialog(contentPane, "Ezin izan da erabiltzailea ezabatu:\n"+((Object[])arg)[1], "Errorea", JOptionPane.ERROR_MESSAGE);
+				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_EZA_TXARTO ez du eskatutakoa jaso");
 				break;
 			case LIBURUZAIN_KAT_TAULA_EGUNERATU:
 				if (((Object[])arg)[1] instanceof Liburua[]) {
@@ -240,7 +242,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 			case LIBURUZAIN_MAI_TAULA_EGUNERATU:
 				if (((Object[])arg)[1] instanceof Mailegua[]){
 					System.out.println("[Bista.Liburuzaina]: Maileguen taula eguneratu da");
-					erabiltzaileTaulaEguneratu((Erabiltzailea[]) ((Object[])arg)[1]);
+					maileguaTaulaEguneratu((Mailegua[]) ((Object[])arg)[1]);
 				} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_MAI_TAULA_EGUNERATU ez du eskatutakoa jaso");
 				break;
 			case LIBURUZAIN_MAI_HASI_ONDO:

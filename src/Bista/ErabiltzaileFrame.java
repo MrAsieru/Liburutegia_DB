@@ -1023,8 +1023,13 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 						}
 						int aukera = JOptionPane.showConfirmDialog(contentPane, mezua, "Datuak eguneratu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 						if (aukera == 0) {
-							System.out.println(String.format("[Kontrolatzailea]: (Datuak eguneratu Pop-Up) datuak eguneratzeko klikatu. Izena:%s, Abizena:%s, Pasahitza:%s, Generoa:%s, JaiotzeData:%s", txfKonIzena.getText(), txfKonAbizena.getText(), new String(psfKonPasahitza.getPassword()), txfKonGeneroa.getText(), txfKonJaioData.getText()));
-							ErabiltzaileArrunta.getInstantzia().erabiltzaileInformazioaEguneratu(txfKonIzena.getText(), txfKonAbizena.getText(), new String(psfKonPasahitza.getPassword()), txfKonGeneroa.getText(), txfKonJaioData.getText());
+							String pasahitza = (new String(psfKonPasahitza.getPassword()).length() > 0) ? new String(psfKonPasahitza.getPassword()) : null;
+							String izena = (txfKonIzena.getText().length() > 0) ? txfKonIzena.getText() :null;
+							String abizena = (txfKonAbizena.getText().length() > 0) ? txfKonAbizena.getText() :null;
+							String generoa = (txfKonGeneroa.getText().length() > 0) ? txfKonGeneroa.getText() :null;
+							String jaiotzeData = (txfKonJaioData.getText().length() > 0) ? txfKonJaioData.getText() :null;
+							System.out.println(String.format("[Kontrolatzailea]: (Datuak eguneratu Pop-Up) datuak eguneratzeko klikatu. Izena:%s, Abizena:%s, Pasahitza:%s, Generoa:%s, JaiotzeData:%s", izena, abizena, pasahitza, generoa, jaiotzeData));
+							ErabiltzaileArrunta.getInstantzia().erabiltzaileInformazioaEguneratu(izena, abizena, pasahitza, generoa, jaiotzeData);
 						} else System.out.println("[Kontrolatzailea]: Datuak eguneratu Pop-Up) ateratzeko klikatu");
 					} else {
 						JOptionPane.showMessageDialog(contentPane, "Ez dira aldaketak egin", "Errorea", JOptionPane.ERROR_MESSAGE);
