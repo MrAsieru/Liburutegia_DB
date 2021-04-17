@@ -1242,7 +1242,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("ID: %d duen %s %s idazlea ezabatu nahi duzu?", (int) tblIdl.getValueAt(tblIdl.getSelectedRow(), 0), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 1), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 2)), "Idazlea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 						if (aukera == 0) {
 							System.out.println(String.format("[Kontrolatzailea]: (Idazlea ezabatu Pop-Up) idazlea kentzeko klikatu. ID:%s, Izen-abizenak:%s %s", (int) tblIdl.getValueAt(tblIdl.getSelectedRow(), 0), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 1), (String) tblIdl.getValueAt(tblIdl.getSelectedRow(), 2)));
-							Liburuzaina.getInstantzia().removeAutorea((String) tblErab.getValueAt(tblErab.getSelectedRow(), 0));
+							Liburuzaina.getInstantzia().removeIdazlea((String) tblErab.getValueAt(tblErab.getSelectedRow(), 0));
 						} else System.out.println("[Kontrolatzailea]: (Idazlea ezabatu Pop-Up) ateratzeko klikatu");
 					} else {
 						JOptionPane.showMessageDialog(contentPane, "Idazle bat ezabatu ahal izateko lehenengo idazle bat aukeratu.", "Errorea", JOptionPane.ERROR_MESSAGE);
