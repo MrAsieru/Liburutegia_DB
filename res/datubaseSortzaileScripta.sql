@@ -5,7 +5,7 @@ create database Liburutegia;
 use Liburutegia;
 
 create table Idazlea (
-    IdazleZenbakia  int(10),
+    IdazleZenbakia  int(10) AUTO_INCREMENT,
     Izena           varchar(20),
     Abizenak        varchar(20),
     Genero          varchar(20),
@@ -26,7 +26,8 @@ create table Erabiltzailea (
     Abizena     varchar(20),
     JaiotzeData date,
     Genero      varchar(20),
-    Admin       bit,
+    Admin       bit NOT NULL,
+    Pasahitza varchar(50) NOT NULL,
     Primary Key (NAN)
 );
 
@@ -35,7 +36,6 @@ create table Liburua (
     Izena               varchar(200),
     ArgitaratzeEguna    date,
     Hizkuntza           varchar(20),
-    Prezioa             int(10),
     Mailegatu           bit,
     Erreserbatua        bit,
     ErabiltzaileaNAN    varchar(9),
@@ -65,11 +65,11 @@ create table Kolekzio_Liburua (
 );
 
 /********************************************DATU BASEA MANIPULATZEKO***************************************************/
-
-TABLAK ADIERAZI:
+/*
+# TABLAK ADIERAZI:
 show tables;
 
-TABLA GUZTIEN SORRERA ADIERAZI:
+# TABLA GUZTIEN SORRERA ADIERAZI:
 show create table Argitaletxe;
 show create table Erabiltzailea;
 show create table Idazlea;
@@ -77,6 +77,6 @@ show create table Kolekzio_Liburua;
 show create table Kolekzioa;
 show create table Liburua;
 
-TABLA OSOA EZABATU:
+# TABLA OSOA EZABATU:
 drop database Liburutegia;
-
+*/

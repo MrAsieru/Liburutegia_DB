@@ -147,26 +147,6 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	
 	@Override
 	public void update(Observable o, Object arg) {
-		// arg -> Object[]:
-		//			arg[0] -> NotifikazioMotak,
-		//			arg[1,2,3,...] -> Datuak
-		// Datu egiturak:
-		// ERABARR_KAT_TAULA_EGUNERATU: 				Erabiltzailea[]
-		// ERABARR_KAT_ERRESERBA_ONDO:					ezer
-		// ERABARR_KAT_ERRESERBA_TXARTO:				String
-		// ERABARR_KOL_KOLEKZIOAK_EGUNERATU:			String[], int[]
-		// ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:			ezer
-		// ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO:			String
-		// ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO:			ezer
-		// ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO:		String
-		// ERABARR_KOL_LIBURUAK_EGUNERATU:				Liburua[]
-		// ERABARR_KOL_LIBURUA_GEHITU_ONDO:				ezer
-		// ERABARR_KOL_LIBURUA_GEHITU_TXARTO:			String
-		// ERABARR_KOL_LIBURUA_KENDU_ONDO:				ezer
-		// ERABARR_KOL_LIBURUA_KENDU_TXARTO:			String
-		// ERABARR_KON_INFORMAZIOA_EGUNERATU:			String[] non nan, izena, abizena, generoa, jaiotze data
-		// ERABARR_KON_ALDAKETA_ONDO:					ezer
-		// ERABARR_KON_ALDAKETA_TXARTO:					String
 
 		if (o instanceof ErabiltzaileArrunta && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {

@@ -132,41 +132,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 	//Logika
 	@Override
 	public void update(Observable o, Object arg) {
-		// arg -> Object[]: 
-		//			arg[0] -> NotifikazioMotak,
-		//			arg[1,2,3,...] -> Datuak
-		// Datu egiturak:
-		// LIBURUZAIN_ERAB_LISTA_EGUNERATU: 				Erabiltzailea[]
-		// LIBURUZAIN_ERAB_SORTU_ONDO:						ezer
-		// LIBURUZAIN_ERAB_SORTU_TXARTO:					String
-		// LIBURUZAIN_ERAB_PASAHITZA_ONDO:					ezer
-		// LIBURUZAIN_ERAB_PASAHITZA_TXARTO:				String
-		// LIBURUZAIN_ERAB_EZA_ONDO							ezer
-		// LIBURUZAIN_ERAB_EZA_TXARTO						String
-		// LIBURUZAIN_KAT_TAULA_EGUNERATUA					Liburua[]
-		// LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU: 	String[]
-		// LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU: 	String[]
-		// LIBURUZAIN_KAT_GEH_IDAZLE_LISTA_EGUNERATU: 		String[]
-		// LIBURUZAIN_KAT_GEH_ONDO_SORTUTA: 				ezer
-		// LIBURUZAIN_KAT_GEH_TXARTO_SORTUTA: 				String
-		// LIBURUZAIN_KAT_EZA_ONDO_EZABATUTA: 				ezer
-		// LIBURUZAIN_KAT_EZA_TXARTO_EZABATUTA:				String
-		// LIBURUZAIN_MAI_TAULA_EGUNERATU:					Mailegua[]
-		// LIBURUZAIN_MAI_HASI_ONDO:						ezer
-		// LIBURUZAIN_MAI_HASI_ERRESERBATUTA:				Erabiltzailea
-		// LIBURUZAIN_MAI_HASI_TXARTO:						String
-		// LIBURUZAIN_MAI_BUELTATU_ONDO:					ezer
-		// LIBURUZAIN_MAI_BUELTATU_TXARTO:					String
-		// LIBURUZAIN_IDL_TAULA_EGUNERATU:					Idazlea[]
-		// LIBURUZAIN_IDL_GEH_ONDO:							ezer
-		// LIBURUZAIN_IDL_GEH_TXARTO:						String
-		// LIBURUZAIN_IDL_KEN_ONDO:							ezer
-		// LIBURUZAIN_IDL_KEN_TXARTO:						String
-		// LIBURUZAIN_ARG_TAULA_EGUNERATU:					Argitaletxea[]
-		// LIBURUZAIN_ARG_GEH_ONDO:							ezer
-		// LIBURUZAIN_ARG_GEH_TXARTO:						String
-		// LIBURUZAIN_ARG_KEN_ONDO:							ezer
-		// LIBURUZAIN_ARG_KEN_TXARTO:						String
+
 		if (o instanceof Liburuzaina && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 			case LIBURUZAIN_ERAB_LISTA_EGUNERATU:
