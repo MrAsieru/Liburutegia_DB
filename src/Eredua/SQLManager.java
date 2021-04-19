@@ -30,9 +30,11 @@ public class SQLManager {
             String zerbitzaria = "jdbc:mysql://localhost:3306/Liburutegia";
             String erabiltzailea = "root";
             String pasahitza = "";
+
             System.out.printf("[Modeloa.SQLManager] Konexioa sortzen... \n");
             konexioa = DriverManager.getConnection(zerbitzaria, erabiltzailea, pasahitza);
             System.out.printf("[Modeloa.SQLManager] Konektatu egin gara! \n");
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -41,17 +43,22 @@ public class SQLManager {
         /**Login**/
 
     public ErabiltzaileMota checkLogin(String pNan, String pPasahitza) {
-        ErabiltzaileMota erab = ErabiltzaileMota.ARRUNTA;
+        ErabiltzaileMota erab = null;
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("select * from Erabiltzailea".formatted());
 
             results.next(); //Lehenengo taula lortzeko
-            if (results.getString("Admin")=="0") {
-                erab = ErabiltzaileMota.LIBURUZAIN;
+            if (results.getString("Pasahitza").equals(pPasahitza)) {
+                if (results.getString("Admin").equals("0")) {
+                    erab = ErabiltzaileMota.LIBURUZAIN;
+                }
+                else {
+                    erab = ErabiltzaileMota.ARRUNTA;
+                }
             }
+
         }
         catch (SQLException e){
             e.printStackTrace();
