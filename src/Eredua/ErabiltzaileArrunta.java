@@ -97,7 +97,13 @@ public class ErabiltzaileArrunta extends Observable {
     }
 
     public void getErabiltzaileInformazioa(){
-        bistaNotifikatu(NotifikazioMotak.ERABARR_KON_INFORMAZIOA_EGUNERATU, SQLManager.getManager().getErabiltzaileInformazioa(this.nan));
+        try {
+            bistaNotifikatu(NotifikazioMotak.ERABARR_KON_INFORMAZIOA_EGUNERATU, SQLManager.getManager().getErabiltzaileInformazioa(this.nan));
+        }
+        catch (SQLException e){
+            System.out.printf("Errore bat getErabiltzaileInformazioa metodojo SQL-an");
+            e.printStackTrace();
+        }
     }
 
     public void erabiltzaileInformazioaEguneratu(String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){

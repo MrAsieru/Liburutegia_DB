@@ -40,7 +40,7 @@ public class SQLManager {
 
         /**Login**/
 
-    public ErabiltzaileMota checkLogin(String pNan, String pPasahitza){
+    public ErabiltzaileMota checkLogin(String pNan, String pPasahitza) {
         ErabiltzaileMota erab = ErabiltzaileMota.ARRUNTA;
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
@@ -62,7 +62,7 @@ public class SQLManager {
         /**Erabiltzaile guztiek erabiltzen duten metodoak**/
 
 
-    public void IzenaAldatu(String pNAN, String pIzena){
+    public void IzenaAldatu(String pNAN, String pIzena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -70,11 +70,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void AbizenaAldatu(String pNAN, String pAbizena){
+    public void AbizenaAldatu(String pNAN, String pAbizena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -82,11 +82,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void JaiotzeDataAldatu(String pNAN, Date pJaiotzeData){
+    public void JaiotzeDataAldatu(String pNAN, Date pJaiotzeData) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -94,11 +94,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void GeneroaAldatu(String pNAN, String pGeneroa){
+    public void GeneroaAldatu(String pNAN, String pGeneroa) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -106,11 +106,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void aldatuPasahitza(String pNAN, String pPasahitza){
+    public void aldatuPasahitza(String pNAN, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -118,11 +118,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public ArrayList<Liburua> getKatalogoa(){
+    public ArrayList<Liburua> getKatalogoa() {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
@@ -208,7 +208,7 @@ public class SQLManager {
         return lista;
     }
 
-    public ArrayList<Erabiltzailea> getErabiltzaileak(String pNan, String pIzena, String pAbizena){
+    public ArrayList<Erabiltzailea> getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
@@ -262,6 +262,31 @@ public class SQLManager {
             e.printStackTrace();
         }
         return lista;
+    }
+
+    public Liburua getLiburua(long pISBN) {
+        Liburua liburua = new Liburua();
+        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        //TODO
+        try{
+            Statement statement = konexioa.createStatement();
+            ResultSet results = statement.executeQuery("".formatted());
+            results.next(); //Lehenengo taula (eta bakarra) lortzeko
+
+            liburua.isbn = Long.parseLong(results.getString("ISBN"));
+            liburua.izena = results.getString("Izena");
+            liburua.argitaratzeData = results.getString("ArgitaratzeEguna");
+            liburua.lengoaia = results.getString("Hizkuntza");
+            liburua.mailegatuta = Boolean.parseBoolean(results.getString("Mailegatu"));
+            liburua.erreserbatua = Boolean.parseBoolean(results.getString("Erreserbatua"));
+            liburua.erabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
+            liburua.idazleaZnb = Integer.parseInt(results.getString("IdazleZenbakia"));
+            liburua.argitaletxeaIFK = results.getString("ArgitaletxeIFK");
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return liburua;
     }
 
     public ArrayList<Mailegua> getMaileguak() {
@@ -333,26 +358,8 @@ public class SQLManager {
         return lista;
 
     }
-    
-    public ArrayList<String> getLengoaiak(){
-        ArrayList<String> lista = new ArrayList<>();
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted()); //KONTUZ!!!!!! Necesita una tabla al menos con todas las hizkumtzak
 
-            while (results.next()) {
-                lista.add(results.getString("Hizkuntza"));
-            }
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-
-    public void addLiburu(Liburua pLiburua){
+    public void addLiburu(Liburua pLiburua) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -360,12 +367,12 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
 
     }
 
-    public void removeLiburu(long ISBN){
+    public void removeLiburu(long ISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -373,11 +380,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza){
+    public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -385,11 +392,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void removeErabiltzaile(String pNAN){
+    public void removeErabiltzaile(String pNAN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -397,11 +404,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
     
-    public void addAutorea(Idazlea pIdz){
+    public void addAutorea(Idazlea pIdz) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -409,11 +416,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void removeAutorea(String pIdazleZenbakia){
+    public void removeAutorea(String pIdazleZenbakia) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -421,11 +428,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void updateAutoreIzena(String pIdazleZenbakia, String pIzena){
+    public void updateAutoreIzena(String pIdazleZenbakia, String pIzena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -433,11 +440,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void updateAutoreAbizena(String pIdazleZenbakia, String pAbizena){
+    public void updateAutoreAbizena(String pIdazleZenbakia, String pAbizena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -445,11 +452,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void updateAutoreGenero(String pIdazleZenbakia, String pGenero){
+    public void updateAutoreGenero(String pIdazleZenbakia, String pGenero) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -457,11 +464,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void updateAutoreHerrialdea(String pIdazleZenbakia, String pHerrialdea){
+    public void updateAutoreHerrialdea(String pIdazleZenbakia, String pHerrialdea) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -469,11 +476,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void addArgitaletxea(Argitaletxea argitaletxea){
+    public void addArgitaletxea(Argitaletxea argitaletxea) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -481,11 +488,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void removeArgitaletzea(String pIFK){
+    public void removeArgitaletzea(String pIFK) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -493,11 +500,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void updateArgitaletzeIzena(String pIFK, String pIzena){
+    public void updateArgitaletzeIzena(String pIFK, String pIzena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -505,11 +512,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void updateArgitaletzeHelbidea(String pIFK, String pHelbidea){
+    public void updateArgitaletzeHelbidea(String pIFK, String pHelbidea) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -517,11 +524,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void addMailegua(String NAN, long pISBN){
+    public void addMailegua(String NAN, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -529,11 +536,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void removeMailegua(long pISBN){
+    public void removeMailegua(long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -541,13 +548,13 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
     /**Erabiltzaile Arrunta**/
 
-    public void sortuKolekzioa(String pNAN, String pIzena){
+    public void sortuKolekzioa(String pNAN, String pIzena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -555,11 +562,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void removeKolekzioa(String pKolekzioIzena, String pNAN){
+    public void removeKolekzioa(String pKolekzioIzena, String pNAN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -567,7 +574,7 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
@@ -621,7 +628,7 @@ public class SQLManager {
         return lista;
     }
 
-    public void addLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN){
+    public void addLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -629,11 +636,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void removeLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN){
+    public void removeLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -641,11 +648,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public void liburuaErreserbatu(String pNAN, long pIsbn) {
+    public void liburuaErreserbatu(String pNAN, long pIsbn) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -653,11 +660,11 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 
-    public String[] getErabiltzaileInformazioa(String pNAN){
+    public String[] getErabiltzaileInformazioa(String pNAN) throws SQLException {
         //String[] non nan, izena, abizena, generoa, jaiotze data
         String[] lista = new String[4];
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -680,7 +687,7 @@ public class SQLManager {
         return lista;
     }
 
-    public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){
+    public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
@@ -688,7 +695,7 @@ public class SQLManager {
             statement.executeQuery("".formatted());
         }
         catch (SQLException e){
-            e.printStackTrace();
+            throw e;
         }
     }
 

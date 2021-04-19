@@ -112,9 +112,13 @@ public class Liburuzaina extends Observable{
         Liburua lib = SQLManager.getManager().getLiburua(pISBN);
         if (!lib.mailegatuta) {
             if (!lib.erreserbatua) {
-                SQLManager.getManager().addMailegua(NAN, pISBN);
-                bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_TAULA_EGUNERATU, SQLManager.getManager().getMaileguak());
-                bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ONDO);
+                try {
+                    SQLManager.getManager().addMailegua(NAN, pISBN);
+                    bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_TAULA_EGUNERATU, SQLManager.getManager().getMaileguak());
+                    bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ONDO);
+                } catch (SQLException e) {
+                    bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_BUELTATU_TXARTO, e.getMessage());
+                }
             }
             else {
                 bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ERRESERBATUTA);
