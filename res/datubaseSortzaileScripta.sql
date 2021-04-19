@@ -21,14 +21,14 @@ create table Argitaletxe (
 );
 
 create table Erabiltzailea (
-    eraebiltzailea_nan	varchar(9),
+    erabiltzailea_nan	varchar(9),
     izena       		varchar(20),
     abizena				varchar(20),
     jaiotze_data 		date,
     generoa      		varchar(20),
     liburuzaina_da  	bit NOT NULL,
     pasahitza 			varchar(50) NOT NULL,
-    Primary Key (eraebiltzailea_nan)
+    Primary Key (erabiltzailea_nan)
 );
 
 create table Liburua (
@@ -60,7 +60,7 @@ create table Kolekzio_Liburua (
     izena              	varchar(30),
     Primary Key (erabiltzailea_nan, izena, liburua_isbn),
     Foreign Key(liburua_isbn) references Liburua(liburua_isbn),
-    Foreign Key(kolekzioa_erabiltzailea_nan, izena) references Kolekzioa(erabiltzailea_nan, izena)
+    Foreign Key(erabiltzailea_nan, izena) references Kolekzioa(erabiltzailea_nan, izena)
 );
 
 /********************************************DATU BASEA MANIPULATZEKO***************************************************/
