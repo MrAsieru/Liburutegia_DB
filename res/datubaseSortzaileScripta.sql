@@ -5,63 +5,62 @@ create database Liburutegia;
 use Liburutegia;
 
 create table Idazlea (
-    IdazleZenbakia  int(10) AUTO_INCREMENT,
-    Izena           varchar(20),
-    Abizenak        varchar(20),
-    Genero          varchar(20),
-    Herrialdea      varchar(30),
-    Primary Key(IdazleZenbakia)
+    idazlea_znb  	int(10) AUTO_INCREMENT,
+    izena           varchar(20),
+    abizenak        varchar(20),
+    generoa         varchar(20),
+    herrialdea      varchar(30),
+    Primary Key(idazlea_znb)
 );
 
 create table Argitaletxe (
-    IFK         varchar(9),
-    Izena       varchar(20),
-    Helbidea    varchar(20),
-    Primary Key (IFK)
+    argitaletxea_ifk	varchar(9),
+    izena       		varchar(20),
+    helbidea    		varchar(20),
+    Primary Key (argitaletxea_ifk)
 );
 
 create table Erabiltzailea (
-    NAN         varchar(9),
-    Izena       varchar(20),
-    Abizena     varchar(20),
-    JaiotzeData date,
-    Genero      varchar(20),
-    Admin       bit NOT NULL,
-    Pasahitza varchar(50) NOT NULL,
-    Primary Key (NAN)
+    eraebiltzailea_nan	varchar(9),
+    izena       		varchar(20),
+    abizena				varchar(20),
+    jaiotze_data 		date,
+    generoa      		varchar(20),
+    liburuzaina_da  	bit NOT NULL,
+    pasahitza 			varchar(50) NOT NULL,
+    Primary Key (eraebiltzailea_nan)
 );
 
 create table Liburua (
-    ISBN                int(13),
-    Izena               varchar(200),
-    ArgitaratzeEguna    date,
-    Hizkuntza           varchar(20),
-    Mailegatu           bit,
-    Erreserbatua        bit,
-    ErabiltzaileaNAN    varchar(9),
-    IdazleZenbakia      int(10),
-    ArgitaletxeIFK      varchar(9),
-    Primary Key(ISBN),
-    Foreign Key(ErabiltzaileaNAN) references Erabiltzailea(NAN),
-    Foreign Key(IdazleZenbakia) references Idazlea(IdazleZenbakia),
-    Foreign Key(ArgitaletxeIFK) references Argitaletxe(IFK)
+    liburua_isbn        int(13),
+    izena               varchar(200),
+    argitaratze_data    date,
+    lengoaia        	varchar(20),
+    mailegatuta         bit,
+    erreserbatuta       bit,
+    erabiltzailea_nan   varchar(9),
+    idazlea_znb     	int(10),
+    argitaletxea_ifk    varchar(9),
+    Primary Key(liburua_isbn),
+    Foreign Key(erabiltzailea_nan) references Erabiltzailea(erabiltzailea_nan),
+    Foreign Key(idazlea_znb) references Idazlea(idazlea_znb),
+    Foreign Key(argitaletxea_ifk) references Argitaletxe(argitaletxea_ifk)
 );
 
 create table Kolekzioa (
-    ErabiltzaileaNAN    varchar(9),
-    Izena               varchar(30),
-    Primary Key (Izena, ErabiltzaileaNAN),
-    Foreign Key(ErabiltzaileaNAN) references Erabiltzailea(NAN)
+    erabiltzailea_nan   varchar(9),
+    izena               varchar(30),
+    Primary Key (erabiltzailea_nan, izena),
+    Foreign Key(erabiltzailea_nan) references Erabiltzailea(erabiltzailea_nan)
 );
 
 create table Kolekzio_Liburua (
-    LiburuISBN                  int(13),
-    KolekzioaErabiltzaileaNAN   varchar(9),
-    KolekzioaIzena              varchar(30),
-    Primary Key (LiburuISBN, KolekzioaErabiltzaileaNAN, KolekzioaIzena),
-    Foreign Key(LiburuISBN) references Liburua(ISBN),
-    Foreign Key(KolekzioaErabiltzaileaNAN) references Erabiltzailea(NAN),
-    Foreign Key(KolekzioaIzena) references Kolekzioa(Izena)
+    liburua_isbn        int(13),
+    erabiltzailea_nan	varchar(9),
+    izena              	varchar(30),
+    Primary Key (erabiltzailea_nan, izena, liburua_isbn),
+    Foreign Key(liburua_isbn) references Liburua(liburua_isbn),
+    Foreign Key(kolekzioa_erabiltzailea_nan, izena) references Kolekzioa(erabiltzailea_nan, izena)
 );
 
 /********************************************DATU BASEA MANIPULATZEKO***************************************************/
