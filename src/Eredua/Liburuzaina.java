@@ -141,16 +141,15 @@ public class Liburuzaina extends Observable{
     }
 
     public void getIdazleak() {
-        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_TAULA_EGUNERATU, SQLManager.getManager().getIdazleak());
+        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDAZLE_LISTA_EGUNERATU, SQLManager.getManager().getIdazleak());
         //TODO erabili behar diren notifikazio motak:
-        // LIBURUZAIN_KAT_GEH_IDAZLE_LISTA_EGUNERATU
-        // LIBURUZAIN_IDL_TAULA_EGUNERATU
+        // LIBURUZAIN_IDAZLE_LISTA_EGUNERATU
     }
 
     public void addIdazlea(Idazlea pIdl) {
         try{
             SQLManager.getManager().addAutorea(pIdl);
-            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_TAULA_EGUNERATU, SQLManager.getManager().getIdazleak());
+            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDAZLE_LISTA_EGUNERATU, SQLManager.getManager().getIdazleak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_GEH_ONDO);
         }
         catch (SQLException e){
@@ -161,7 +160,7 @@ public class Liburuzaina extends Observable{
     public void removeIdazlea(String pIdazleZenbakia){
         try{
             SQLManager.getManager().removeAutorea(pIdazleZenbakia);
-            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_TAULA_EGUNERATU, SQLManager.getManager().getIdazleak());
+            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDAZLE_LISTA_EGUNERATU, SQLManager.getManager().getIdazleak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_KEN_ONDO);
         }
         catch (SQLException e){
@@ -170,16 +169,15 @@ public class Liburuzaina extends Observable{
     }
 
     public void getArgitaletxeak() {
-        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_TAULA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
+        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
         //TODO erabili behar diren notifikazio motak:
-        // LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU
-        // LIBURUZAIN_ARG_TAULA_EGUNERATU
+        // LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU
     }
 
     public void addArgitaletxea(Argitaletxea arg) {
         try{
             SQLManager.getManager().addArgitaletxea(arg);
-            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_TAULA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
+            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_GEH_ONDO);
         }
         catch (SQLException e){
@@ -190,7 +188,7 @@ public class Liburuzaina extends Observable{
     public void removeArgitaletzea(String pIFK){
         try{
             SQLManager.getManager().removeArgitaletzea(pIFK);
-            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_TAULA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
+            bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_KEN_ONDO);
         }
         catch (SQLException e){
