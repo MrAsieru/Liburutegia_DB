@@ -30,16 +30,19 @@ public class Liburuzaina extends Observable{
     }
 
     public void getErabiltzaileak() {
+        //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_LISTA_EGUNERATU, SQLManager.getManager().getErabiltzaileak());
     }
 
     public void getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
+        //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_LISTA_EGUNERATU, SQLManager.getManager().getErabiltzaileak(pNan, pIzena, pAbizena));
     }
 
     public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza){
         try{
             SQLManager.getManager().addErabiltzaileArrunta(pErabiltzaile, pPasahitza);
+            //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_LISTA_EGUNERATU, SQLManager.getManager().getErabiltzaileak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_SORTU_ONDO);
         }
@@ -61,6 +64,7 @@ public class Liburuzaina extends Observable{
     public void removeErabiltzailea(String pNAN){
         try{
             SQLManager.getManager().removeErabiltzaile(pNAN);
+            //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_LISTA_EGUNERATU, SQLManager.getManager().getErabiltzaileak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_EZA_ONDO);
         }
@@ -70,20 +74,19 @@ public class Liburuzaina extends Observable{
     }
 
     public void getLiburuak() {
+        //TODO eman beharrezkoa: isbn, izena, argitaratzedata, lengoaia, erreserbatuta, mailegatuta, erabiltzaileNAN
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_TAULA_EGUNERATU, SQLManager.getManager().getLiburuak());
     }
 
     public void getLengoaiak() {
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU,
                 new String[]{"Euskera", "Gaztelera", "Ingelesa"});
-        // Lista hemen sortu, ez da behar DB-n egotea
-        //TODO erabili behar diren notifikazio motak:
-        // LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU
     }
 
     public void addLiburu(Liburua pLiburua){
         try{
             SQLManager.getManager().addLiburu(pLiburua);
+            //TODO eman beharrezkoa: isbn, izena, argitaratzedata, lengoaia, erreserbatuta, mailegatuta, erabiltzaileNAN
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_TAULA_EGUNERATU, SQLManager.getManager().getLiburuak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_GEH_ONDO_SORTUTA);
         }
@@ -95,6 +98,7 @@ public class Liburuzaina extends Observable{
     public void removeLiburu(long ISBN){
         try{
             SQLManager.getManager().removeLiburu(ISBN);
+            //TODO eman beharrezkoa: isbn, izena, argitaratzedata, lengoaia, erreserbatuta, mailegatuta, erabiltzaileNAN
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_TAULA_EGUNERATU, SQLManager.getManager().getLiburuak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_EZA_ONDO_EZABATUTA);
         }
@@ -104,6 +108,7 @@ public class Liburuzaina extends Observable{
     }
 
     public void getMaileguak() {
+        //TODO eman beharrezkoa: isbn, liburuaizena, nan erabiltzaileaizena
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_TAULA_EGUNERATU, SQLManager.getManager().getMaileguak());
     }
 
@@ -114,6 +119,7 @@ public class Liburuzaina extends Observable{
             if (!lib.erreserbatua) {
                 try {
                     SQLManager.getManager().addMailegua(NAN, pISBN);
+                    //TODO eman beharrezkoa: isbn, liburuaizena, nan erabiltzaileaizena
                     bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_TAULA_EGUNERATU, SQLManager.getManager().getMaileguak());
                     bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ONDO);
                 } catch (SQLException e) {
@@ -121,6 +127,7 @@ public class Liburuzaina extends Observable{
                 }
             }
             else {
+                //TODO eman beharrezkoa: izena, abizena, nan
                 bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ERRESERBATUTA);
             }
         }
@@ -132,6 +139,7 @@ public class Liburuzaina extends Observable{
     public void removeMailegua(long pISBN){
         try{
             SQLManager.getManager().removeMailegua(pISBN);
+            //TODO eman beharrezkoa: isbn, liburuaizena, nan erabiltzaileaizena
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_TAULA_EGUNERATU, SQLManager.getManager().getMaileguak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_BUELTATU_ONDO);
         }
@@ -141,6 +149,7 @@ public class Liburuzaina extends Observable{
     }
 
     public void getIdazleak() {
+        //TODO eman beharrezkoa: id, izena, abizena, generoa, herrialdea
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDAZLE_LISTA_EGUNERATU, SQLManager.getManager().getIdazleak());
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_IDAZLE_LISTA_EGUNERATU
@@ -149,6 +158,7 @@ public class Liburuzaina extends Observable{
     public void addIdazlea(Idazlea pIdl) {
         try{
             SQLManager.getManager().addAutorea(pIdl);
+            //TODO eman beharrezkoa: id, izena, abizena, generoa, herrialdea
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDAZLE_LISTA_EGUNERATU, SQLManager.getManager().getIdazleak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_GEH_ONDO);
         }
@@ -160,6 +170,7 @@ public class Liburuzaina extends Observable{
     public void removeIdazlea(String pIdazleZenbakia){
         try{
             SQLManager.getManager().removeAutorea(pIdazleZenbakia);
+            //TODO eman beharrezkoa: id, izena, abizena, generoa, herrialdea
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDAZLE_LISTA_EGUNERATU, SQLManager.getManager().getIdazleak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_IDL_KEN_ONDO);
         }
@@ -169,6 +180,7 @@ public class Liburuzaina extends Observable{
     }
 
     public void getArgitaletxeak() {
+        //TODO eman beharrezkoa: ifk, izena, helbidea
         bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
         //TODO erabili behar diren notifikazio motak:
         // LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU
@@ -177,6 +189,7 @@ public class Liburuzaina extends Observable{
     public void addArgitaletxea(Argitaletxea arg) {
         try{
             SQLManager.getManager().addArgitaletxea(arg);
+            //TODO eman beharrezkoa: ifk, izena, helbidea
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_GEH_ONDO);
         }
@@ -188,6 +201,7 @@ public class Liburuzaina extends Observable{
     public void removeArgitaletzea(String pIFK){
         try{
             SQLManager.getManager().removeArgitaletzea(pIFK);
+            //TODO eman beharrezkoa: ifk, izena, helbidea
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU, SQLManager.getManager().getArgitaletxeak());
             bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ARG_KEN_ONDO);
         }

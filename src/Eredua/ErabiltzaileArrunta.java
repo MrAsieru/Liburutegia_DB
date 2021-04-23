@@ -27,10 +27,12 @@ public class ErabiltzaileArrunta extends Observable {
     }
 
     public void getKatalogoa() {
+        //TODO eman beharrezkoa: isbn, izena, argData, lengoaia, argitaletxeaIzena, mailegatuta, erreserbatuta
         bistaNotifikatu(NotifikazioMotak.ERABARR_KAT_TAULA_EGUNERATU, SQLManager.getManager().getKatalogoa());
     }
 
     public void getKatalogoa(String pIzena, String pDataBehe, String pDataGoi, String pLengoaia, boolean pEskuragarri) {
+        //TODO eman beharrezkoa: isbn, izena, argData, lengoaia, argitaletxeaIzena, mailegatuta, erreserbatuta
         bistaNotifikatu(NotifikazioMotak.ERABARR_KAT_TAULA_EGUNERATU, SQLManager.getManager().getKatalogoa(pIzena, pDataBehe, pDataGoi, pLengoaia, pEskuragarri));
     }
 
@@ -45,16 +47,19 @@ public class ErabiltzaileArrunta extends Observable {
     }
 
     public void getKolekzioak() {
-        bistaNotifikatu(NotifikazioMotak.ERABARR_KAT_TAULA_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
+        //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
+        bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
     }
 
     public void getKolekziokoLiburuak(String pKolekzioa) {
-        bistaNotifikatu(NotifikazioMotak.ERABARR_KAT_TAULA_EGUNERATU, SQLManager.getManager().getKolekziokoLiburuak(this.nan, pKolekzioa));
+        //TODO eman beharrezkoa: isbn, izena, erreserbatuta, mailegatuta
+        bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUAK_EGUNERATU, SQLManager.getManager().getKolekziokoLiburuak(this.nan, pKolekzioa));
     }
 
     public void sortuKolekzioa(String pIzena){
         try{
             SQLManager.getManager().sortuKolekzioa(this.nan, pIzena);
+            //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
             bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
             bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOA_SORTU_ONDO);
         }
@@ -66,6 +71,7 @@ public class ErabiltzaileArrunta extends Observable {
     public void removeKolekzioa(String pKolekzioIzena){
         try{
             SQLManager.getManager().removeKolekzioa(this.nan, pKolekzioIzena);
+            //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
             bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
             bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO);
         }
@@ -77,7 +83,8 @@ public class ErabiltzaileArrunta extends Observable {
     public void addLiburuaKolekziora(String pKolekzioIzena, long pISBN){
         try{
             SQLManager.getManager().addLiburuakKolekziora(this.nan, pKolekzioIzena, pISBN);
-            bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
+            //TODO eman beharrezkoa: isbn, izena, erreserbatuta, mailegatuta
+            bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUAK_EGUNERATU, SQLManager.getManager().getKolekziokoLiburuak(this.nan, pKolekzioIzena));
             bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUA_GEHITU_ONDO);
         }
         catch (SQLException e){
@@ -88,7 +95,8 @@ public class ErabiltzaileArrunta extends Observable {
     public void removeLiburuaKolekzioan(String pKolekzioIzena, long pISBN){
         try{
             SQLManager.getManager().removeLiburuakKolekziora(this.nan, pKolekzioIzena, pISBN);
-            bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
+            //TODO eman beharrezkoa: isbn, izena, erreserbatuta, mailegatuta
+            bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUAK_EGUNERATU, SQLManager.getManager().getKolekziokoLiburuak(this.nan, pKolekzioIzena));
             bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_LIBURUA_KENDU_ONDO);
         }
         catch (SQLException e){
@@ -98,6 +106,7 @@ public class ErabiltzaileArrunta extends Observable {
 
     public void getErabiltzaileInformazioa(){
         try {
+            //TODO eman beharrezkoa: nan, izena, abizena, generoa, jaiotze data
             bistaNotifikatu(NotifikazioMotak.ERABARR_KON_INFORMAZIOA_EGUNERATU, SQLManager.getManager().getErabiltzaileInformazioa(this.nan));
         }
         catch (SQLException e){
@@ -109,6 +118,7 @@ public class ErabiltzaileArrunta extends Observable {
     public void erabiltzaileInformazioaEguneratu(String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData){
         try{
             SQLManager.getManager().erabiltzaileInformazioaEguneratu(this.nan, pIzena, pAbizena, pPasahitza, pGeneroa, pJaioData);
+            //TODO eman beharrezkoa: nan, izena, abizena, generoa, jaiotze data
             bistaNotifikatu(NotifikazioMotak.ERABARR_KON_INFORMAZIOA_EGUNERATU, SQLManager.getManager().getErabiltzaileInformazioa(this.nan));
             bistaNotifikatu(NotifikazioMotak.ERABARR_KON_ALDAKETA_ONDO);
         }

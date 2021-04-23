@@ -136,33 +136,31 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		//			arg[0] -> NotifikazioMotak,
 		//			arg[1,2,3,...] -> Datuak
 		// Datu egiturak:
-		// LIBURUZAIN_ERAB_LISTA_EGUNERATU: 				Erabiltzailea[]
+		// LIBURUZAIN_ERAB_LISTA_EGUNERATU: 				Erabiltzailea[]: nan, izena, abizena, jaiotzedata, generoa
 		// LIBURUZAIN_ERAB_SORTU_ONDO:						ezer
 		// LIBURUZAIN_ERAB_SORTU_TXARTO:					String
 		// LIBURUZAIN_ERAB_PASAHITZA_ONDO:					ezer
 		// LIBURUZAIN_ERAB_PASAHITZA_TXARTO:				String
 		// LIBURUZAIN_ERAB_EZA_ONDO							ezer
 		// LIBURUZAIN_ERAB_EZA_TXARTO						String
-		// LIBURUZAIN_KAT_TAULA_EGUNERATUA					Liburua[]
+		// LIBURUZAIN_KAT_TAULA_EGUNERATU					Liburua[]: isbn, izena, argitaratzedata, lengoaia, erreserbatuta, mailegatuta, erabiltzaileNAN
 		// LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU: 	String[]
-		// LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU: 	String[]
-		// LIBURUZAIN_KAT_GEH_IDAZLE_LISTA_EGUNERATU: 		String[]
+		// LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU: 			Argitaletxea[]: ifk, izena, helbidea
+		// LIBURUZAIN_IDAZLE_LISTA_EGUNERATU: 				Idazle[]: id, izena, abizena, generoa, herrialdea
 		// LIBURUZAIN_KAT_GEH_ONDO_SORTUTA: 				ezer
 		// LIBURUZAIN_KAT_GEH_TXARTO_SORTUTA: 				String
 		// LIBURUZAIN_KAT_EZA_ONDO_EZABATUTA: 				ezer
 		// LIBURUZAIN_KAT_EZA_TXARTO_EZABATUTA:				String
-		// LIBURUZAIN_MAI_TAULA_EGUNERATU:					Mailegua[]
+		// LIBURUZAIN_MAI_TAULA_EGUNERATU:					Mailegua[]: isbn, liburuaizena, nan erabiltzaileaizena
 		// LIBURUZAIN_MAI_HASI_ONDO:						ezer
-		// LIBURUZAIN_MAI_HASI_ERRESERBATUTA:				Erabiltzailea
+		// LIBURUZAIN_MAI_HASI_ERRESERBATUTA:				Erabiltzailea: izena, abizena, nan
 		// LIBURUZAIN_MAI_HASI_TXARTO:						String
 		// LIBURUZAIN_MAI_BUELTATU_ONDO:					ezer
 		// LIBURUZAIN_MAI_BUELTATU_TXARTO:					String
-		// LIBURUZAIN_IDL_TAULA_EGUNERATU:					Idazlea[]
 		// LIBURUZAIN_IDL_GEH_ONDO:							ezer
 		// LIBURUZAIN_IDL_GEH_TXARTO:						String
 		// LIBURUZAIN_IDL_KEN_ONDO:							ezer
 		// LIBURUZAIN_IDL_KEN_TXARTO:						String
-		// LIBURUZAIN_ARG_TAULA_EGUNERATU:					Argitaletxea[]
 		// LIBURUZAIN_ARG_GEH_ONDO:							ezer
 		// LIBURUZAIN_ARG_GEH_TXARTO:						String
 		// LIBURUZAIN_ARG_KEN_ONDO:							ezer

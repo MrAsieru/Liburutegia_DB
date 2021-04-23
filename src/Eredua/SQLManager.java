@@ -129,7 +129,7 @@ public class SQLManager {
             throw e;
         }
     }
-
+    //TODO eman beharrezkoa: isbn, izena, argData, lengoaia, argitaletxeaIzena, mailegatuta, erreserbatuta
     public ArrayList<Liburua> getKatalogoa() {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -187,7 +187,7 @@ public class SQLManager {
     }
 
     /**Liburuzaina**/
-
+//TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
     public ArrayList<Erabiltzailea> getErabiltzaileak() {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -215,7 +215,7 @@ public class SQLManager {
         }
         return lista;
     }
-
+    //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
     public ArrayList<Erabiltzailea> getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -243,7 +243,7 @@ public class SQLManager {
         }
         return lista;
     }
-
+    //TODO eman beharrezkoa: isbn, izena, argitaratzedata, lengoaia, erreserbatuta, mailegatuta, erabiltzaileNAN
     public ArrayList<Liburua> getLiburuak() {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -296,7 +296,7 @@ public class SQLManager {
         }
         return liburua;
     }
-
+    //TODO eman beharrezkoa: isbn, liburuaizena, nan erabiltzaileaizena
     public ArrayList<Mailegua> getMaileguak() {
         ArrayList<Mailegua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -319,7 +319,7 @@ public class SQLManager {
         }
         return lista;
     }
-
+    //TODO eman beharrezkoa: id, izena, abizena, generoa, herrialdea
     public ArrayList<Idazlea> getIdazleak() {
         ArrayList<Idazlea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -343,7 +343,7 @@ public class SQLManager {
         }
         return lista;
     }
-
+    //TODO eman beharrezkoa: ifk, izena, helbidea
     public ArrayList<Argitaletxea> getArgitaletxeak() {
         ArrayList<Argitaletxea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -585,7 +585,7 @@ public class SQLManager {
             throw e;
         }
     }
-
+    //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
     public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN) {
         ArrayList<LiburuKolekzio> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -607,7 +607,7 @@ public class SQLManager {
         }
         return lista;
     }
-
+    //TODO eman beharrezkoa: isbn, izena, erreserbatuta, mailegatuta
     public ArrayList<Liburua> getKolekziokoLiburuak(String pNAN, String pKolekzioa) {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -671,7 +671,7 @@ public class SQLManager {
             throw e;
         }
     }
-
+    //TODO eman beharrezkoa: nan, izena, abizena, generoa, jaiotze data
     public String[] getErabiltzaileInformazioa(String pNAN) throws SQLException {
         //String[] non nan, izena, abizena, generoa, jaiotze data
         String[] lista = new String[4];
