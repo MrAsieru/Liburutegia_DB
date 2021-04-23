@@ -47,18 +47,19 @@ public class SQLManager {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("select * from Erabiltzailea".formatted());
+            ResultSet results = statement.executeQuery("""
+            SELECT liburuzaina_da
+            FROM Erabiltzailea
+            WHERE nan=\'%s\' AND 
+                pasahitza=\'%s\'
+            """.formatted(pNan, pPasahitza));
 
-            results.next(); //Lehenengo taula lortzeko
-            if (results.getString("Pasahitza").equals(pPasahitza)) {
-                if (results.getString("Admin").equals("0")) {
-                    erab = ErabiltzaileMota.LIBURUZAIN;
-                }
-                else {
-                    erab = ErabiltzaileMota.ARRUNTA;
-                }
+            if (!results.next()){
+                erab = ErabiltzaileMota.OKERRA;
+            } else {
+                if (results.getBoolean("liburuzaina_da")) erab = ErabiltzaileMota.LIBURUZAIN;
+                else erab = ErabiltzaileMota.ARRUNTA;
             }
-
         }
         catch (SQLException e){
             e.printStackTrace();
