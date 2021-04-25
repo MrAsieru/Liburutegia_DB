@@ -25,8 +25,6 @@ public class SQLManager {
 
     private void konektatu() {
         try {
-            // TODO - datu-basera konektatzeko kodea
-
             String zerbitzaria = "jdbc:mysql://localhost:3306/Liburutegia";
             String erabiltzailea = "root";
             String pasahitza = "";
@@ -69,7 +67,7 @@ public class SQLManager {
 
     public void aldatuPasahitza(String pNAN, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("""
@@ -82,11 +80,10 @@ public class SQLManager {
             throw e;
         }
     }
-    //TODO eman beharrezkoa: isbn, izena, argData, lengoaia, argitaletxeaIzena, mailegatuta, erreserbatuta
+
     public ArrayList<Liburua> getKatalogoa() {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -96,13 +93,13 @@ public class SQLManager {
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString(0));
-                liburua.izena = results.getString(1);
-                liburua.argitaratzeData = results.getString(2);
-                liburua.lengoaia = results.getString(3);
-                liburua.argitaletxeaIzena = results.getString(4);
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString(5));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString(6));
+                liburua.isbn = Long.parseLong(results.getString(1));
+                liburua.izena = results.getString(2);
+                liburua.argitaratzeData = results.getString(3);
+                liburua.lengoaia = results.getString(4);
+                liburua.argitaletxeaIzena = results.getString(5);
+                liburua.mailegatuta = results.getBoolean(6);
+                liburua.erreserbatua = results.getBoolean(7);
                 lista.add(liburua);
             }
         }
@@ -115,7 +112,6 @@ public class SQLManager {
     public ArrayList<Liburua> getKatalogoa(String pIzena, String pDataBehe, String pDataGoi, String pLengoaia, boolean pEskuragarri) {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             boolean and = false;
             String esaldia = """
@@ -135,6 +131,7 @@ public class SQLManager {
                     esaldia += " AND ";
                 }
                 esaldia += "\'%s\' <= L.argitaratze_data".formatted(pDataBehe);
+                and = true;
             }
             if (pDataGoi != null) {
                 if (and){
@@ -142,6 +139,7 @@ public class SQLManager {
                     esaldia += " AND ";
                 }
                 esaldia += "L.argitaratze_data <= \'%s\'".formatted(pDataGoi);
+                and = true;
             }
             if (pLengoaia != null) {
                 if (and){
@@ -149,6 +147,7 @@ public class SQLManager {
                     esaldia += " AND ";
                 }
                 esaldia += "L.lengoaia=\'%s\'".formatted(pLengoaia);
+                and = true;
             }
             if (pEskuragarri) {
                 if (and){
@@ -164,13 +163,13 @@ public class SQLManager {
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString(0));
-                liburua.izena = results.getString(1);
-                liburua.argitaratzeData = results.getString(2);
-                liburua.lengoaia = results.getString(3);
-                liburua.argitaletxeaIzena = results.getString(4);
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString(5));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString(6));
+                liburua.isbn = Long.parseLong(results.getString(1));
+                liburua.izena = results.getString(2);
+                liburua.argitaratzeData = results.getString(3);
+                liburua.lengoaia = results.getString(4);
+                liburua.argitaletxeaIzena = results.getString(5);
+                liburua.mailegatuta = results.getBoolean(6);
+                liburua.erreserbatua = results.getBoolean(7);
                 lista.add(liburua);
             }
         }
@@ -181,11 +180,9 @@ public class SQLManager {
     }
 
     /**Liburuzaina**/
-//TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
     public ArrayList<Erabiltzailea> getErabiltzaileak() {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -208,11 +205,10 @@ public class SQLManager {
         }
         return lista;
     }
-    //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
+
     public ArrayList<Erabiltzailea> getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -238,11 +234,10 @@ public class SQLManager {
         }
         return lista;
     }
-    //TODO eman beharrezkoa: isbn, izena, argitaratzedata, lengoaia, erreserbatuta, mailegatuta, erabiltzaileNAN
+
     public ArrayList<Liburua> getLiburuak() {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -271,7 +266,7 @@ public class SQLManager {
     public Liburua getLiburua(long pISBN) {
         Liburua liburua = new Liburua();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO probatu barik
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -296,11 +291,9 @@ public class SQLManager {
         }
         return liburua;
     }
-    //TODO eman beharrezkoa: isbn, liburuaizena, nan, erabiltzaileaizena
     public ArrayList<Mailegua> getMaileguak() {
         ArrayList<Mailegua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -311,10 +304,10 @@ public class SQLManager {
 
             while (results.next()) {
                 Mailegua mailegua = new Mailegua();
-                mailegua.isbn = Long.parseLong(results.getString(0));
-                mailegua.liburuaIzena = results.getString(1);
-                mailegua.nan = results.getString(2);
-                mailegua.erabiltzaileaIzena = results.getString(3);
+                mailegua.isbn = results.getLong(1);
+                mailegua.liburuaIzena = results.getString(2);
+                mailegua.nan = results.getString(3);
+                mailegua.erabiltzaileaIzena = results.getString(4);
                 lista.add(mailegua);
             }
         }
@@ -323,11 +316,9 @@ public class SQLManager {
         }
         return lista;
     }
-    //TODO eman beharrezkoa: id, izena, abizena, generoa, herrialdea
     public ArrayList<Idazlea> getIdazleak() {
         ArrayList<Idazlea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -350,11 +341,9 @@ public class SQLManager {
         }
         return lista;
     }
-    //TODO eman beharrezkoa: ifk, izena, helbidea
     public ArrayList<Argitaletxea> getArgitaletxeak() {
         ArrayList<Argitaletxea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -379,7 +368,7 @@ public class SQLManager {
 
     public void addLiburu(Liburua pLiburua) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             statement.execute("""
@@ -397,7 +386,7 @@ public class SQLManager {
 
     public void removeLiburu(long ISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("""
@@ -412,7 +401,7 @@ public class SQLManager {
 
     public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("""
@@ -429,7 +418,7 @@ public class SQLManager {
 
     public void removeErabiltzaile(String pNAN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("""
@@ -444,7 +433,7 @@ public class SQLManager {
     
     public void addAutorea(Idazlea pIdz) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -456,55 +445,7 @@ public class SQLManager {
 
     public void removeAutorea(String pIdazleZenbakia) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void updateAutoreIzena(String pIdazleZenbakia, String pIzena) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void updateAutoreAbizena(String pIdazleZenbakia, String pAbizena) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void updateAutoreGenero(String pIdazleZenbakia, String pGenero) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void updateAutoreHerrialdea(String pIdazleZenbakia, String pHerrialdea) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -516,7 +457,7 @@ public class SQLManager {
 
     public void addArgitaletxea(Argitaletxea argitaletxea) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -528,31 +469,7 @@ public class SQLManager {
 
     public void removeArgitaletzea(String pIFK) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void updateArgitaletzeIzena(String pIFK, String pIzena) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void updateArgitaletzeHelbidea(String pIFK, String pHelbidea) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -564,7 +481,7 @@ public class SQLManager {
 
     public void addMailegua(String NAN, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -576,7 +493,7 @@ public class SQLManager {
 
     public void removeMailegua(long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -590,7 +507,7 @@ public class SQLManager {
 
     public void sortuKolekzioa(String pNAN, String pIzena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -602,7 +519,7 @@ public class SQLManager {
 
     public void removeKolekzioa(String pKolekzioIzena, String pNAN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -611,20 +528,41 @@ public class SQLManager {
             throw e;
         }
     }
-    //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
     public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN) {
+        return getKolekzioak(pNAN, -1, -1);
+    }
+    public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN, int pBehe, int pGoi) {
         ArrayList<LiburuKolekzio> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
+            String esaldia = """
+                SELECT x.kol_izena, SUM(x.guztira)
+                FROM (
+                    SELECT kol_izena, COUNT(*) AS guztira
+                    FROM Kolekzio_Liburua
+                    WHERE erab_nan=\'%s\'
+                    GROUP BY kol_izena
+                    UNION
+                    SELECT izena, 0
+                    FROM Kolekzioa
+                    WHERE erab_nan=\'%s\') AS x
+                GROUP BY x.kol_izena
+                """.formatted(pNAN, pNAN);
+            if (pBehe != -1 && pGoi == -1) {
+                esaldia += " HAVING %s <= SUM(x.guztira)".formatted(pBehe);
+            } else if (pBehe == -1 && pGoi != -1) {
+                esaldia += " HAVING SUM(x.guztira) <= %s".formatted(pGoi);
+            } else if (pBehe != -1 && pGoi != -1) {
+                esaldia += " HAVING SUM(x.guztira) BETWEEN %s AND %s".formatted(pBehe, pGoi);
+            }
+            esaldia += ";";
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery(esaldia);
 
             while (results.next()) {
                 LiburuKolekzio kolekzio = new LiburuKolekzio();
-                kolekzio.izena = results.getString("Izena");
-                kolekzio.erabNAN = results.getString("ErabiltzaileaNAN");
-                kolekzio.liburuLista = this.getKolekziokoLiburuak(pNAN, kolekzio.izena); //TODO liburuak ez dira behar
+                kolekzio.izena = results.getString(1);
+                kolekzio.liburuKantitatea = results.getInt(2);
                 lista.add(kolekzio);
             }
         }
@@ -633,47 +571,24 @@ public class SQLManager {
         }
         return lista;
     }
-    public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN, int pBehe, int pGoi) { //TODO -1 bada ez hartu kontuan
-        ArrayList<LiburuKolekzio> lista = new ArrayList<>();
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
-
-            while (results.next()) {
-                LiburuKolekzio kolekzio = new LiburuKolekzio();
-                kolekzio.izena = results.getString("Izena");
-                kolekzio.erabNAN = results.getString("ErabiltzaileaNAN");
-                kolekzio.liburuLista = this.getKolekziokoLiburuak(pNAN, kolekzio.izena);
-                lista.add(kolekzio);
-            }
-        }
-        catch (SQLException e){
-            e.printStackTrace();
-        }
-        return lista;
-    }
-    //TODO eman beharrezkoa: isbn, izena, erreserbatuta, mailegatuta
     public ArrayList<Liburua> getKolekziokoLiburuak(String pNAN, String pKolekzioa) {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted()); //Lortu erabiltzaile baten kolekzioa liburuaren bidez
+            ResultSet results = statement.executeQuery("""
+                SELECT L.isbn, L.izena, L.erreserbatuta, L.mailegatuta
+                FROM Kolekzio_Liburua K JOIN Liburua L ON K.lib_isbn = L.isbn
+                WHERE K.erab_nan=\'%s\' AND
+                    K.kol_izena=\'%s\';
+                """.formatted(pNAN, pKolekzioa));
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString("ISBN"));
-                liburua.izena = results.getString("Izena");
-                liburua.argitaratzeData = results.getString("ArgitaratzeEguna");
-                liburua.lengoaia = results.getString("Hizkuntza");
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString("Mailegatu"));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString("Erreserbatua"));
-                liburua.erabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
-                liburua.idazleaZnb = Integer.parseInt(results.getString("IdazleZenbakia"));
-                liburua.argitaletxeaIFK = results.getString("ArgitaletxeIFK");
+                liburua.isbn = results.getLong(1);
+                liburua.izena = results.getString(2);
+                liburua.erreserbatua = results.getBoolean(3);
+                liburua.mailegatuta = results.getBoolean(4);
                 lista.add(liburua);
             }
         }
@@ -685,7 +600,7 @@ public class SQLManager {
 
     public void addLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -697,7 +612,7 @@ public class SQLManager {
 
     public void removeLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -709,7 +624,7 @@ public class SQLManager {
 
     public void liburuaErreserbatu(String pNAN, long pIsbn) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
+        //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
             statement.executeQuery("".formatted());
@@ -719,22 +634,23 @@ public class SQLManager {
         }
     }
     //TODO eman beharrezkoa: nan, izena, abizena, generoa, jaiotze data
-    public String[] getErabiltzaileInformazioa(String pNAN) throws SQLException {
-        //String[] non nan, izena, abizena, generoa, jaiotze data
-        String[] lista = new String[4];
+    public ArrayList<String> getErabiltzaileInformazioa(String pNAN) throws SQLException {
+        ArrayList<String> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted()); //Erabiltzaile bakarra lortu!!!
+            ResultSet results = statement.executeQuery("""
+                SELECT nan, izena, abizena, generoa, jaiotze_data
+                FROM Erabiltzailea
+                WHERE nan=\'%s\'
+            """.formatted(pNAN));
 
-            String[] erabiltzaileInfo = new String[5];
             results.next();
-            erabiltzaileInfo[0] = results.getString("NAN");
-            erabiltzaileInfo[1] = results.getString("Izena");
-            erabiltzaileInfo[2] = results.getString("Abizena");
-            erabiltzaileInfo[3] = results.getString("Generoa");
-            erabiltzaileInfo[4] = results.getString("JaiotzeData");
+            lista.add(results.getString(1));
+            lista.add(results.getString(2));
+            lista.add(results.getString(3));
+            lista.add(results.getString(4));
+            lista.add(results.getString(5));
         }
         catch (SQLException e){
             e.printStackTrace();
@@ -744,6 +660,7 @@ public class SQLManager {
 
     public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             if (pIzena != null) statement.executeQuery("""

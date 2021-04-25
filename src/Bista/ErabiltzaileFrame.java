@@ -3,10 +3,7 @@ package Bista;
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -17,29 +14,19 @@ import javax.swing.table.DefaultTableModel;
 import Egitura.LiburuKolekzio;
 import Egitura.Liburua;
 import Eredua.ErabiltzaileArrunta;
+import Eredua.Liburuzaina;
 import Eredua.NotifikazioMotak;
 
-import javax.swing.JTabbedPane;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
 
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.stream.Collectors;
-import javax.swing.JPasswordField;
 import javax.swing.text.JTextComponent;
 
 public class ErabiltzaileFrame extends JFrame implements Observer {
@@ -59,7 +46,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JLabel lblKatPopArg;
 	private JTextField txfKatPopArgBehe;
 	private JLabel lblKatPopArgBehe;
-	private JTextField txfPopKatArgGoi;
+	private JTextField txfKatPopArgGoi;
 	private JLabel lblKatPopArgGoi;
 	private JSeparator separator_1;
 	private JLabel lblLengoaia;
@@ -72,8 +59,6 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JPanel pnlKatPopLeng;
 	private JSeparator separator_2;
 	private JPanel pnlKolTaulak;
-	private DefaultTableModel dtmKol1;
-	private DefaultTableModel dtmKol2;
 	private JButton btnKatErreserba;
 	private JPanel pnlKontua;
 	private JPanel pnlKolKolekzioakBotoi;
@@ -179,6 +164,12 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 						katalogoaListaEguneratu((ArrayList<Liburua>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_TAULA_EGUNERATU ez du eskatutakoa jaso");
 					break;
+				case ERABARR_KAT_FIL_LENGOAIA_LISTA_EGUNERATU:
+					if (((Object[])arg)[1] instanceof ArrayList) {
+						System.out.println("[Bista.Erabiltzailea]: Lengoaien lista eguneratu da");
+						filtroaLengoaiakEguneratu((ArrayList<String>) ((Object[])arg)[1]);
+					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_FIL_LENGOAIA_LISTA_EGUNERATU ez du eskatutakoa jaso");
+					break;
 				case ERABARR_KAT_ERRESERBA_ONDO:
 					JOptionPane.showMessageDialog(contentPane, "Erreserba ondo gorde da", "Erreserba ondo gordeta", JOptionPane.PLAIN_MESSAGE);
 					break;
@@ -232,9 +223,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_LIBURUA_KENDU_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KON_INFORMAZIOA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof String[]){
+					if (((Object[])arg)[1] instanceof ArrayList){
 						System.out.println("[Bista.Erabiltzailea]: Kontua informazioa eguneratu da");
-						kontuaInformazioaKargatu((String[]) ((Object[])arg)[1]);
+						kontuaInformazioaKargatu((ArrayList<String>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KON_INFORMAZIOA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KON_ALDAKETA_ONDO:
@@ -259,25 +250,37 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		}
 	}
 
+	private void filtroaLengoaiakEguneratu(ArrayList<String> pLista) {
+		if (cbxKatPopLeng != null) {
+			int aukeratuta = cbxKatPopLeng.getSelectedIndex();
+			cbxKatPopLeng.setModel(new DefaultComboBoxModel());
+			cbxKatPopLeng.addItem("-");
+			for (String leng:pLista) {
+				cbxKatPopLeng.addItem(leng);
+			}
+			cbxKatPopLeng.setSelectedIndex(aukeratuta);
+		}
+	}
+
 	private void kolekzioaKolekzioListaEguneratu(ArrayList<LiburuKolekzio> pLista) {
-		dtmKol1.setRowCount(0);
+		dtmKolKolekzioak.setRowCount(0);
 		for (LiburuKolekzio kol:pLista){
-			dtmKol1.addRow(new Object[]{kol.izena, kol.liburuKantitatea});
+			dtmKolKolekzioak.addRow(new Object[]{kol.izena, kol.liburuKantitatea});
 		}
 	}
 
 	private void kolekzioaLiburuListaEguneratu(ArrayList<Liburua> pLista) {
-		dtmKol2.setRowCount(0);
+		dtmKolLiburuak.setRowCount(0);
 		for (Liburua lib:pLista) {
-			dtmKol1.addRow(new Object[] {lib.isbn, lib.izena, (!lib.erreserbatua && !lib.mailegatuta)});
+			dtmKolLiburuak.addRow(new Object[] {lib.isbn, lib.izena, (!lib.erreserbatua && !lib.mailegatuta)});
 		}
 	}
 
-	private void kontuaInformazioaKargatu(String[] pLista) {
-		txfKonNan.setText(pLista[0]);
+	private void kontuaInformazioaKargatu(ArrayList<String> pLista) {
+		txfKonNan.setText(pLista.get(0));
 		HintTextField[] eremuak =  new HintTextField[] {(HintTextField) txfKonIzena, (HintTextField)txfKonAbizena, (HintTextField)txfKonGeneroa, (HintTextField)txfKonJaioData};
 		for (int i = 0; i < eremuak.length; i++) {
-			eremuak[i].setHint(pLista[i+1]);
+			eremuak[i].setHint(pLista.get(i + 1));
 		}
 	}
 
@@ -293,6 +296,17 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					if (tabbedPane.getSelectedIndex() == 2) {
 						System.out.println("[Kontrolatzailea]: Nire kontua panela irekita, informazioa eskatu da.");
 						ErabiltzaileArrunta.getInstantzia().getErabiltzaileInformazioa();
+					}
+					switch (tabbedPane.getSelectedIndex()) {
+						case 0:
+							ErabiltzaileArrunta.getInstantzia().getKatalogoa();
+							break;
+						case 1:
+							ErabiltzaileArrunta.getInstantzia().getKolekzioak();
+							break;
+						case 2:
+							ErabiltzaileArrunta.getInstantzia().getErabiltzaileInformazioa();
+							break;
 					}
 				}
 			});
@@ -333,6 +347,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 				}
 			};
 			tblKat = new JTable(dtmKat);
+			tblKat.getTableHeader().setReorderingAllowed(false);
 			ErabiltzaileArrunta.getInstantzia().getKatalogoa();
 		}
 		return tblKat;
@@ -417,10 +432,15 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			gbc_chbKatPopEsku.gridy = 6;
 			pnlKatPopFiltratu.add(getChbKatPopEsku(), gbc_chbKatPopEsku);
 		}
+		ErabiltzaileArrunta.getInstantzia().getLengoaiak();
 		int aukera = JOptionPane.showConfirmDialog(this, pnlKatPopFiltratu, "Katalogoa filtratu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		if (aukera == 0) {
-			System.out.println(String.format("[Kontrolatzailea]: (Filtroa Pop-Up) datuak bidali. Izena:%s, DataBehe:%s, DataGoi:%s, Lengoaia:%s, Eskuragarri:%s", txfKatPopIzena.getText(), txfKatPopArgBehe.getText(), txfPopKatArgGoi.getText(), (String) cbxKatPopLeng.getSelectedItem(), chbKatPopEsku.isSelected()));
-			ErabiltzaileArrunta.getInstantzia().getKatalogoa(txfKatPopIzena.getText(), txfKatPopArgBehe.getText(), txfPopKatArgGoi.getText(), (String) cbxKatPopLeng.getSelectedItem(), chbKatPopEsku.isSelected());
+			System.out.println(String.format("[Kontrolatzailea]: (Filtroa Pop-Up) datuak bidali. Izena:%s, DataBehe:%s, DataGoi:%s, Lengoaia:%s, Eskuragarri:%s", txfKatPopIzena.getText(), txfKatPopArgBehe.getText(), txfKatPopArgGoi.getText(), (String) cbxKatPopLeng.getSelectedItem(), chbKatPopEsku.isSelected()));
+			String izena = (txfKatPopIzena.getText().equals(""))?null:txfKatPopIzena.getText();
+			String behe = (txfKatPopArgBehe.getText().equals(""))?null:txfKatPopArgBehe.getText();
+			String goi = (txfKatPopArgGoi.getText().equals(""))?null: txfKatPopArgGoi.getText();
+			String lengoaia = (cbxKatPopLeng.getSelectedItem()) == null || ((String) cbxKatPopLeng.getSelectedItem()).equals("-") ? null:(String) cbxKatPopLeng.getSelectedItem();
+			ErabiltzaileArrunta.getInstantzia().getKatalogoa(izena, behe, goi, lengoaia, chbKatPopEsku.isSelected());
 		} else System.out.println("[Kontrolatzailea]: (Filtroa Pop-Up) lehioa itxi");
 	}
 
@@ -438,7 +458,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 	private JTextField getTxfKatPopArgBehe() {
 		if (txfKatPopArgBehe == null) {
-			txfKatPopArgBehe = new JTextField();
+			txfKatPopArgBehe = new HintTextField("uuuu-hh-ee");
 			txfKatPopArgBehe.setColumns(10);
 		}
 		return txfKatPopArgBehe;
@@ -449,12 +469,12 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		}
 		return lblKatPopArgBehe;
 	}
-	private JTextField getTxfPopKatArgGoi() {
-		if (txfPopKatArgGoi == null) {
-			txfPopKatArgGoi = new JTextField();
-			txfPopKatArgGoi.setColumns(10);
+	private JTextField getTxfKatPopArgGoi() {
+		if (txfKatPopArgGoi == null) {
+			txfKatPopArgGoi = new HintTextField("uuuu-hh-ee");
+			txfKatPopArgGoi.setColumns(10);
 		}
-		return txfPopKatArgGoi;
+		return txfKatPopArgGoi;
 	}
 	private JLabel getLblKatPopArgGoi() {
 		if (lblKatPopArgGoi == null) {
@@ -556,7 +576,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			gbc_txfPopKatArgGoi.insets = new Insets(0, 0, 5, 5);
 			gbc_txfPopKatArgGoi.gridx = 2;
 			gbc_txfPopKatArgGoi.gridy = 1;
-			pnlKatPopArg.add(getTxfPopKatArgGoi(), gbc_txfPopKatArgGoi);
+			pnlKatPopArg.add(getTxfKatPopArgGoi(), gbc_txfPopKatArgGoi);
 			GridBagConstraints gbc_lblKatPopArgGoi = new GridBagConstraints();
 			gbc_lblKatPopArgGoi.insets = new Insets(0, 0, 5, 0);
 			gbc_lblKatPopArgGoi.anchor = GridBagConstraints.NORTH;
@@ -605,6 +625,11 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Katalogoa panela) btnKatGarbitu klikatuta");
+					txfKatPopIzena.setText("");
+					txfKatPopArgBehe.setText("");
+					txfKatPopArgGoi.setText("");
+					if (cbxKatPopLeng != null) cbxKatPopLeng.setSelectedIndex(0);
+					chbKatPopEsku.setSelected(false);
 					ErabiltzaileArrunta.getInstantzia().getKatalogoa();
 				}
 			});
@@ -972,6 +997,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 				}
 			};
 			tblKolKolekzioak = new JTable(dtmKolKolekzioak);
+			tblKolKolekzioak.getTableHeader().setReorderingAllowed(false);
 			tblKolKolekzioak.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 				@Override
@@ -993,6 +1019,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 				}
 			};
 			tblKolLiburuak = new JTable(dtmKolLiburuak);
+			tblKolLiburuak.getTableHeader().setReorderingAllowed(false);
 		}
 		return tblKolLiburuak;
 	}

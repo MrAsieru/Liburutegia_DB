@@ -1,6 +1,7 @@
 package Eredua;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
@@ -36,6 +37,14 @@ public class ErabiltzaileArrunta extends Observable {
         bistaNotifikatu(NotifikazioMotak.ERABARR_KAT_TAULA_EGUNERATU, SQLManager.getManager().getKatalogoa(pIzena, pDataBehe, pDataGoi, pLengoaia, pEskuragarri));
     }
 
+    public void getLengoaiak() {
+        ArrayList<String> lista = new ArrayList<>();
+        lista.add("Euskera");
+        lista.add("Gaztelera");
+        lista.add("Ingelesa");
+        bistaNotifikatu(NotifikazioMotak.ERABARR_KAT_FIL_LENGOAIA_LISTA_EGUNERATU, lista);
+    }
+
     public void liburuaErreserbatu(long pIsbn) {
         try{
             SQLManager.getManager().liburuaErreserbatu(this.nan, pIsbn);
@@ -53,6 +62,7 @@ public class ErabiltzaileArrunta extends Observable {
 
     public void getKolekzioak(int pBehe, int pGoi){ //TODO balioa -1 bada tratatu
         //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
+        bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan, pBehe, pGoi));
     }
 
     public void getKolekziokoLiburuak(String pKolekzioa) {

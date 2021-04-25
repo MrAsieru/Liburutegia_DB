@@ -9,6 +9,8 @@ import javax.swing.JPasswordField;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 import Egitura.Argitaletxea;
@@ -406,6 +408,28 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 			tabbedPane.addTab("Maileguak", null, getPnlTabMaileguak(), null);
 			tabbedPane.addTab("Idazleak", null, getPnlTabIdazleak(), null);
 			tabbedPane.addTab("Argitaletxeak", null, getPnlTabArgitaletxeak(), null);
+			tabbedPane.addChangeListener(new ChangeListener() {
+				@Override
+				public void stateChanged(ChangeEvent e) {
+					switch (tabbedPane.getSelectedIndex()) {
+						case 0:
+							Liburuzaina.getInstantzia().getErabiltzaileak();
+							break;
+						case 1:
+							Liburuzaina.getInstantzia().getLiburuak();
+							break;
+						case 2:
+							Liburuzaina.getInstantzia().getMaileguak();
+							break;
+						case 3:
+							Liburuzaina.getInstantzia().getIdazleak();
+							break;
+						case 4:
+							Liburuzaina.getInstantzia().getArgitaletxeak();
+							break;
+					}
+				}
+			});
 		}
 		return tabbedPane;
 	}
@@ -626,6 +650,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				}
 			};
 			tblErab = new JTable(dtmErab);
+			tblErab.getTableHeader().setReorderingAllowed(false);
 			Liburuzaina.getInstantzia().getErabiltzaileak();
 		}
 		return tblErab;
@@ -1048,6 +1073,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				}
 			};
 			tblKat = new JTable(dtmKat);
+			tblKat.getTableHeader().setReorderingAllowed(false);
 			Liburuzaina.getInstantzia().getLiburuak();
 		}
 		return tblKat;
@@ -1135,6 +1161,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				}
 			};
 			tblMai = new JTable(dtmMai);
+			tblMai.getTableHeader().setReorderingAllowed(false);
 			Liburuzaina.getInstantzia().getMaileguak();
 		}
 		return tblMai;
@@ -1286,6 +1313,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				}
 			};
 			tblIdl = new JTable(dtmIdl);
+			tblIdl.getTableHeader().setReorderingAllowed(false);
 			Liburuzaina.getInstantzia().getIdazleak();
 		}
 		return tblIdl;
@@ -1317,6 +1345,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				}
 			};
 			tblArg = new JTable(dtmArg);
+			tblArg.getTableHeader().setReorderingAllowed(false);
 			Liburuzaina.getInstantzia().getArgitaletxeak();
 		}
 		return tblArg;
