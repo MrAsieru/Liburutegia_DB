@@ -67,10 +67,9 @@ public class SQLManager {
 
     public void aldatuPasahitza(String pNAN, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("""
+            statement.executeUpdate("""
                 UPDATE Erabiltzailea
                 SET pasahitza=\'%s\'
                 WHERE nan=\'%s\';
@@ -368,11 +367,10 @@ public class SQLManager {
 
     public void addLiburu(Liburua pLiburua) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
             statement.execute("""
-                INSERT INTO
+                INSERT INTO Liburua
                 VALUES (%s, \'%s\', \'%s\', \'%s\', 0, 0, NULL, %s, \'%s\');
                 """.formatted(pLiburua.isbn, pLiburua.izena,
                     pLiburua.argitaratzeData, pLiburua.lengoaia,
@@ -386,10 +384,10 @@ public class SQLManager {
 
     public void removeLiburu(long ISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO ez doa
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("""
+            statement.executeUpdate("""
                 DELETE FROM Liburua
                 WHERE isbn=\'%s\'
                 """.formatted(ISBN));
@@ -421,7 +419,7 @@ public class SQLManager {
         //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("""
+            statement.executeUpdate("""
                 DELETE FROM Erabiltzailea
                 WHERE nan=\'%s\';
                 """.formatted(pNAN));
@@ -496,7 +494,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -522,7 +520,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -615,7 +613,7 @@ public class SQLManager {
         //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -627,7 +625,7 @@ public class SQLManager {
         //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -660,10 +658,10 @@ public class SQLManager {
 
     public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO ez doa
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
-            if (pIzena != null) statement.executeQuery("""
+            if (pIzena != null) statement.executeUpdate("""
                                 UPDATE Erabiltzailea
                                 SET izena=\'%s\'
                                 WHERE nan=\'%s\';
