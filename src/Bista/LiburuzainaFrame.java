@@ -29,6 +29,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -168,9 +169,9 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		if (o instanceof Liburuzaina && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 				case LIBURUZAIN_ERAB_LISTA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Erabiltzailea[]){
+					if (((Object[])arg)[1] instanceof ArrayList){
 						System.out.println("[Bista.Liburuzaina]: Erabiltzaileen taula eguneratu da");
-						erabiltzaileTaulaEguneratu((Erabiltzailea[]) ((Object[])arg)[1]);
+						erabiltzaileTaulaEguneratu((ArrayList<Erabiltzailea>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_LISTA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_ERAB_SORTU_ONDO:
@@ -198,33 +199,33 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_ERAB_EZA_TXARTO ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_KAT_TAULA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Liburua[]) {
+					if (((Object[])arg)[1] instanceof ArrayList) {
 						System.out.println("[Bista.Liburuzaina]: Katalogoaren taula eguneratu da");
-						katalogoaTaulaEguneratu((Liburua[]) ((Object[])arg)[1]);
+						katalogoaTaulaEguneratu((ArrayList<Liburua>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_KAT_TAULA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof String[]) {
+					if (((Object[])arg)[1] instanceof ArrayList) {
 						System.out.println("[Bista.Liburuzaina]: Lengoaien lista eguneratu da");
-						katalogoaLengoaiakEguneratu((String[]) ((Object[])arg)[1]);
+						katalogoaLengoaiakEguneratu((ArrayList<String>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_ARGITALETXE_LISTA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Argitaletxea[]) {
+					if (((Object[])arg)[1] instanceof ArrayList) {
 						System.out.println("[Bista.Liburuzaina]: Argitaletxeen taula eguneratu da");
-						argitaletxeakTaulaEguneratu((Argitaletxea[]) ((Object[])arg)[1]);
+						argitaletxeakTaulaEguneratu((ArrayList<Argitaletxea>) ((Object[])arg)[1]);
 
 						System.out.println("[Bista.Liburuzaina]: Argitaletxeen lista eguneratu da");
-						katalogoaArgitaletxeakEguneratu((Argitaletxea[]) ((Object[])arg)[1]);
+						katalogoaArgitaletxeakEguneratu((ArrayList<Argitaletxea>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_KAT_GEH_ARGITALETXE_LISTA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_IDAZLE_LISTA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Idazlea[]) {
+					if (((Object[])arg)[1] instanceof ArrayList) {
 						System.out.println("[Bista.Liburuzaina]: Idazleen taula eguneratu da");
-						idazleakTaulaEguneratu((Idazlea[]) ((Object[])arg)[1]);
+						idazleakTaulaEguneratu((ArrayList<Idazlea>) ((Object[])arg)[1]);
 
 						System.out.println("[Bista.Liburuzaina]: Idazleen lista eguneratu da");
-						katalogoaIdazleakEguneratu((Idazlea[]) ((Object[])arg)[1]);
+						katalogoaIdazleakEguneratu((ArrayList<Idazlea>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_IDAZLE_LISTA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_KAT_GEH_ONDO_SORTUTA:
@@ -244,9 +245,9 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_KAT_EZA_TXARTO_EZABATUTA ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_MAI_TAULA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Mailegua[]){
+					if (((Object[])arg)[1] instanceof ArrayList){
 						System.out.println("[Bista.Liburuzaina]: Maileguen taula eguneratu da");
-						maileguaTaulaEguneratu((Mailegua[]) ((Object[])arg)[1]);
+						maileguaTaulaEguneratu((ArrayList<Mailegua>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_MAI_TAULA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case LIBURUZAIN_MAI_HASI_ONDO:
@@ -310,56 +311,62 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		}
 	}
 
-	private void erabiltzaileTaulaEguneratu(Erabiltzailea[] pLista) {
+	private void erabiltzaileTaulaEguneratu(ArrayList<Erabiltzailea> pLista) {
 		dtmErab.setRowCount(0);
 		for (Erabiltzailea erab:pLista) {
 			dtmErab.addRow(new Object[] {erab.nan, erab.izena, erab.abizena, erab.jaiotzeData, erab.generoa});
 		}
 	}
 
-	private void katalogoaTaulaEguneratu(Liburua[] pLista) {
+	private void katalogoaTaulaEguneratu(ArrayList<Liburua> pLista) {
 		dtmKat.setRowCount(0);
 		for (Liburua lib:pLista) {
 			dtmKat.addRow(new Object[] {lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, (lib.erreserbatua)?"Erreserbatuta":((lib.mailegatuta)?"Mailegatuta":"Eskuragarri"), lib.erabiltzaileaNAN});
 		}
 	}
 
-	private void katalogoaLengoaiakEguneratu(String[] pLista) {
-		cbxKatGehLeng.removeAll();
-		for (String leng:pLista) {
-			cbxKatGehLeng.addItem(leng);
+	private void katalogoaLengoaiakEguneratu(ArrayList<String> pLista) {
+		if (cbxKatGehLeng != null) {
+			cbxKatGehLeng.removeAll();
+			for (String leng:pLista) {
+				cbxKatGehLeng.addItem(leng);
+			}
 		}
 	}
 
-	private void katalogoaArgitaletxeakEguneratu(Argitaletxea[] pLista) {
-		cbxKatGehArgit.removeAll();
-		for(Argitaletxea arg:pLista) {
-			cbxKatGehArgit.addItem(new ComboItem<String>(arg.Izena, arg.IFK));
+	private void katalogoaArgitaletxeakEguneratu(ArrayList<Argitaletxea> pLista) {
+		if (cbxKatGehArgit != null) {
+			cbxKatGehArgit.removeAll();
+			for(Argitaletxea arg:pLista) {
+				cbxKatGehArgit.addItem(new ComboItem<String>(arg.Izena, arg.IFK));
+			}
 		}
 	}
 
-	private void katalogoaIdazleakEguneratu(Idazlea[] pLista) {
-		cbxKatGehIdazle.removeAll();
-		for(Idazlea idl:pLista) {
-			cbxKatGehIdazle.addItem(new ComboItem<Integer>(idl.izena, idl.id));
+	private void katalogoaIdazleakEguneratu(ArrayList<Idazlea> pLista) {
+		if (cbxKatGehIdazle != null){
+			cbxKatGehIdazle.removeAll();
+			for(Idazlea idl:pLista) {
+				cbxKatGehIdazle.addItem(new ComboItem<Integer>(idl.izena, idl.id));
+			}
 		}
 	}
 
-	private void maileguaTaulaEguneratu(Mailegua[] pLista) {
+	private void maileguaTaulaEguneratu(ArrayList<Mailegua> pLista) {
 		dtmMai.setRowCount(0);
 		for (Mailegua mai:pLista) {
 			dtmMai.addRow(new Object[] {mai.isbn, mai.liburuaIzena, mai.nan, mai.erabiltzaileaIzena});
 		}
 	}
 
-	private void idazleakTaulaEguneratu(Idazlea[] pLista) {
+	private void idazleakTaulaEguneratu(ArrayList<Idazlea> pLista) {
 		dtmIdl.setRowCount(0);
 		for (Idazlea idl:pLista) {
 			dtmIdl.addRow(new Object[] {idl.id, idl.izena, idl.abizena, idl.generoa, idl.herrialdea});
 		}
 	}
 
-	private void argitaletxeakTaulaEguneratu(Argitaletxea[] pLista) {
+	private void argitaletxeakTaulaEguneratu(ArrayList<Argitaletxea> pLista) {
 		dtmArg.setRowCount(0);
 		for (Argitaletxea arg:pLista) {
 			dtmArg.addRow(new Object[] {arg.IFK, arg.Izena, arg.Helbidea});
@@ -857,10 +864,25 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		JTextField txfKatGehISBN = new JTextField();
 		txfKatGehISBN.setColumns(13);
 		panel.add(txfKatGehISBN, gbc_txfKatGehISBN);
+		GridBagConstraints gbc_txfKatGehData = new GridBagConstraints();
+		gbc_txfKatGehData.insets = new Insets(0, 0, 0, 5);
+		gbc_txfKatGehData.fill = GridBagConstraints.HORIZONTAL;
+		gbc_txfKatGehData.gridx = 1;
+		gbc_txfKatGehData.gridy = 5;
+		JTextField txfKatGehData = new HintTextField("uuuu-hh-ee");
+		panel.add(txfKatGehData, gbc_txfKatGehData);
+		GridBagConstraints gbc_lblKatGehData = new GridBagConstraints();
+		gbc_lblKatGehData.anchor = GridBagConstraints.WEST;
+		gbc_lblKatGehData.insets = new Insets(0, 0, 5, 5);
+		gbc_lblKatGehData.gridx = 1;
+		gbc_lblKatGehData.gridy = 4;
+		JLabel lblKatGehData = new JLabel("Argitaratze data:");
+		panel.add(lblKatGehData, gbc_lblKatGehData);
+		Liburuzaina.getInstantzia().getLengoaiak();
+		Liburuzaina.getInstantzia().getIdazleak();
+		Liburuzaina.getInstantzia().getArgitaletxeak();
 
 		int aukera = JOptionPane.showConfirmDialog(this, panel, "Liburua gehitu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-		Liburuzaina.getInstantzia().getLengoaiak();
-
 		if (aukera == 0) {
 			try {
 				Liburua lib = new Liburua();
@@ -869,6 +891,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				lib.lengoaia = (String) cbxKatGehLeng.getSelectedItem();
 				lib.argitaletxeaIFK = ((ComboItem<String>)cbxKatGehArgit.getSelectedItem()).getValue();
 				lib.idazleaZnb = ((ComboItem<Integer>)cbxKatGehIdazle.getSelectedItem()).getValue();
+				lib.argitaratzeData = txfKatGehData.getText();
 				System.out.println(String.format("[Kontrolatzailea]: (Liburua gehitu Pop-Up) datuak bidali. ISBN:%d, Izena:%s, Lengoaia:%s, Argitaletxea:%s, Idazlea:%d", lib.isbn, lib.izena, lib.lengoaia, lib.argitaletxeaIFK, lib.idazleaZnb));
 				Liburuzaina.getInstantzia().addLiburu(lib);
 			} catch (NumberFormatException nfe) {

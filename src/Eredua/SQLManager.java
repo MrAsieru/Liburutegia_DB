@@ -51,7 +51,7 @@ public class SQLManager {
             SELECT liburuzaina_da
             FROM Erabiltzailea
             WHERE nan=\'%s\' AND 
-                pasahitza=\'%s\'
+                pasahitza=\'%s\';
             """.formatted(pNan, pPasahitza));
 
             if (!results.next()){
@@ -67,63 +67,16 @@ public class SQLManager {
         return erab;
     }
 
-        /**Erabiltzaile guztiek erabiltzen duten metodoak**/
-
-
-    public void IzenaAldatu(String pNAN, String pIzena) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void AbizenaAldatu(String pNAN, String pAbizena) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void JaiotzeDataAldatu(String pNAN, Date pJaiotzeData) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
-    public void GeneroaAldatu(String pNAN, String pGeneroa) throws SQLException {
-        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
-        try{
-            Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
-        }
-        catch (SQLException e){
-            throw e;
-        }
-    }
-
     public void aldatuPasahitza(String pNAN, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeQuery("""
+                UPDATE Erabiltzailea
+                SET pasahitza=\'%s\'
+                WHERE nan=\'%s\';
+                """.formatted(pPasahitza, pNAN));
         }
         catch (SQLException e){
             throw e;
@@ -136,19 +89,20 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("select * from Liburua".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT L.isbn, L.izena, L.argitaratze_data, L.lengoaia, A.izena, L.mailegatuta, L.erreserbatuta
+                FROM Liburua L JOIN Argitaletxe A ON L.arg_ifk = A.ifk;
+                """);
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString("ISBN"));
-                liburua.izena = results.getString("Izena");
-                liburua.argitaratzeData = results.getString("ArgitaratzeEguna");
-                liburua.lengoaia = results.getString("Hizkuntza");
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString("Mailegatu"));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString("Erreserbatua"));
-                liburua.erabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
-                liburua.idazleaZnb = 12;//Integer.parseInt(results.getString("IdazleZenbakia"));
-                liburua.argitaletxeaIFK = results.getString("ArgitaletxeIFK");
+                liburua.isbn = Long.parseLong(results.getString(0));
+                liburua.izena = results.getString(1);
+                liburua.argitaratzeData = results.getString(2);
+                liburua.lengoaia = results.getString(3);
+                liburua.argitaletxeaIzena = results.getString(4);
+                liburua.mailegatuta = Boolean.parseBoolean(results.getString(5));
+                liburua.erreserbatua = Boolean.parseBoolean(results.getString(6));
                 lista.add(liburua);
             }
         }
@@ -163,20 +117,60 @@ public class SQLManager {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
+            boolean and = false;
+            String esaldia = """
+                SELECT L.isbn, L.izena, L.argitaratze_data, L.lengoaia, A.izena, L.mailegatuta, L.erreserbatuta
+                FROM Liburua L JOIN Argitaletxe A ON L.arg_ifk = A.ifk
+                """;
+            if (pIzena != null || pDataBehe != null || pDataGoi != null || pLengoaia != null || pEskuragarri) {
+                esaldia += " WHERE ";
+            }
+            if (pIzena != null){
+                esaldia += "L.izena LIKE \'%%%s%%\'".formatted(pIzena);
+                and = true;
+            }
+            if (pDataBehe != null) {
+                if (and){
+                    and = false;
+                    esaldia += " AND ";
+                }
+                esaldia += "\'%s\' <= L.argitaratze_data".formatted(pDataBehe);
+            }
+            if (pDataGoi != null) {
+                if (and){
+                    and = false;
+                    esaldia += " AND ";
+                }
+                esaldia += "L.argitaratze_data <= \'%s\'".formatted(pDataGoi);
+            }
+            if (pLengoaia != null) {
+                if (and){
+                    and = false;
+                    esaldia += " AND ";
+                }
+                esaldia += "L.lengoaia=\'%s\'".formatted(pLengoaia);
+            }
+            if (pEskuragarri) {
+                if (and){
+                    and = false;
+                    esaldia += " AND ";
+                }
+                esaldia += "L.mailegatuta=0 AND L.erreserbatuta=0";
+            }
+            esaldia+=";";
+
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery(esaldia);
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString("ISBN"));
-                liburua.izena = results.getString("Izena");
-                liburua.argitaratzeData = results.getString("ArgitaratzeEguna");
-                liburua.lengoaia = results.getString("Hizkuntza");
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString("Mailegatu"));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString("Erreserbatua"));
-                liburua.erabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
-                liburua.idazleaZnb = Integer.parseInt(results.getString("IdazleZenbakia"));
-                liburua.argitaletxeaIFK = results.getString("ArgitaletxeIFK");
+                liburua.isbn = Long.parseLong(results.getString(0));
+                liburua.izena = results.getString(1);
+                liburua.argitaratzeData = results.getString(2);
+                liburua.lengoaia = results.getString(3);
+                liburua.argitaletxeaIzena = results.getString(4);
+                liburua.mailegatuta = Boolean.parseBoolean(results.getString(5));
+                liburua.erreserbatua = Boolean.parseBoolean(results.getString(6));
                 lista.add(liburua);
             }
         }
@@ -194,19 +188,18 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT nan, izena, abizena, jaiotze_data, generoa
+                FROM Erabiltzailea;
+                """);
 
             while (results.next()) {
                 Erabiltzailea erab = new Erabiltzailea();
-                erab.nan = results.getString("NAN");
-                erab.izena = results.getString("Izena");
-                erab.abizena = results.getString("Abizena");
-                erab.jaiotzeData = results.getString("JaiotzeData");
-                erab.generoa = results.getString("Genero");
-                erab.liburuzainaDa = false;
-                if(Integer.parseInt(results.getString("Admin"))==0){
-                    erab.liburuzainaDa = true;
-                }
+                erab.nan = results.getString("nan");
+                erab.izena = results.getString("izena");
+                erab.abizena = results.getString("abizena");
+                erab.jaiotzeData = results.getString("jaiotze_data");
+                erab.generoa = results.getString("generoa");
                 lista.add(erab);
             }
         }
@@ -222,19 +215,21 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT nan, izena, abizena, jaiotze_data, generoa
+                FROM Erabiltzailea
+                WHERE nan LIKE \'%%%s%%\' AND
+                    izena LIKE \'%%%s%%\' AND
+                    abizena LIKE \'%%%s%%\';
+                """.formatted(pNan, pIzena, pAbizena));
 
             while (results.next()) {
                 Erabiltzailea erab = new Erabiltzailea();
-                erab.nan = results.getString("NAN");
-                erab.izena = results.getString("Izena");
-                erab.abizena = results.getString("Abizena");
-                erab.jaiotzeData = results.getString("JaiotzeData");
-                erab.generoa = results.getString("Genero");
-                erab.liburuzainaDa = false;
-                if(Integer.parseInt(results.getString("Admin"))==0){
-                    erab.liburuzainaDa = true;
-                }
+                erab.nan = results.getString("nan");
+                erab.izena = results.getString("izena");
+                erab.abizena = results.getString("abizena");
+                erab.jaiotzeData = results.getString("jaiotze_data");
+                erab.generoa = results.getString("generoa");
                 lista.add(erab);
             }
         }
@@ -250,19 +245,20 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT isbn, izena, argitaratze_data, lengoaia, erreserbatuta, mailegatuta, erab_nan
+                FROM Liburua;
+                """);
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString("ISBN"));
-                liburua.izena = results.getString("Izena");
-                liburua.argitaratzeData = results.getString("ArgitaratzeEguna");
-                liburua.lengoaia = results.getString("Hizkuntza");
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString("Mailegatu"));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString("Erreserbatua"));
-                liburua.erabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
-                liburua.idazleaZnb = Integer.parseInt(results.getString("IdazleZenbakia"));
-                liburua.argitaletxeaIFK = results.getString("ArgitaletxeIFK");
+                liburua.isbn = Long.parseLong(results.getString("isbn"));
+                liburua.izena = results.getString("izena");
+                liburua.argitaratzeData = results.getString("argitaratze_data");
+                liburua.lengoaia = results.getString("lengoaia");
+                liburua.mailegatuta = Boolean.parseBoolean(results.getString("mailegatuta"));
+                liburua.erreserbatua = Boolean.parseBoolean(results.getString("erreserbatuta"));
+                liburua.erabiltzaileaNAN = results.getString("erab_nan");
                 lista.add(liburua);
             }
         }
@@ -278,39 +274,47 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT *
+                FROM Liburua
+                WHERE isbn=\'%d\'
+                """.formatted(pISBN));
             results.next(); //Lehenengo taula (eta bakarra) lortzeko
 
-            liburua.isbn = Long.parseLong(results.getString("ISBN"));
-            liburua.izena = results.getString("Izena");
-            liburua.argitaratzeData = results.getString("ArgitaratzeEguna");
-            liburua.lengoaia = results.getString("Hizkuntza");
-            liburua.mailegatuta = Boolean.parseBoolean(results.getString("Mailegatu"));
-            liburua.erreserbatua = Boolean.parseBoolean(results.getString("Erreserbatua"));
-            liburua.erabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
-            liburua.idazleaZnb = Integer.parseInt(results.getString("IdazleZenbakia"));
-            liburua.argitaletxeaIFK = results.getString("ArgitaletxeIFK");
+            liburua.isbn = Long.parseLong(results.getString("isbn"));
+            liburua.izena = results.getString("izena");
+            liburua.argitaratzeData = results.getString("argitaratze_data");
+            liburua.lengoaia = results.getString("hizkuntza");
+            liburua.mailegatuta = Boolean.parseBoolean(results.getString("mailegatuta"));
+            liburua.erreserbatua = Boolean.parseBoolean(results.getString("erreserbatuta"));
+            liburua.erabiltzaileaNAN = results.getString("erab_nan");
+            liburua.idazleaZnb = Integer.parseInt(results.getString("idl_znb"));
+            liburua.argitaletxeaIFK = results.getString("arg_ifk");
         }
         catch (SQLException e){
             e.printStackTrace();
         }
         return liburua;
     }
-    //TODO eman beharrezkoa: isbn, liburuaizena, nan erabiltzaileaizena
+    //TODO eman beharrezkoa: isbn, liburuaizena, nan, erabiltzaileaizena
     public ArrayList<Mailegua> getMaileguak() {
         ArrayList<Mailegua> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted()); //CUIDADO!!!!!!! Teneis que conseguir las tablas y cambiarselas respectivamente como estan abajo
+            ResultSet results = statement.executeQuery("""
+                SELECT L.isbn, L.izena, E.nan, E.izena
+                FROM Liburua L JOIN Erabiltzailea E on E.nan = L.erab_nan
+                WHERE L.mailegatuta=1;
+"""); //CUIDADO!!!!!!! Teneis que conseguir las tablas y cambiarselas respectivamente como estan abajo
 
             while (results.next()) {
                 Mailegua mailegua = new Mailegua();
-                mailegua.nan = results.getString("ErabiltzaileaNAN");
-                mailegua.isbn = Long.parseLong(results.getString("ISBN"));
-                mailegua.erabiltzaileaIzena = results.getString("ErabiltzaileIzena");
-                mailegua.liburuaIzena = results.getString("LiburuIzena");
+                mailegua.isbn = Long.parseLong(results.getString(0));
+                mailegua.liburuaIzena = results.getString(1);
+                mailegua.nan = results.getString(2);
+                mailegua.erabiltzaileaIzena = results.getString(3);
                 lista.add(mailegua);
             }
         }
@@ -326,15 +330,18 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT znb, izena, abizenak, generoa, herrialdea
+                FROM Idazlea;
+                """);
 
             while (results.next()) {
                 Idazlea idazlea = new Idazlea();
-                idazlea.id = Integer.parseInt(results.getString("IdazleZenbakia"));
-                idazlea.izena = results.getString("Izena");
-                idazlea.abizena = results.getString("Abizenak");
-                idazlea.generoa = results.getString("Genero");
-                idazlea.herrialdea = results.getString("Herrialdea");
+                idazlea.id = Integer.parseInt(results.getString("znb"));
+                idazlea.izena = results.getString("izena");
+                idazlea.abizena = results.getString("abizenak");
+                idazlea.generoa = results.getString("generoa");
+                idazlea.herrialdea = results.getString("herrialdea");
                 lista.add(idazlea);
             }
         }
@@ -350,13 +357,16 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("".formatted());
+            ResultSet results = statement.executeQuery("""
+                SELECT *
+                FROM Argitaletxe;
+                """);
 
             while (results.next()) {
                 Argitaletxea argitaletxea = new Argitaletxea();
-                argitaletxea.IFK = results.getString("IFK");
-                argitaletxea.Helbidea = results.getString("Helbidea");
-                argitaletxea.Izena = results.getString("Izena");
+                argitaletxea.IFK = results.getString("ifk");
+                argitaletxea.Helbidea = results.getString("helbidea");
+                argitaletxea.Izena = results.getString("izena");
                 lista.add(argitaletxea);
             }
         }
@@ -372,7 +382,12 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.execute("""
+                INSERT INTO
+                VALUES (%s, \'%s\', \'%s\', \'%s\', 0, 0, NULL, %s, \'%s\');
+                """.formatted(pLiburua.isbn, pLiburua.izena,
+                    pLiburua.argitaratzeData, pLiburua.lengoaia,
+                    pLiburua.idazleaZnb, pLiburua.argitaletxeaIFK));
         }
         catch (SQLException e){
             throw e;
@@ -385,7 +400,10 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeQuery("""
+                DELETE FROM Liburua
+                WHERE isbn=\'%s\'
+                """.formatted(ISBN));
         }
         catch (SQLException e){
             throw e;
@@ -397,7 +415,12 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeQuery("""
+                INSERT INTO Erabiltzailea
+                VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');
+                """.formatted(pErabiltzaile.nan, pErabiltzaile.izena,
+                    pErabiltzaile.abizena, pErabiltzaile.jaiotzeData,
+                    pErabiltzaile.generoa, 0, pPasahitza));
         }
         catch (SQLException e){
             throw e;
@@ -409,7 +432,10 @@ public class SQLManager {
         //TODO
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeQuery("""
+                DELETE FROM Erabiltzailea
+                WHERE nan=\'%s\';
+                """.formatted(pNAN));
         }
         catch (SQLException e){
             throw e;
@@ -718,10 +744,33 @@ public class SQLManager {
 
     public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            if (pIzena != null) statement.executeQuery("""
+                                UPDATE Erabiltzailea
+                                SET izena=\'%s\'
+                                WHERE nan=\'%s\';
+                                """.formatted(pNAN, pIzena));
+            else if (pAbizena != null) statement.executeQuery("""
+                                UPDATE Erabiltzailea
+                                SET abizena=\'%s\'
+                                WHERE nan=\'%s\';
+                                """.formatted(pNAN, pAbizena));
+            else if (pJaioData != null) statement.executeQuery("""
+                                UPDATE Erabiltzailea
+                                SET jaiotze_data=\'%s\'
+                                WHERE nan=\'%s\';
+                                """.formatted(pNAN, pJaioData));
+            else if (pGeneroa != null) statement.executeQuery("""
+                                UPDATE Erabiltzailea
+                                SET generoa=\'%s\'
+                                WHERE nan=\'%s\';
+                                """.formatted(pNAN, pGeneroa));
+            else if (pPasahitza != null) statement.executeQuery("""
+                                UPDATE Erabiltzailea
+                                SET pasahitza=\'%s\'
+                                WHERE nan=\'%s\';
+                                """.formatted(pNAN, pJaioData));
         }
         catch (SQLException e){
             throw e;

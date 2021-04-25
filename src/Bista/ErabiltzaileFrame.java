@@ -24,10 +24,7 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -177,9 +174,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		if (o instanceof ErabiltzaileArrunta && arg instanceof Object[] && ((Object[])arg).length > 0 && ((Object[])arg)[0] instanceof NotifikazioMotak) {
 			switch ((NotifikazioMotak)((Object[])arg)[0]) {
 				case ERABARR_KAT_TAULA_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Liburua[]){
+					if (((Object[])arg)[1] instanceof ArrayList){
 						System.out.println("[Bista.Erabiltzailea]: Katalogoa taula eguneratu da");
-						katalogoaListaEguneratu((Liburua[]) ((Object[])arg)[1]);
+						katalogoaListaEguneratu((ArrayList<Liburua>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_TAULA_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KAT_ERRESERBA_ONDO:
@@ -191,9 +188,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_ERRESERBA_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOAK_EGUNERATU:
-					if (((Object[])arg)[1] instanceof LiburuKolekzio[]){
+					if (((Object[])arg)[1] instanceof ArrayList){
 						System.out.println("[Bista.Erabiltzailea]: Kolekzio lista eguneratu da");
-						kolekzioaKolekzioListaEguneratu((LiburuKolekzio[]) ((Object[])arg)[1]);
+						kolekzioaKolekzioListaEguneratu((ArrayList<LiburuKolekzio>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOAK_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:
@@ -213,9 +210,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOA_EZABATU_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_LIBURUAK_EGUNERATU:
-					if (((Object[])arg)[1] instanceof Liburua[]){
+					if (((Object[])arg)[1] instanceof ArrayList){
 						System.out.println("[Bista.Erabiltzailea]: Kolekzioaren liburu lista eguneratu da");
-						kolekzioaLiburuListaEguneratu((Liburua[]) ((Object[])arg)[1]);
+						kolekzioaLiburuListaEguneratu((ArrayList<Liburua>) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOAK_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_LIBURUA_GEHITU_ONDO:
@@ -255,23 +252,21 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		}
 	}
 
-	private void katalogoaListaEguneratu(Liburua[] pLista){
+	private void katalogoaListaEguneratu(ArrayList<Liburua> pLista){
 		dtmKat.setRowCount(0);
 		for (Liburua lib: pLista){
 			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena, (!lib.mailegatuta && !lib.erreserbatua)});
 		}
 	}
 
-	private void kolekzioaKolekzioListaEguneratu(LiburuKolekzio[] pLista) {
+	private void kolekzioaKolekzioListaEguneratu(ArrayList<LiburuKolekzio> pLista) {
 		dtmKol1.setRowCount(0);
-		if (pLista.length == pLista.length) {
-			for (LiburuKolekzio kol:pLista){
-				dtmKol1.addRow(new Object[]{kol.izena, kol.liburuKantitatea});
-			}
+		for (LiburuKolekzio kol:pLista){
+			dtmKol1.addRow(new Object[]{kol.izena, kol.liburuKantitatea});
 		}
 	}
 
-	private void kolekzioaLiburuListaEguneratu(Liburua[] pLista) {
+	private void kolekzioaLiburuListaEguneratu(ArrayList<Liburua> pLista) {
 		dtmKol2.setRowCount(0);
 		for (Liburua lib:pLista) {
 			dtmKol1.addRow(new Object[] {lib.isbn, lib.izena, (!lib.erreserbatua && !lib.mailegatuta)});

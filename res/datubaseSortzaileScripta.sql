@@ -79,3 +79,14 @@ show create table Liburua;
 # TABLA OSOA EZABATU:
 drop database Liburutegia;
 */
+INSERT INTO Erabiltzailea VALUES ('12345678A','Jon','Ruiz','2010-10-10','Mutila',0,'hola');
+
+INSERT INTO Argitaletxe VALUES('98765432A','LiburuArgitaletxe','Gran Via 45');
+
+INSERT INTO Idazlea VALUES(1,'Ander','Martinez','Mutila','Bilbo');
+
+INSERT INTO Liburua VALUES (13579,'Don Quijote','10/05/2004', 'Gaztelera',0,0,NULL,1,'98765432A');
+
+INSERT INTO Kolekzioa VALUES('12345678A', 'Nire Kolekzioa');
+
+INSERT INTO Kolekzio_Liburua VALUES('12345678A','Iker', 13579);

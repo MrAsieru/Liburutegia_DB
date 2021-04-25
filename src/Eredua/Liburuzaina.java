@@ -31,7 +31,7 @@ public class Liburuzaina extends Observable{
 
     public void getErabiltzaileak() {
         //TODO eman beharrezkoa: nan, izena, abizena, jaiotzedata, generoa
-        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_LISTA_EGUNERATU, SQLManager.getManager().getErabiltzaileak());
+        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_ERAB_LISTA_EGUNERATU,SQLManager.getManager().getErabiltzaileak());
     }
 
     public void getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
@@ -79,8 +79,11 @@ public class Liburuzaina extends Observable{
     }
 
     public void getLengoaiak() {
-        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU,
-                new String[]{"Euskera", "Gaztelera", "Ingelesa"});
+        ArrayList<String> lista = new ArrayList<>();
+        lista.add("Euskera");
+        lista.add("Gaztelera");
+        lista.add("Ingelesa");
+        bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_KAT_GEH_LENGOAIA_LISTA_EGUNERATU, lista);
     }
 
     public void addLiburu(Liburua pLiburua){

@@ -51,7 +51,7 @@ public class ErabiltzaileArrunta extends Observable {
         bistaNotifikatu(NotifikazioMotak.ERABARR_KOL_KOLEKZIOAK_EGUNERATU, SQLManager.getManager().getKolekzioak(this.nan));
     }
 
-    public void getKolekzioak(int pBehe, int pGoi){ // TODO balioa -1 bada tratatu
+    public void getKolekzioak(int pBehe, int pGoi){ //TODO balioa -1 bada tratatu
         //TODO eman beharrezkoa: String[]: izenak, int[]: liburu kantitateak
     }
 
