@@ -55,9 +55,9 @@ create table Kolekzioa (
 );
 
 create table Kolekzio_Liburua (
-    lib_isbn            int(13),
     erab_nan	        varchar(9),
     izena              	varchar(30),
+    lib_isbn            int(13),
     Primary Key (erab_nan, izena, lib_isbn),
     Foreign Key(lib_isbn) references Liburua(isbn),
     Foreign Key(erab_nan, izena) references Kolekzioa(erab_nan, izena)

@@ -14,10 +14,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import Egitura.Erabiltzailea;
+import Egitura.LiburuKolekzio;
 import Egitura.Liburua;
 import Eredua.ErabiltzaileArrunta;
-import Eredua.Liburuzaina;
 import Eredua.NotifikazioMotak;
 
 import javax.swing.JTabbedPane;
@@ -38,12 +37,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Dimension;
 import java.util.stream.Collectors;
 import javax.swing.JPasswordField;
 import javax.swing.text.JTextComponent;
@@ -109,6 +106,15 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private JLabel lblKonJaiotzeData;
 	private JTextField txfKonJaioData;
 	private JButton btnKolEguneratu;
+	private JPanel pnlKolKolekzioak;
+	private JPanel pnlKolKolekzioakKantitatea;
+	private JLabel lblKolKantitateaIzenburu;
+	private JPanel pnlKolekzioakKantitatea;
+	private JTextField txfKolBehe;
+	private JLabel lblKolKantBehe;
+	private JTextField txfKolGoi;
+	private JLabel lblKolKantGoi;
+	private JButton btnKolKantitateaGarbitu;
 
 	/**
 	 * Launch the application.
@@ -154,7 +160,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		// ERABARR_KAT_TAULA_EGUNERATU: 				Liburua[]: isbn, izena, argData, lengoaia, argitaletxeaIzena, mailegatuta, erreserbatuta
 		// ERABARR_KAT_ERRESERBA_ONDO:					ezer
 		// ERABARR_KAT_ERRESERBA_TXARTO:				String
-		// ERABARR_KOL_KOLEKZIOAK_EGUNERATU:			String[]: izenak, int[]: liburu kantitatea
+		// ERABARR_KOL_KOLEKZIOAK_EGUNERATU:			LiburuKolekzio[]:
 		// ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:			ezer
 		// ERABARR_KOL_KOLEKZIOA_SORTU_TXARTO:			String
 		// ERABARR_KOL_KOLEKZIOA_EZABATU_ONDO:			ezer
@@ -185,9 +191,9 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KAT_ERRESERBA_TXARTO ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOAK_EGUNERATU:
-					if (((Object[])arg)[1] instanceof String[] && ((Object[])arg)[2] instanceof int[]){
+					if (((Object[])arg)[1] instanceof LiburuKolekzio[]){
 						System.out.println("[Bista.Erabiltzailea]: Kolekzio lista eguneratu da");
-						kolekzioaKolekzioListaEguneratu((String[]) ((Object[])arg)[1], (int[]) ((Object[])arg)[2]);
+						kolekzioaKolekzioListaEguneratu((LiburuKolekzio[]) ((Object[])arg)[1]);
 					} else System.out.println("[Bista.Erabiltzailea]: ERABARR_KOL_KOLEKZIOAK_EGUNERATU ez du eskatutakoa jaso");
 					break;
 				case ERABARR_KOL_KOLEKZIOA_SORTU_ONDO:
@@ -256,11 +262,11 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		}
 	}
 
-	private void kolekzioaKolekzioListaEguneratu(String[] pListaIze, int[] pListaKant) {
+	private void kolekzioaKolekzioListaEguneratu(LiburuKolekzio[] pLista) {
 		dtmKol1.setRowCount(0);
-		if (pListaIze.length == pListaKant.length) {
-			for (int i = 0; i < pListaIze.length; i++) {
-				dtmKol1.addRow(new Object[] {pListaIze[i], pListaKant[i]});
+		if (pLista.length == pLista.length) {
+			for (LiburuKolekzio kol:pLista){
+				dtmKol1.addRow(new Object[]{kol.izena, kol.liburuKantitatea});
 			}
 		}
 	}
@@ -637,7 +643,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			GridBagLayout gbl_pnlKolTaulak = new GridBagLayout();
 			gbl_pnlKolTaulak.columnWidths = new int[] {0, 0};
 			gbl_pnlKolTaulak.rowHeights = new int[] {0, 0};
-			gbl_pnlKolTaulak.columnWeights = new double[]{0.0, 0.0};
+			gbl_pnlKolTaulak.columnWeights = new double[]{1.0, 0.0};
 			gbl_pnlKolTaulak.rowWeights = new double[]{0.0, 1.0};
 			pnlKolTaulak.setLayout(gbl_pnlKolTaulak);
 			GridBagConstraints gbc_pnlKolKolekzioakBotoi = new GridBagConstraints();
@@ -652,13 +658,13 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			gbc_pnlKolLiburuakBotoi.gridx = 1;
 			gbc_pnlKolLiburuakBotoi.gridy = 0;
 			pnlKolTaulak.add(getPnlKolLiburuakBotoi(), gbc_pnlKolLiburuakBotoi);
-			GridBagConstraints gbc_scpKolKolekzioak = new GridBagConstraints();
-			gbc_scpKolKolekzioak.weightx = 0.33;
-			gbc_scpKolKolekzioak.insets = new Insets(0, 0, 5, 5);
-			gbc_scpKolKolekzioak.fill = GridBagConstraints.BOTH;
-			gbc_scpKolKolekzioak.gridx = 0;
-			gbc_scpKolKolekzioak.gridy = 1;
-			pnlKolTaulak.add(getScpKolKolekzioak(), gbc_scpKolKolekzioak);
+			GridBagConstraints gbc_pnlKolKolekzioak = new GridBagConstraints();
+			gbc_pnlKolKolekzioak.weightx = 0.33;
+			gbc_pnlKolKolekzioak.insets = new Insets(0, 0, 5, 5);
+			gbc_pnlKolKolekzioak.fill = GridBagConstraints.BOTH;
+			gbc_pnlKolKolekzioak.gridx = 0;
+			gbc_pnlKolKolekzioak.gridy = 1;
+			pnlKolTaulak.add(getPnlKolKolekzioak(), gbc_pnlKolKolekzioak);
 			GridBagConstraints gbc_scpKolLiburuak = new GridBagConstraints();
 			gbc_scpKolLiburuak.weightx = 0.66;
 			gbc_scpKolLiburuak.anchor = GridBagConstraints.WEST;
@@ -783,6 +789,169 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 			});
 		}
 		return btnKolLiburuaKendu;
+	}
+	private JPanel getPnlKolKolekzioak() {
+		if (pnlKolKolekzioak == null) {
+			pnlKolKolekzioak = new JPanel();
+			GridBagLayout gbl_pnlKolKolekzioak = new GridBagLayout();
+			gbl_pnlKolKolekzioak.columnWidths = new int[] {0};
+			gbl_pnlKolKolekzioak.rowHeights = new int[] {0, 0};
+			gbl_pnlKolKolekzioak.columnWeights = new double[]{1.0};
+			gbl_pnlKolKolekzioak.rowWeights = new double[]{1.0, 0.0};
+			pnlKolKolekzioak.setLayout(gbl_pnlKolKolekzioak);
+			GridBagConstraints gbc_scpKolKolekzioak = new GridBagConstraints();
+			gbc_scpKolKolekzioak.fill = GridBagConstraints.BOTH;
+			gbc_scpKolKolekzioak.insets = new Insets(0, 0, 5, 0);
+			gbc_scpKolKolekzioak.gridx = 0;
+			gbc_scpKolKolekzioak.gridy = 0;
+			pnlKolKolekzioak.add(getScpKolKolekzioak(), gbc_scpKolKolekzioak);
+			GridBagConstraints gbc_pnlKolKolekzioakKantitatea = new GridBagConstraints();
+			gbc_pnlKolKolekzioakKantitatea.anchor = GridBagConstraints.SOUTHWEST;
+			gbc_pnlKolKolekzioakKantitatea.gridx = 0;
+			gbc_pnlKolKolekzioakKantitatea.gridy = 1;
+			pnlKolKolekzioak.add(getPnlKolKolekzioakKantitatea(), gbc_pnlKolKolekzioakKantitatea);
+		}
+		return pnlKolKolekzioak;
+	}
+	private JPanel getPnlKolKolekzioakKantitatea() {
+		if (pnlKolKolekzioakKantitatea == null) {
+			pnlKolKolekzioakKantitatea = new JPanel();
+			GridBagLayout gbl_pnlKolKolekzioakKantitatea = new GridBagLayout();
+			gbl_pnlKolKolekzioakKantitatea.columnWidths = new int[] {0, 0};
+			gbl_pnlKolKolekzioakKantitatea.rowHeights = new int[] {0, 0};
+			gbl_pnlKolKolekzioakKantitatea.columnWeights = new double[]{0.0};
+			gbl_pnlKolKolekzioakKantitatea.rowWeights = new double[]{0.0, 0.0};
+			pnlKolKolekzioakKantitatea.setLayout(gbl_pnlKolKolekzioakKantitatea);
+			GridBagConstraints gbc_lblKolKantitateaIzenburu = new GridBagConstraints();
+			gbc_lblKolKantitateaIzenburu.anchor = GridBagConstraints.NORTHWEST;
+			gbc_lblKolKantitateaIzenburu.insets = new Insets(0, 0, 5, 5);
+			gbc_lblKolKantitateaIzenburu.gridx = 0;
+			gbc_lblKolKantitateaIzenburu.gridy = 0;
+			pnlKolKolekzioakKantitatea.add(getLblKolKantitateaIzenburu(), gbc_lblKolKantitateaIzenburu);
+			GridBagConstraints gbc_btnKolKantitateaGarbitu = new GridBagConstraints();
+			gbc_btnKolKantitateaGarbitu.insets = new Insets(0, 0, 5, 0);
+			gbc_btnKolKantitateaGarbitu.gridx = 1;
+			gbc_btnKolKantitateaGarbitu.gridy = 1;
+			pnlKolKolekzioakKantitatea.add(getBtnKolKantitateaGarbitu(), gbc_btnKolKantitateaGarbitu);
+			GridBagConstraints gbc_pnlKolekzioakKantitatea = new GridBagConstraints();
+			gbc_pnlKolekzioakKantitatea.insets = new Insets(0, 0, 0, 5);
+			gbc_pnlKolekzioakKantitatea.fill = GridBagConstraints.BOTH;
+			gbc_pnlKolekzioakKantitatea.gridx = 0;
+			gbc_pnlKolekzioakKantitatea.gridy = 1;
+			pnlKolKolekzioakKantitatea.add(getPnlKolekzioakKantitatea(), gbc_pnlKolekzioakKantitatea);
+		}
+		return pnlKolKolekzioakKantitatea;
+	}
+	private JLabel getLblKolKantitateaIzenburu() {
+		if (lblKolKantitateaIzenburu == null) {
+			lblKolKantitateaIzenburu = new JLabel("Liburu kantitatea");
+		}
+		return lblKolKantitateaIzenburu;
+	}
+	private JPanel getPnlKolekzioakKantitatea() {
+		if (pnlKolekzioakKantitatea == null) {
+			pnlKolekzioakKantitatea = new JPanel();
+			GridBagLayout gbl_pnlKolekzioakKantitatea = new GridBagLayout();
+			gbl_pnlKolekzioakKantitatea.columnWidths = new int[] {30, 0, 30, 0};
+			gbl_pnlKolekzioakKantitatea.rowHeights = new int[] {30};
+			gbl_pnlKolekzioakKantitatea.columnWeights = new double[]{1.0, 0.0, 1.0, 0.0};
+			gbl_pnlKolekzioakKantitatea.rowWeights = new double[]{0.0};
+			pnlKolekzioakKantitatea.setLayout(gbl_pnlKolekzioakKantitatea);
+			GridBagConstraints gbc_txfKolBehe = new GridBagConstraints();
+			gbc_txfKolBehe.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfKolBehe.insets = new Insets(0, 5, 0, 0);
+			gbc_txfKolBehe.gridx = 0;
+			gbc_txfKolBehe.gridy = 0;
+			pnlKolekzioakKantitatea.add(getTxfKolBehe(), gbc_txfKolBehe);
+			GridBagConstraints gbc_lblKolKantBehe = new GridBagConstraints();
+			gbc_lblKolKantBehe.insets = new Insets(0, 0, 0, 5);
+			gbc_lblKolKantBehe.gridx = 1;
+			gbc_lblKolKantBehe.gridy = 0;
+			pnlKolekzioakKantitatea.add(getLblKolKantBehe(), gbc_lblKolKantBehe);
+			GridBagConstraints gbc_txfKolGoi = new GridBagConstraints();
+			gbc_txfKolGoi.insets = new Insets(0, 5, 0, 0);
+			gbc_txfKolGoi.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txfKolGoi.gridx = 2;
+			gbc_txfKolGoi.gridy = 0;
+			pnlKolekzioakKantitatea.add(getTxfKolGoi(), gbc_txfKolGoi);
+			GridBagConstraints gbc_lblKolKantGoi = new GridBagConstraints();
+			gbc_lblKolKantGoi.insets = new Insets(0, 0, 0, 5);
+			gbc_lblKolKantGoi.gridx = 3;
+			gbc_lblKolKantGoi.gridy = 0;
+			pnlKolekzioakKantitatea.add(getLblKolKantGoi(), gbc_lblKolKantGoi);
+		}
+		return pnlKolekzioakKantitatea;
+	}
+	private void kolekzioKantitatearekinEskatu(){
+		int behe, goi;
+		try{
+			behe = Integer.parseInt(txfKolBehe.getText());
+		} catch (NumberFormatException nfe) {
+			behe = -1;
+		}
+
+		try{
+			goi = Integer.parseInt(txfKolGoi.getText());
+		} catch (NumberFormatException nfe) {
+			goi = -1;
+		}
+		System.out.println("[KONTROLATZAILEA]: Kolekzioa kantitatearekin: behe=%d goi=%d".formatted(behe, goi));
+		ErabiltzaileArrunta.getInstantzia().getKolekzioak(behe, goi);
+	}
+	private JTextField getTxfKolBehe() {
+		if (txfKolBehe == null) {
+			txfKolBehe = new JTextField();
+			txfKolBehe.setColumns(10);
+			txfKolBehe.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					contentPane.requestFocus();
+					kolekzioKantitatearekinEskatu();
+				}
+			});
+		}
+		return txfKolBehe;
+	}
+	private JLabel getLblKolKantBehe() {
+		if (lblKolKantBehe == null) {
+			lblKolKantBehe = new JLabel("-tik");
+		}
+		return lblKolKantBehe;
+	}
+	private JTextField getTxfKolGoi() {
+		if (txfKolGoi == null) {
+			txfKolGoi = new JTextField();
+			txfKolGoi.setColumns(10);
+			txfKolGoi.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					contentPane.requestFocus();
+					kolekzioKantitatearekinEskatu();
+				}
+			});
+		}
+		return txfKolGoi;
+	}
+	private JLabel getLblKolKantGoi() {
+		if (lblKolKantGoi == null) {
+			lblKolKantGoi = new JLabel("-ra");
+		}
+		return lblKolKantGoi;
+	}
+	private JButton getBtnKolKantitateaGarbitu() {
+		if (btnKolKantitateaGarbitu == null) {
+			btnKolKantitateaGarbitu = new JButton("Garbitu");
+			btnKolKantitateaGarbitu.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					System.out.println("[KONTROLATZAILEA]: Kolekzioen kantitateak garbitu");
+					txfKolBehe.setText("");
+					txfKolGoi.setText("");
+					ErabiltzaileArrunta.getInstantzia().getKolekzioak();
+				}
+			});
+		}
+		return btnKolKantitateaGarbitu;
 	}
 	private JScrollPane getScpKolKolekzioak() {
 		if (scpKolKolekzioak == null) {

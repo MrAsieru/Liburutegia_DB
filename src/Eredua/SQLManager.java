@@ -596,9 +596,30 @@ public class SQLManager {
 
             while (results.next()) {
                 LiburuKolekzio kolekzio = new LiburuKolekzio();
-                kolekzio.Izena = results.getString("Izena");
-                kolekzio.ErabiltzaileaNAN = results.getString("ErabiltzaileaNAN");
-                kolekzio.LiburuLista = this.getKolekziokoLiburuak(pNAN, kolekzio.Izena);
+                kolekzio.izena = results.getString("Izena");
+                kolekzio.erabNAN = results.getString("ErabiltzaileaNAN");
+                kolekzio.liburuLista = this.getKolekziokoLiburuak(pNAN, kolekzio.izena); //TODO liburuak ez dira behar
+                lista.add(kolekzio);
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return lista;
+    }
+    public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN, int pBehe, int pGoi) { //TODO -1 bada ez hartu kontuan
+        ArrayList<LiburuKolekzio> lista = new ArrayList<>();
+        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        //TODO
+        try{
+            Statement statement = konexioa.createStatement();
+            ResultSet results = statement.executeQuery("".formatted());
+
+            while (results.next()) {
+                LiburuKolekzio kolekzio = new LiburuKolekzio();
+                kolekzio.izena = results.getString("Izena");
+                kolekzio.erabNAN = results.getString("ErabiltzaileaNAN");
+                kolekzio.liburuLista = this.getKolekziokoLiburuak(pNAN, kolekzio.izena);
                 lista.add(kolekzio);
             }
         }

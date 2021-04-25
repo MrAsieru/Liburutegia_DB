@@ -3,7 +3,8 @@ package Egitura;
 import java.util.ArrayList;
 
 public class LiburuKolekzio {
-    public String               ErabiltzaileaNAN;
-    public String               Izena;
-    public ArrayList<Liburua>   LiburuLista;
+    public String erabNAN;
+    public String izena;
+    public ArrayList<Liburua> liburuLista;
+    public int liburuKantitatea;
 }
