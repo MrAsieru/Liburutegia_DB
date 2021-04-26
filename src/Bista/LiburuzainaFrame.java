@@ -340,7 +340,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		if (cbxKatGehArgit != null) {
 			cbxKatGehArgit.removeAll();
 			for(Argitaletxea arg:pLista) {
-				cbxKatGehArgit.addItem(new ComboItem<String>(arg.Izena, arg.IFK));
+				cbxKatGehArgit.addItem(new ComboItem<String>(arg.izena, arg.ifk));
 			}
 		}
 	}
@@ -371,7 +371,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 	private void argitaletxeakTaulaEguneratu(ArrayList<Argitaletxea> pLista) {
 		dtmArg.setRowCount(0);
 		for (Argitaletxea arg:pLista) {
-			dtmArg.addRow(new Object[] {arg.IFK, arg.Izena, arg.Helbidea});
+			dtmArg.addRow(new Object[] {arg.ifk, arg.izena, arg.helbidea});
 		}
 	}
 
@@ -1421,10 +1421,10 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		int aukera = JOptionPane.showConfirmDialog(this, panel, "Sortu argitaletxea", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 		if (aukera == 0) {
 			Argitaletxea arg = new Argitaletxea();
-			arg.Izena = txfPopIzena.getText();
-			arg.Helbidea = txfPopHelbidea.getText();
-			arg.IFK = txfPopIFK.getText();
-			System.out.println(String.format("[Kontrolatzailea]: (Argitaletxea sortu Pop-Up) Argitaletxea sortzeko klikatuta. Izena:%s, Helbidea:%s, IFK:%s", arg.Izena, arg.Helbidea, arg.IFK));
+			arg.izena = txfPopIzena.getText();
+			arg.helbidea = txfPopHelbidea.getText();
+			arg.ifk = txfPopIFK.getText();
+			System.out.println(String.format("[Kontrolatzailea]: (Argitaletxea sortu Pop-Up) Argitaletxea sortzeko klikatuta. Izena:%s, Helbidea:%s, IFK:%s", arg.izena, arg.helbidea, arg.ifk));
 			Liburuzaina.getInstantzia().addArgitaletxea(arg);
 		} else {
 			System.out.println("[Kontrolatzailea]: (Argitaletxea sortu Pop-Up) Ateratzeko klikatuta");
