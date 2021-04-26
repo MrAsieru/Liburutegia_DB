@@ -652,7 +652,7 @@ public class SQLManager {
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
                 UPDATE Liburua 
-                SET (erreserbatuta=1 AND  erab_nan=\'%s\') 
+                SET erreserbatuta=1, erab_nan=\'%s\'
                 WHERE (isbn=\'%s\' AND 
                     mailegatuta=0 AND 
                     erreserbatuta=0 AND 
@@ -663,7 +663,7 @@ public class SQLManager {
             throw e;
         }
     }
-    //TODO eman beharrezkoa: nan, izena, abizena, generoa, jaiotze data
+
     public ArrayList<String> getErabiltzaileInformazioa(String pNAN) throws SQLException {
         ArrayList<String> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
@@ -690,7 +690,6 @@ public class SQLManager {
 
     public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             if (pIzena != null) statement.executeUpdate("""
