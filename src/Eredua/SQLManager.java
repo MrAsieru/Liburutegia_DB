@@ -299,7 +299,7 @@ public class SQLManager {
                 SELECT L.isbn, L.izena, E.nan, E.izena
                 FROM Liburua L JOIN Erabiltzailea E on E.nan = L.erab_nan
                 WHERE L.mailegatuta=1;
-"""); //CUIDADO!!!!!!! Teneis que conseguir las tablas y cambiarselas respectivamente como estan abajo
+                """); //CUIDADO!!!!!!! Teneis que conseguir las tablas y cambiarselas respectivamente como estan abajo
 
             while (results.next()) {
                 Mailegua mailegua = new Mailegua();
@@ -434,7 +434,10 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                    INSERT INTO Idazlea 
+                    VALUES(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')
+                    """.formatted(pIdz.id, pIdz.izena, pIdz.abizena, pIdz.generoa, pIdz.herrialdea));
         }
         catch (SQLException e){
             throw e;
@@ -446,7 +449,10 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                    DELETE * FROM Idazlea 
+                    WHERE (znb=\'%s\')
+                    """.formatted(pIdazleZenbakia));
         }
         catch (SQLException e){
             throw e;
@@ -458,7 +464,10 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                    INSERT INTO Argitaletxea 
+                    VALUES(\'%s\', \'%s\', \'%s\')
+                    """.formatted(pArgitaletxea.ifk, pArgitaletxea.izena, pArgitaletxea.helbidea));
         }
         catch (SQLException e){
             throw e;
@@ -470,19 +479,25 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                        DELETE * FROM 
+                        Argitaletxea WHERE(ifk=\'%s\')
+                        """.formatted(pIFK));
         }
         catch (SQLException e){
             throw e;
         }
     }
 
-    public void addMailegua(String NAN, long pISBN) throws SQLException {
+    public void addMailegua(String pNAN, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                    UPDATE Liburua 
+                    SET (mailegatuta=1 AND erab_nan=\'%s\') WHERE isbn=\'%s\'
+                    """.formatted(pNAN, pISBN));
         }
         catch (SQLException e){
             throw e;
@@ -508,7 +523,10 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+            INSERT INTO Kolekzioa 
+            VALUES(\'%s\',\'%s\')
+            """.formatted(pNAN,pIzena));
         }
         catch (SQLException e){
             throw e;
@@ -601,7 +619,10 @@ public class SQLManager {
         //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                        INSERT INTO Kolekzioa_Liburua 
+                        VALUES(\'%s\', \'%s\', \'%s\')
+                        """.formatted(pNAN, pKolekzioIzena, pISBN));
         }
         catch (SQLException e){
             throw e;
@@ -613,7 +634,10 @@ public class SQLManager {
         //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+            DELETE FROM Kolekzioa_Liburua 
+            WHERE(erab_nan=\'%s\' and kol_izena =\'%s\'  and lib_isbn =\'%s\')
+            """.formatted(pNAN, pKolekzioIzena, pKolekzioIzena));
         }
         catch (SQLException e){
             throw e;
