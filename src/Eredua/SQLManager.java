@@ -265,7 +265,7 @@ public class SQLManager {
     public Liburua getLiburua(long pISBN) {
         Liburua liburua = new Liburua();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO probatu barik
+        //TODO konprobatu erabilera
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -352,9 +352,9 @@ public class SQLManager {
 
             while (results.next()) {
                 Argitaletxea argitaletxea = new Argitaletxea();
-                argitaletxea.IFK = results.getString("ifk");
-                argitaletxea.Helbidea = results.getString("helbidea");
-                argitaletxea.Izena = results.getString("izena");
+                argitaletxea.ifk= results.getString("ifk");
+                argitaletxea.helbidea = results.getString("helbidea");
+                argitaletxea.izena = results.getString("izena");
                 lista.add(argitaletxea);
             }
         }
@@ -459,7 +459,7 @@ public class SQLManager {
         }
     }
 
-    public void addArgitaletxea(Argitaletxea argitaletxea) throws SQLException {
+    public void addArgitaletxea(Argitaletxea pArgitaletxea) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         //TODO egin
         try{
@@ -506,10 +506,14 @@ public class SQLManager {
 
     public void removeMailegua(long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                UPDATE Liburua 
+                SET mailegatuta=0, erab_nan=NULL 
+                WHERE isbn=\'%s\'
+            """.formatted(pISBN));
         }
         catch (SQLException e){
             throw e;
@@ -538,7 +542,10 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+                DELETE FROM Kolekzioa 
+                WHERE erab_nan=\'%s\' AND izena=\'%s\'
+            """.formatted(pNAN, pKolekzioIzena));
         }
         catch (SQLException e){
             throw e;
@@ -571,6 +578,7 @@ public class SQLManager {
             } else if (pBehe != -1 && pGoi != -1) {
                 esaldia += " HAVING SUM(x.guztira) BETWEEN %s AND %s".formatted(pBehe, pGoi);
             }
+            esaldia += " ORDER BY x.kol_izena";
             esaldia += ";";
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery(esaldia);
@@ -649,7 +657,9 @@ public class SQLManager {
         //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeUpdate("".formatted());
+            statement.executeUpdate("""
+
+""");
         }
         catch (SQLException e){
             throw e;
