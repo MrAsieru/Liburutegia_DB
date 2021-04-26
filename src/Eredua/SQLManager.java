@@ -431,7 +431,7 @@ public class SQLManager {
     
     public void addAutorea(Idazlea pIdz) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -446,7 +446,7 @@ public class SQLManager {
 
     public void removeAutorea(String pIdazleZenbakia) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -461,7 +461,7 @@ public class SQLManager {
 
     public void addArgitaletxea(Argitaletxea pArgitaletxea) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -476,7 +476,7 @@ public class SQLManager {
 
     public void removeArgitaletzea(String pIFK) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -491,13 +491,18 @@ public class SQLManager {
 
     public void addMailegua(String pNAN, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probat
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
                     UPDATE Liburua 
-                    SET (mailegatuta=1 AND erab_nan=\'%s\') WHERE isbn=\'%s\'
-                    """.formatted(pNAN, pISBN));
+                    SET (mailegatuta=1 AND erab_nan=\'%s\') 
+                    WHERE isbn=\'%s\' AND 
+                        mailegatuta=0 AND
+                        (erreserbatuta=0 OR
+                            (erreserbatuta=1 AND
+                            erab_nan=\'%s\'))
+                    """.formatted(pNAN, pISBN, pNAN));
         }
         catch (SQLException e){
             throw e;
@@ -524,7 +529,7 @@ public class SQLManager {
 
     public void sortuKolekzioa(String pNAN, String pIzena) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -539,7 +544,7 @@ public class SQLManager {
 
     public void removeKolekzioa(String pKolekzioIzena, String pNAN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -624,7 +629,7 @@ public class SQLManager {
 
     public void addLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin gabe
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -639,7 +644,7 @@ public class SQLManager {
 
     public void removeLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin gabe
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
@@ -654,12 +659,17 @@ public class SQLManager {
 
     public void liburuaErreserbatu(String pNAN, long pIsbn) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
-        //TODO egin gabe
+        //TODO probatu
         try{
             Statement statement = konexioa.createStatement();
             statement.executeUpdate("""
-
-""");
+                UPDATE Liburua 
+                SET (erreserbatuta=1 AND  erab_nan=\'%s\') 
+                WHERE (isbn=\'%s\' AND 
+                    mailegatuta=0 AND 
+                    erreserbatuta=0 AND 
+                    erab_nan !=\'pNAN\')
+                """.formatted(pNAN, pIsbn, pNAN));
         }
         catch (SQLException e){
             throw e;
