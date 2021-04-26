@@ -42,16 +42,16 @@ create table Liburua (
     idz_znb     	    int(10),
     arg_ifk             varchar(9),
     Primary Key(isbn),
-    Foreign Key(erab_nan) references Erabiltzailea(nan),
-    Foreign Key(idz_znb) references Idazlea(znb),
-    Foreign Key(arg_ifk) references Argitaletxe(ifk)
+    Foreign Key(erab_nan) references Erabiltzailea(nan) ON DELETE SET NULL,
+    Foreign Key(idz_znb) references Idazlea(znb) ON DELETE SET NULL,
+    Foreign Key(arg_ifk) references Argitaletxe(ifk) ON DELETE SET NULL
 );
 
 create table Kolekzioa (
     erab_nan            varchar(9),
     izena               varchar(30),
     Primary Key (erab_nan, izena),
-    Foreign Key(erab_nan) references Erabiltzailea(nan)
+    Foreign Key(erab_nan) references Erabiltzailea(nan) ON DELETE CASCADE
 );
 
 create table Kolekzio_Liburua (
@@ -59,8 +59,8 @@ create table Kolekzio_Liburua (
     kol_izena              	varchar(30),
     lib_isbn            int(13),
     Primary Key (erab_nan, kol_izena, lib_isbn),
-    Foreign Key(lib_isbn) references Liburua(isbn),
-    Foreign Key(erab_nan, kol_izena) references Kolekzioa(erab_nan, izena)
+    Foreign Key(lib_isbn) references Liburua(isbn) ON DELETE CASCADE,
+    Foreign Key(erab_nan, kol_izena) references Kolekzioa(erab_nan, izena) ON DELETE CASCADE
 );
 
 /********************************************DATU BASEA MANIPULATZEKO***************************************************/
@@ -110,3 +110,6 @@ INSERT INTO Kolekzio_Liburua VALUES('45678901A', 'Nire', 45468);
 
 
 
+UPDATE Liburua
+SET erreserbatuta=1, erab_nan='a'
+WHERE

@@ -2,9 +2,7 @@ package Eredua;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Observable;
-import java.util.Observer;
 
 import Egitura.*;
 
@@ -117,7 +115,7 @@ public class Liburuzaina extends Observable{
 
     public void addMailegua(String NAN, long pISBN){
         //
-        Liburua lib = SQLManager.getManager().getLiburua(pISBN);
+        Liburua lib = SQLManager.getManager().getLiburuaMailegatzeko(pISBN);
         if (!lib.mailegatuta) {
             if (!lib.erreserbatua) {
                 try {
