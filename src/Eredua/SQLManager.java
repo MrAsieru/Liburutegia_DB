@@ -402,7 +402,7 @@ public class SQLManager {
         //TODO ez doa
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("""
+            statement.executeUpdate("""
                 INSERT INTO Erabiltzailea
                 VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\', \'%s\');
                 """.formatted(pErabiltzaile.nan, pErabiltzaile.izena,
@@ -434,7 +434,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -446,7 +446,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -458,7 +458,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -470,7 +470,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -482,7 +482,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -508,7 +508,7 @@ public class SQLManager {
         //TODO egin
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -601,7 +601,7 @@ public class SQLManager {
         //TODO egin gabe
         try{
             Statement statement = konexioa.createStatement();
-            statement.executeQuery("".formatted());
+            statement.executeUpdate("".formatted());
         }
         catch (SQLException e){
             throw e;
@@ -666,22 +666,22 @@ public class SQLManager {
                                 SET izena=\'%s\'
                                 WHERE nan=\'%s\';
                                 """.formatted(pNAN, pIzena));
-            else if (pAbizena != null) statement.executeQuery("""
+            else if (pAbizena != null) statement.executeUpdate("""
                                 UPDATE Erabiltzailea
                                 SET abizena=\'%s\'
                                 WHERE nan=\'%s\';
                                 """.formatted(pNAN, pAbizena));
-            else if (pJaioData != null) statement.executeQuery("""
+            else if (pJaioData != null) statement.executeUpdate("""
                                 UPDATE Erabiltzailea
                                 SET jaiotze_data=\'%s\'
                                 WHERE nan=\'%s\';
                                 """.formatted(pNAN, pJaioData));
-            else if (pGeneroa != null) statement.executeQuery("""
+            else if (pGeneroa != null) statement.executeUpdate("""
                                 UPDATE Erabiltzailea
                                 SET generoa=\'%s\'
                                 WHERE nan=\'%s\';
                                 """.formatted(pNAN, pGeneroa));
-            else if (pPasahitza != null) statement.executeQuery("""
+            else if (pPasahitza != null) statement.executeUpdate("""
                                 UPDATE Erabiltzailea
                                 SET pasahitza=\'%s\'
                                 WHERE nan=\'%s\';
