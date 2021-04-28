@@ -97,7 +97,7 @@ public class SQLManager {
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString(1));
+                liburua.isbn = results.getLong(1);
                 liburua.izena = results.getString(2);
                 liburua.argitaratzeData = results.getString(3);
                 liburua.lengoaia = results.getString(4);
@@ -169,7 +169,7 @@ public class SQLManager {
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString(1));
+                liburua.isbn = results.getLong(1);
                 liburua.izena = results.getString(2);
                 liburua.argitaratzeData = results.getString(3);
                 liburua.lengoaia = results.getString(4);
@@ -255,12 +255,12 @@ public class SQLManager {
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
-                liburua.isbn = Long.parseLong(results.getString("isbn"));
+                liburua.isbn = results.getLong("isbn");
                 liburua.izena = results.getString("izena");
                 liburua.argitaratzeData = results.getString("argitaratze_data");
                 liburua.lengoaia = results.getString("lengoaia");
-                liburua.mailegatuta = Boolean.parseBoolean(results.getString("mailegatuta"));
-                liburua.erreserbatua = Boolean.parseBoolean(results.getString("erreserbatuta"));
+                liburua.mailegatuta = results.getBoolean("mailegatuta");
+                liburua.erreserbatua = results.getBoolean("erreserbatuta");
                 liburua.erabiltzaileaNAN = results.getString("erab_nan");
                 lista.add(liburua);
             }
@@ -330,7 +330,7 @@ public class SQLManager {
 
             while (results.next()) {
                 Idazlea idazlea = new Idazlea();
-                idazlea.id = Integer.parseInt(results.getString("znb"));
+                idazlea.id = results.getInt("znb");
                 idazlea.izena = results.getString("izena");
                 idazlea.abizena = results.getString("abizenak");
                 idazlea.generoa = results.getString("generoa");
