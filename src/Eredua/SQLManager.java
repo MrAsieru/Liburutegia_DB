@@ -419,7 +419,7 @@ public class SQLManager {
             VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', 0, \'%s\')
             """.formatted(pErabiltzaile.nan, pErabiltzaile.izena,
                     pErabiltzaile.abizena, pErabiltzaile.jaiotzeData,
-                    pErabiltzaile.generoa, 0, pPasahitza));
+                    pErabiltzaile.generoa, pPasahitza));
         }
         catch (SQLException e){
             throw e;
