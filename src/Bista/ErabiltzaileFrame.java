@@ -246,7 +246,13 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private void katalogoaListaEguneratu(ArrayList<Liburua> pLista){
 		dtmKat.setRowCount(0);
 		for (Liburua lib: pLista){
-			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena, (lib.mailegatuta && lib.erreserbatua)?"zu err.":(!lib.mailegatuta && !lib.erreserbatua)});
+			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena,
+					(lib.erabiltzaileBera)?(
+							(lib.mailegatuta)?"zuk mai.":(
+									(lib.erreserbatua)?"zuk err.":null
+							)
+					):(!lib.mailegatuta && !lib.erreserbatua)
+									});
 		}
 	}
 
@@ -273,7 +279,13 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private void kolekzioaLiburuListaEguneratu(ArrayList<Liburua> pLista) {
 		dtmKolLiburuak.setRowCount(0);
 		for (Liburua lib:pLista) {
-			dtmKolLiburuak.addRow(new Object[] {lib.isbn, lib.izena, (lib.mailegatuta && lib.erreserbatua)?"zu err.":(!lib.mailegatuta && !lib.erreserbatua)});
+			dtmKolLiburuak.addRow(new Object[] {lib.isbn, lib.izena,
+					(lib.erabiltzaileBera)?(
+							(lib.mailegatuta)?"zuk mai.":(
+									(lib.erreserbatua)?"zuk err.":null
+							)
+					):(!lib.mailegatuta && !lib.erreserbatua)
+			});
 		}
 	}
 

@@ -102,15 +102,10 @@ public class SQLManager {
                 liburua.argitaratzeData = results.getString(3);
                 liburua.lengoaia = results.getString(4);
                 liburua.argitaletxeaIzena = results.getString(5);
+                liburua.mailegatuta = results.getBoolean(6);
+                liburua.erreserbatua = results.getBoolean(7);
                 liburua.erabiltzaileaNAN = results.getString(8);
-                if (pNan.equals(liburua.erabiltzaileaNAN)) {
-                    liburua.mailegatuta = true;
-                    liburua.erreserbatua = true;
-                } else {
-                    liburua.mailegatuta = results.getBoolean(6);
-                    liburua.erreserbatua = results.getBoolean(7);
-                }
-
+                if (pNan.equals(liburua.erabiltzaileaNAN)) liburua.erabiltzaileBera = true;
                 lista.add(liburua);
             }
         }
@@ -179,13 +174,9 @@ public class SQLManager {
                 liburua.argitaratzeData = results.getString(3);
                 liburua.lengoaia = results.getString(4);
                 liburua.argitaletxeaIzena = results.getString(5);
-                if (pNan.equals(liburua.erabiltzaileaNAN)) {
-                    liburua.mailegatuta = true;
-                    liburua.erreserbatua = true;
-                } else {
-                    liburua.mailegatuta = results.getBoolean(6);
-                    liburua.erreserbatua = results.getBoolean(7);
-                }
+                liburua.mailegatuta = results.getBoolean(6);
+                liburua.erreserbatua = results.getBoolean(7);
+                if (pNan.equals(liburua.erabiltzaileaNAN)) liburua.erabiltzaileBera = true;
                 liburua.erabiltzaileaNAN = results.getString(8);
                 lista.add(liburua);
             }
@@ -620,14 +611,10 @@ public class SQLManager {
                 Liburua liburua = new Liburua();
                 liburua.isbn = results.getLong(1);
                 liburua.izena = results.getString(2);
+                liburua.mailegatuta = results.getBoolean(3);
+                liburua.erreserbatua = results.getBoolean(4);
                 liburua.erabiltzaileaNAN = results.getString(5);
-                if (pNAN.equals(liburua.erabiltzaileaNAN)) {
-                    liburua.mailegatuta = true;
-                    liburua.erreserbatua = true;
-                } else {
-                    liburua.mailegatuta = results.getBoolean(3);
-                    liburua.erreserbatua = results.getBoolean(4);
-                }
+                if (pNAN.equals(liburua.erabiltzaileaNAN)) liburua.erabiltzaileBera = true;
                 lista.add(liburua);
             }
         }

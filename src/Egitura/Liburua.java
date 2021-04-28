@@ -13,4 +13,5 @@ public class Liburua {
     public boolean mailegatuta;
     public boolean erreserbatua;
     public String erabiltzaileaNAN;
+    public boolean erabiltzaileBera;
 }
