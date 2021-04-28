@@ -10,7 +10,7 @@ public class Login extends Observable{
 		this.addObserver(pO);
 		System.out.println("[Eredua.Login]: Saioa hasteko eskatuta, erab: %s, pasahitza: %s".formatted(pErabiltzailea, pPasahitza));
 
-		erab = SQLManager.getManager().checkLogin(pErabiltzailea, pPasahitza); //TODO konprobatu erabilera, baliteke null bueltatzea
+		erab = SQLManager.getManager().checkLogin(pErabiltzailea, pPasahitza);
 		System.out.println("[Eredua.Login]: Saioaren erabiltzaile mota: %s".formatted(erab.name()));
 
 		setChanged();

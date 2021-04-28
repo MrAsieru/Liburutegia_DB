@@ -246,7 +246,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private void katalogoaListaEguneratu(ArrayList<Liburua> pLista){
 		dtmKat.setRowCount(0);
 		for (Liburua lib: pLista){
-			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena, (!lib.mailegatuta && !lib.erreserbatua)});
+			dtmKat.addRow(new Object[]{lib.isbn, lib.izena, lib.argitaratzeData, lib.lengoaia, lib.argitaletxeaIzena, (lib.mailegatuta && lib.erreserbatua)?"zu err.":(!lib.mailegatuta && !lib.erreserbatua)});
 		}
 	}
 
@@ -263,6 +263,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	}
 
 	private void kolekzioaKolekzioListaEguneratu(ArrayList<LiburuKolekzio> pLista) {
+		if (dtmKolLiburuak != null) dtmKolLiburuak.setRowCount(0);
 		dtmKolKolekzioak.setRowCount(0);
 		for (LiburuKolekzio kol:pLista){
 			dtmKolKolekzioak.addRow(new Object[]{kol.izena, kol.liburuKantitatea});
@@ -272,11 +273,16 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 	private void kolekzioaLiburuListaEguneratu(ArrayList<Liburua> pLista) {
 		dtmKolLiburuak.setRowCount(0);
 		for (Liburua lib:pLista) {
-			dtmKolLiburuak.addRow(new Object[] {lib.isbn, lib.izena, (!lib.erreserbatua && !lib.mailegatuta)});
+			dtmKolLiburuak.addRow(new Object[] {lib.isbn, lib.izena, (lib.mailegatuta && lib.erreserbatua)?"zu err.":(!lib.mailegatuta && !lib.erreserbatua)});
 		}
 	}
 
 	private void kontuaInformazioaKargatu(ArrayList<String> pLista) {
+		psfKonPasahitza.setText("");
+		txfKonIzena.setText("");
+		txfKonAbizena.setText("");
+		txfKonGeneroa.setText("");
+		txfKonJaioData.setText("");
 		txfKonNan.setText(pLista.get(0));
 		HintTextField[] eremuak =  new HintTextField[] {(HintTextField) txfKonIzena, (HintTextField)txfKonAbizena, (HintTextField)txfKonGeneroa, (HintTextField)txfKonJaioData};
 		for (int i = 0; i < eremuak.length; i++) {
@@ -1002,7 +1008,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 
 				@Override
 				public void valueChanged(ListSelectionEvent e) {
-					ErabiltzaileArrunta.getInstantzia().getKolekziokoLiburuak((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0));
+					if (tblKolKolekzioak.getRowCount() > 0 && tblKolKolekzioak.getSelectedRow() >= 0) ErabiltzaileArrunta.getInstantzia().getKolekziokoLiburuak((String) tblKolKolekzioak.getValueAt(tblKolKolekzioak.getSelectedRow(), 0));
 				}
 			});
 			ErabiltzaileArrunta.getInstantzia().getKolekzioak();

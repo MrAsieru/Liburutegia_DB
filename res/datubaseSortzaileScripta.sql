@@ -13,7 +13,7 @@ create table Idazlea (
     Primary Key(znb)
 );
 
-create table Argitaletxe (
+create table Argitaletxea (
     ifk	                varchar(9),
     izena       		varchar(20),
     helbidea    		varchar(20),
@@ -44,7 +44,7 @@ create table Liburua (
     Primary Key(isbn),
     Foreign Key(erab_nan) references Erabiltzailea(nan) ON DELETE SET NULL,
     Foreign Key(idz_znb) references Idazlea(znb) ON DELETE SET NULL,
-    Foreign Key(arg_ifk) references Argitaletxe(ifk) ON DELETE SET NULL
+    Foreign Key(arg_ifk) references Argitaletxea(ifk) ON DELETE SET NULL
 );
 
 create table Kolekzioa (
@@ -85,9 +85,9 @@ INSERT INTO Erabiltzailea VALUES ('34567890A','Andoni','Ramos','2000-02-29','Mut
 INSERT INTO Erabiltzailea VALUES ('45678901A','Olatz','Garcia','2012-11-10','Neska',0,'4321');
 INSERT INTO Erabiltzailea VALUES ('1','Liburu','Zain','2000-11-10','Neska',1,'1');
 
-INSERT INTO Argitaletxe VALUES('98765432A','LiburuArgitaletxe','Gran Via 45');
-INSERT INTO Argitaletxe VALUES('98765432B','Elkar','Gran Via 40');
-INSERT INTO Argitaletxe VALUES('98765432C','Santillana','Gran Via 43');
+INSERT INTO Argitaletxea VALUES('98765432A','LiburuArgitaletxe','Gran Via 45');
+INSERT INTO Argitaletxea VALUES('98765432B','Elkar','Gran Via 40');
+INSERT INTO Argitaletxea VALUES('98765432C','Santillana','Gran Via 43');
 
 INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Ander','Martinez','Mutila','Espainia');
 INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Ana','Hurtado','Neska','Frantzia');
@@ -107,9 +107,3 @@ INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Nire Kolekzioa', 13579);
 INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Nire Kolekzioa', 45464);
 INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Nire bigarren', 45468);
 INSERT INTO Kolekzio_Liburua VALUES('45678901A', 'Nire', 45468);
-
-
-
-UPDATE Liburua
-SET erreserbatuta=1, erab_nan='a'
-WHERE
