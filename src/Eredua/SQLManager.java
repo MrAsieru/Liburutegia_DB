@@ -44,13 +44,17 @@ public class SQLManager {
         ErabiltzaileMota erab = null;
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("""
+            String kontsulta = """
             SELECT liburuzaina_da
             FROM Erabiltzailea
-            WHERE nan=\'%s\' AND 
-                pasahitza=\'%s\';
-            """.formatted(pNan, pPasahitza));
+            WHERE nan=? AND 
+                pasahitza=?;
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setString(1, pNan);
+            statement.setString(2, pPasahitza);
+            ResultSet results = statement.executeQuery();
+            System.out.println(statement);
 
             if (!results.next()){
                 erab = ErabiltzaileMota.OKERRA;
@@ -68,12 +72,16 @@ public class SQLManager {
     public void aldatuPasahitza(String pNAN, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String kontsulta = """
                 UPDATE Erabiltzailea
-                SET pasahitza=\'%s\'
-                WHERE nan=\'%s\';
-                """.formatted(pPasahitza, pNAN));
+                SET pasahitza=?
+                WHERE nan=?;
+                """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setString(1, pPasahitza);
+            statement.setString(2, pNAN);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -187,6 +195,32 @@ public class SQLManager {
         return lista;
     }
 
+    public Erabiltzailea getErabiltzailea(String pNan) {
+        Erabiltzailea erab = null;
+        System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        try{
+            String kontsulta = """
+                SELECT izena, abizena
+                FROM Erabiltzailea
+                WHERE nan = ?
+                """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setString(1, pNan);
+            ResultSet results = statement.executeQuery();
+
+            if (results.next()) {
+                erab = new Erabiltzailea();
+                erab.nan = pNan;
+                erab.izena = results.getString("izena");
+                erab.abizena = results.getString("abizena");
+            }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return erab;
+    }
+
     /**Liburuzaina**/
     public ArrayList<Erabiltzailea> getErabiltzaileak() {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
@@ -218,14 +252,19 @@ public class SQLManager {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("""
+            String kontsulta = """
                 SELECT nan, izena, abizena, jaiotze_data, generoa
                 FROM Erabiltzailea
-                WHERE nan LIKE \'%%%s%%\' AND
-                    izena LIKE \'%%%s%%\' AND
-                    abizena LIKE \'%%%s%%\';
-                """.formatted(pNan, pIzena, pAbizena));
+                WHERE nan LIKE ? AND
+                    izena LIKE ? AND
+                    abizena LIKE ?;
+                """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setString(1, "%"+pNan+"%");
+            statement.setString(2, "%"+pIzena+"%");
+            statement.setString(3, "%"+pAbizena+"%");
+            ResultSet results = statement.executeQuery();
+            System.out.println(statement);
 
             while (results.next()) {
                 Erabiltzailea erab = new Erabiltzailea();
@@ -275,17 +314,22 @@ public class SQLManager {
         Liburua liburua = null;
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery("""
-                SELECT mailegatuta, erreserbatuta
+            String kontsulta = """
+                SELECT mailegatuta, erreserbatuta, erab_nan
                 FROM Liburua
-                WHERE isbn=\'%d\'
-                """.formatted(pISBN));
+                WHERE isbn=?
+                """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setLong(1, pISBN);
+            ResultSet results = statement.executeQuery();
+            System.out.println(statement);
+
             if (results.next()){
                 liburua = new Liburua();
                 //Lehenengo taula (eta bakarra) lortzeko
                 liburua.mailegatuta = results.getBoolean("mailegatuta");
                 liburua.erreserbatua = results.getBoolean("erreserbatuta");
+                liburua.erabiltzaileaNAN = results.getString("erab_nan");
             }
         }
         catch (SQLException e){
@@ -302,7 +346,7 @@ public class SQLManager {
                 SELECT L.isbn, L.izena, E.nan, E.izena
                 FROM Liburua L JOIN Erabiltzailea E on E.nan = L.erab_nan
                 WHERE L.mailegatuta=1;
-                """); //CUIDADO!!!!!!! Teneis que conseguir las tablas y cambiarselas respectivamente como estan abajo
+                """);
 
             while (results.next()) {
                 Mailegua mailegua = new Mailegua();
@@ -371,13 +415,19 @@ public class SQLManager {
     public void addLiburu(Liburua pLiburua) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.execute("""
+            String esaldia = """
                 INSERT INTO Liburua
-                VALUES (%s, \'%s\', \'%s\', \'%s\', 0, 0, NULL, %s, \'%s\');
-                """.formatted(pLiburua.isbn, pLiburua.izena,
-                    pLiburua.argitaratzeData, pLiburua.lengoaia,
-                    pLiburua.idazleaZnb, pLiburua.argitaletxeaIFK));
+                VALUES (?, ?, ?, ?, 0, 0, NULL, ?, ?);
+                """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setLong(1, pLiburua.isbn);
+            statement.setString(2, pLiburua.izena);
+            statement.setString(3, pLiburua.argitaratzeData);
+            statement.setString(4, pLiburua.lengoaia);
+            statement.setInt(5, pLiburua.idazleaZnb);
+            statement.setString(6, pLiburua.argitaletxeaIFK);
+            statement.execute();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -388,11 +438,15 @@ public class SQLManager {
     public void removeLiburu(long ISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            int ezabatuta = statement.executeUpdate("""
+            String esaldia = """
             DELETE FROM Liburua
-            WHERE isbn=\'%s\'
-            """.formatted(ISBN));
+            WHERE isbn=?
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setLong(1, ISBN);
+            int ezabatuta = statement.executeUpdate();
+            System.out.println(statement);
+
             if (ezabatuta == 0) throw new SQLException("liburua ez da existitzen");
         }
         catch (SQLException e){
@@ -403,14 +457,19 @@ public class SQLManager {
     public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            //TODO aurkitu zergatik ez du ipintzen pasahitza
-            statement.executeUpdate("""
+            String kontsulta = """
             INSERT INTO Erabiltzailea (nan, izena, abizena, jaiotze_data, generoa, liburuzaina_da, pasahitza)
-            VALUES (\'%s\', \'%s\', \'%s\', \'%s\', \'%s\', 0, \'%s\')
-            """.formatted(pErabiltzaile.nan, pErabiltzaile.izena,
-                    pErabiltzaile.abizena, pErabiltzaile.jaiotzeData,
-                    pErabiltzaile.generoa, pPasahitza));
+            VALUES (?, ?, ?, ?, ?, 0, ?)
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setString(1, pErabiltzaile.nan);
+            statement.setString(2, pErabiltzaile.izena);
+            statement.setString(3, pErabiltzaile.abizena);
+            statement.setString(4, pErabiltzaile.jaiotzeData);
+            statement.setString(5, pErabiltzaile.generoa);
+            statement.setString(6, pPasahitza);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -420,11 +479,14 @@ public class SQLManager {
     public void removeErabiltzaile(String pNAN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String esaldia = """
             DELETE FROM Erabiltzailea
-            WHERE nan=\'%s\';
-            """.formatted(pNAN));
+            WHERE nan=?
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setString(1, pNAN);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -434,11 +496,18 @@ public class SQLManager {
     public void addAutorea(Idazlea pIdz) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String kontsulta = """
             INSERT INTO Idazlea 
-            VALUES(\'%s\', \'%s\', \'%s\', \'%s\', \'%s\')
-            """.formatted(pIdz.id, pIdz.izena, pIdz.abizena, pIdz.generoa, pIdz.herrialdea));
+            VALUES(?, ?, ?, ?, ?)
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
+            statement.setInt(1, pIdz.id);
+            statement.setString(2, pIdz.izena);
+            statement.setString(3, pIdz.abizena);
+            statement.setString(4, pIdz.generoa);
+            statement.setString(5, pIdz.herrialdea);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -448,11 +517,14 @@ public class SQLManager {
     public void removeAutorea(String pIdazleZenbakia) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String esaldia = """
             DELETE FROM Idazlea 
-            WHERE (znb=\'%s\')
-            """.formatted(pIdazleZenbakia));
+            WHERE (znb=?)
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setString(1, pIdazleZenbakia);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -463,11 +535,16 @@ public class SQLManager {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         if (pArgitaletxea.ifk.equals("")) throw new SQLException("IFK ez da balioduna");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String esaldia = """
             INSERT INTO Argitaletxea 
-            VALUES(\'%s\', \'%s\', \'%s\')
-            """.formatted(pArgitaletxea.ifk, pArgitaletxea.izena, pArgitaletxea.helbidea));
+            VALUES(?, ?, ?)
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setString(1, pArgitaletxea.ifk);
+            statement.setString(2, pArgitaletxea.izena);
+            statement.setString(3, pArgitaletxea.helbidea);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -477,11 +554,14 @@ public class SQLManager {
     public void removeArgitaletxea(String pIFK) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String esaldia = """
             DELETE FROM Argitaletxea 
-            WHERE ifk=\'%s\'
-            """.formatted(pIFK));
+            WHERE ifk=?
+            """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setString(1, pIFK);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
@@ -491,16 +571,21 @@ public class SQLManager {
     public void addMailegua(String pNAN, long pISBN) throws SQLException {
         System.out.printf("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            Statement statement = konexioa.createStatement();
-            statement.executeUpdate("""
+            String esaldia = """
                     UPDATE Liburua 
-                    SET mailegatuta=1, erab_nan=\'%s\'
-                    WHERE isbn=\'%s\' AND 
+                    SET mailegatuta=1, erreserbatuta=0, erab_nan=?
+                    WHERE isbn=? AND 
                         mailegatuta=0 AND
                         (erreserbatuta=0 OR
                             (erreserbatuta=1 AND
-                            erab_nan=\'%s\'))
-                    """.formatted(pNAN, pISBN, pNAN));
+                            erab_nan=?))
+                    """;
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
+            statement.setString(1, pNAN);
+            statement.setLong(2, pISBN);
+            statement.setString(3, pNAN);
+            statement.executeUpdate();
+            System.out.println(statement);
         }
         catch (SQLException e){
             throw e;
