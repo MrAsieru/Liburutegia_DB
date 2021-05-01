@@ -126,53 +126,56 @@ public class SQLManager {
         ArrayList<Liburua> lista = new ArrayList<>();
         System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            boolean and = false;
-            String esaldia = """
+            String kontsulta = """
                 SELECT L.isbn, L.izena, L.argitaratze_data, L.lengoaia, A.izena, L.mailegatuta, L.erreserbatuta, L.erab_nan
                 FROM Liburua L JOIN Argitaletxea A ON L.arg_ifk = A.ifk
+                WHERE (? OR L.izena LIKE ?) AND
+                    (? OR ? <= L.argitaratze_data) AND
+                    (? OR L.argitaratze_data <= ?) AND
+                    (? OR L.lengoaia = ?) AND
+                    (? OR (L.mailegatuta=0 AND L.erreserbatuta=0))
                 """;
-            if (pIzena != null || pDataBehe != null || pDataGoi != null || pLengoaia != null || pEskuragarri) {
-                esaldia += " WHERE ";
-            }
+            PreparedStatement statement = konexioa.prepareStatement(kontsulta);
             if (pIzena != null){
-                esaldia += "L.izena LIKE \'%%%s%%\'".formatted(pIzena);
-                and = true;
+                statement.setBoolean(1, false);
+                statement.setString(2, "%"+pIzena+"%");
+            } else {
+                statement.setBoolean(1, true);
+                statement.setString(2, "");
             }
-            if (pDataBehe != null) {
-                if (and){
-                    and = false;
-                    esaldia += " AND ";
-                }
-                esaldia += "\'%s\' <= L.argitaratze_data".formatted(pDataBehe);
-                and = true;
-            }
-            if (pDataGoi != null) {
-                if (and){
-                    and = false;
-                    esaldia += " AND ";
-                }
-                esaldia += "L.argitaratze_data <= \'%s\'".formatted(pDataGoi);
-                and = true;
-            }
-            if (pLengoaia != null) {
-                if (and){
-                    and = false;
-                    esaldia += " AND ";
-                }
-                esaldia += "L.lengoaia=\'%s\'".formatted(pLengoaia);
-                and = true;
-            }
-            if (pEskuragarri) {
-                if (and){
-                    and = false;
-                    esaldia += " AND ";
-                }
-                esaldia += "L.mailegatuta=0 AND L.erreserbatuta=0";
-            }
-            esaldia+=";";
 
-            Statement statement = konexioa.createStatement();
-            ResultSet results = statement.executeQuery(esaldia);
+            if (pDataBehe != null) {
+                statement.setBoolean(3, false);
+                statement.setString(4, pDataBehe);
+            } else {
+                statement.setBoolean(3, true);
+                statement.setString(4, "");
+            }
+
+            if (pDataGoi != null) {
+                statement.setBoolean(5, false);
+                statement.setString(6, pDataGoi);
+            } else {
+                statement.setBoolean(5, true);
+                statement.setString(6, "");
+            }
+
+            if (pLengoaia != null) {
+                statement.setBoolean(7, false);
+                statement.setString(8, pLengoaia);
+            } else {
+                statement.setBoolean(7, true);
+                statement.setString(8, "");
+            }
+
+            if (pEskuragarri) {
+                statement.setBoolean(9, false);
+            } else {
+                statement.setBoolean(9, true);
+            }
+
+            ResultSet results = statement.executeQuery();
+            System.out.println(statement);
 
             while (results.next()) {
                 Liburua liburua = new Liburua();
