@@ -120,7 +120,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 530, 300);
 		setTitle("Liburuzain saioa: "+pErabiltzailea);
-		setIconImage(new ImageIcon("res/icon.png").getImage());
+		setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
 		Liburuzaina.getInstantzia().erabiltzaileEzarri(pErabiltzailea);
 		Liburuzaina.getInstantzia().addObserver(this);
 		contentPane = new JPanel();
