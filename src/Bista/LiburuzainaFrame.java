@@ -120,7 +120,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 530, 300);
 		setTitle("Liburuzain saioa: "+pErabiltzailea);
-		setIconImage(new ImageIcon("res/icon.png").getImage());
+		setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
 		Liburuzaina.getInstantzia().erabiltzaileEzarri(pErabiltzailea);
 		Liburuzaina.getInstantzia().addObserver(this);
 		contentPane = new JPanel();
@@ -256,7 +256,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 					JOptionPane.showMessageDialog(contentPane, "Mailegua ondo gorde da", "Mailegua ondo hasita", JOptionPane.PLAIN_MESSAGE);
 					break;
 				case LIBURUZAIN_MAI_HASI_ERRESERBATUTA:
-					if (((Object[])arg)[1] instanceof Erabiltzailea) {
+					if (((Object[])arg)[1] instanceof Erabiltzailea || ((Object[])arg)[1] == null) {
 						Erabiltzailea erab = (Erabiltzailea) ((Object[])arg)[1];
 						JOptionPane.showMessageDialog(contentPane, String.format("Liburu hau beste erabiltzaile batek erreserbatuta du:\nIzen-abizenak: %s %s, NAN:%s", erab.izena, erab.abizena, erab.nan), "Errorea", JOptionPane.ERROR_MESSAGE);
 					} else System.out.println("[Bista.Liburuzaina]: LIBURUZAIN_MAI_HASI_ERRESERBATUTA ez du eskatutakoa jaso");

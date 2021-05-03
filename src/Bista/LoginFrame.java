@@ -58,7 +58,7 @@ public class LoginFrame extends JFrame implements Observer{
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 350, 150);
 		setTitle("Liburutegia: login");
-		setIconImage(new ImageIcon("res/icon.png").getImage());
+		setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

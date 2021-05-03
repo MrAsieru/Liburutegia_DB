@@ -116,8 +116,8 @@ public class Liburuzaina extends Observable{
     public void addMailegua(String NAN, long pISBN){
         //
         Liburua lib = SQLManager.getManager().getLiburuaMailegatzeko(pISBN);
-        if (lib != null && !lib.mailegatuta) {
-            if (!lib.erreserbatua) {
+        if (lib != null && (!lib.mailegatuta || lib.erabiltzaileaNAN == null)) {
+            if (!lib.erreserbatua || (lib.erreserbatua && (NAN.equals(lib.erabiltzaileaNAN) || lib.erabiltzaileaNAN == null))) {
                 try {
                     SQLManager.getManager().addMailegua(NAN, pISBN);
                     //eman beharrezkoa: isbn, liburuaizena, nan erabiltzaileaizena
@@ -128,8 +128,8 @@ public class Liburuzaina extends Observable{
                 }
             }
             else {
-                //eman beharrezkoa: izena, abizena, nan
-                bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ERRESERBATUTA);
+                Erabiltzailea erab = SQLManager.getManager().getErabiltzailea(lib.erabiltzaileaNAN);
+                bistaNotifikatu(NotifikazioMotak.LIBURUZAIN_MAI_HASI_ERRESERBATUTA, erab);
             }
         }
         else {

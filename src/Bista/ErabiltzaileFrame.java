@@ -121,7 +121,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		setTitle("Erabiltzaile saioa: "+pErabiltzailea);
-		setIconImage(new ImageIcon("res/icon.png").getImage());
+		setIconImage(new ImageIcon(getClass().getResource("/icon.png")).getImage());
 		ErabiltzaileArrunta.getInstantzia().erabiltzaileEzarri(pErabiltzailea);
 		ErabiltzaileArrunta.getInstantzia().addObserver(this);
 		contentPane = new JPanel();
