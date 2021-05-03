@@ -5,7 +5,7 @@ create database Liburutegia;
 use Liburutegia;
 
 create table Idazlea (
-    znb  	        int(10) AUTO_INCREMENT,
+    znb  	        bigint(10) AUTO_INCREMENT,
     izena           varchar(20),
     abizenak        varchar(20),
     generoa         varchar(20),
@@ -15,8 +15,8 @@ create table Idazlea (
 
 create table Argitaletxea (
     ifk	                varchar(9),
-    izena       		varchar(20),
-    helbidea    		varchar(20),
+    izena       		varchar(30),
+    helbidea    		varchar(50),
     Primary Key (ifk)
 );
 
@@ -32,14 +32,14 @@ create table Erabiltzailea (
 );
 
 create table Liburua (
-    isbn                int(13),
+    isbn                bigint(13),
     izena               varchar(200),
     argitaratze_data    date,
     lengoaia        	varchar(20),
     mailegatuta         bit,
     erreserbatuta       bit,
     erab_nan            varchar(9),
-    idz_znb     	    int(10),
+    idz_znb     	    bigint(10),
     arg_ifk             varchar(9),
     Primary Key(isbn),
     Foreign Key(erab_nan) references Erabiltzailea(nan) ON DELETE SET NULL,
@@ -56,54 +56,51 @@ create table Kolekzioa (
 
 create table Kolekzio_Liburua (
     erab_nan	        varchar(9),
-    kol_izena              	varchar(30),
-    lib_isbn            int(13),
+    kol_izena           varchar(30),
+    lib_isbn            bigint(13),
     Primary Key (erab_nan, kol_izena, lib_isbn),
     Foreign Key(lib_isbn) references Liburua(isbn) ON DELETE CASCADE,
     Foreign Key(erab_nan, kol_izena) references Kolekzioa(erab_nan, izena) ON DELETE CASCADE
 );
 
-/********************************************DATU BASEA MANIPULATZEKO***************************************************/
-/*
-# TABLAK ADIERAZI:
-show tables;
-
-# TABLA GUZTIEN SORRERA ADIERAZI:
-show create table Argitaletxe;
-show create table Erabiltzailea;
-show create table Idazlea;
-show create table Kolekzio_Liburua;
-show create table Kolekzioa;
-show create table Liburua;
-
-# TABLA OSOA EZABATU:
-drop database Liburutegia;
-*/
+/********************************************DATU BASEA POPULATU***************************************************/
 INSERT INTO Erabiltzailea VALUES ('12345678A','Jon','Ruiz','2000-10-10','Mutila',0,'12');
-INSERT INTO Erabiltzailea VALUES ('23456789A','Ander','Garcia','2001-01-10','Beste',0,'123');
-INSERT INTO Erabiltzailea VALUES ('34567890A','Andoni','Ramos','2000-02-29','Mutila',0,'a1234');
-INSERT INTO Erabiltzailea VALUES ('45678901A','Olatz','Garcia','2012-11-10','Neska',0,'4321');
-INSERT INTO Erabiltzailea VALUES ('1','Liburu','Zain','2000-11-10','Neska',1,'1');
+INSERT INTO Erabiltzailea VALUES ('23456789B','Ander','Garcia','2001-01-10','Beste',0,'123');
+INSERT INTO Erabiltzailea VALUES ('34567890C','Andoni','Ramos','2000-02-29','Mutila',0,'a1234');
+INSERT INTO Erabiltzailea VALUES ('45678901D','Olatz','Garcia','2012-11-10','Neska',0,'4321');
+INSERT INTO Erabiltzailea VALUES ('56789012E','Guillermo','Diaz','1998-03-14','Mutila',1,'liburuzaina');
 
-INSERT INTO Argitaletxea VALUES('98765432A','LiburuArgitaletxe','Gran Via 45');
-INSERT INTO Argitaletxea VALUES('98765432B','Elkar','Gran Via 40');
-INSERT INTO Argitaletxea VALUES('98765432C','Santillana','Gran Via 43');
+INSERT INTO Argitaletxea VALUES('Q4818011B','EHU argitalpenak','Ingeniero Torres Quevedo Plaza, 1, 48013 Bilbao');
+INSERT INTO Argitaletxea VALUES('Q2085301B','Elkar','Portuetxe Kalea, 88, 20018 Donostia');
+INSERT INTO Argitaletxea VALUES('Q3152071B','Santillana','Av. Marcelo Celayeta, 54, 31014 Pamplona');
+INSERT INTO Argitaletxea VALUES('Q9645721A','MIT publisher','77 Massachusetts Ave, Cambridge, MA 02139');
 
 INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Ander','Martinez','Mutila','Espainia');
 INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Ana','Hurtado','Neska','Frantzia');
+INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Aitziber','Unzueta','Neska','Espainia');
+INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Miguel','de Cervantes','Mutila','Espainia');
+INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('William','Shakespeare','Mutila','Ingalaterra');
+INSERT INTO Idazlea (izena, abizenak, generoa, herrialdea) VALUES('Donald','Chamberlin','Mutila','Estatu Batuak');
 
-INSERT INTO Liburua VALUES (13579,'Don Quijote','2004-05-10', 'Gaztelera',0,0,NULL,1,'98765432A');
-INSERT INTO Liburua VALUES (45464,'Kalkulua II','2000-05-11', 'Euskera',0,0,NULL,2,'98765432B');
-INSERT INTO Liburua VALUES (45468,'SQL manual','1997-05-11', 'Ingelesa',0,0,NULL,1,'98765432C');
-INSERT INTO Liburua VALUES (45469,'SQL manual (II)','1997-05-12', 'Ingelesa',1,0,'12345678A',1,'98765432C');
-INSERT INTO Liburua VALUES (45470,'SQL manual (III)','1997-05-13', 'Ingelesa',0,1,'45678901A',1,'98765432C');
+INSERT INTO Liburua VALUES (13579,'Don Quijote de la Mancha','1605-01-01', 'Gaztelera',0,0,NULL,4,NULL);
+INSERT INTO Liburua VALUES (13575,'Hamlet','1603-01-01', 'Ingelesa',0,0,NULL,5,NULL);
+INSERT INTO Liburua VALUES (9783484812874,'Kalkulua II','2000-05-11', 'Euskera',0,0,NULL,2,'Q4818011B');
+INSERT INTO Liburua VALUES (9782482486312,'SQL manual','1997-05-11', 'Ingelesa',0,0,NULL,6,'Q9645721A');
+INSERT INTO Liburua VALUES (9782482486313,'SQL manual (II)','1998-02-28', 'Ingelesa',1,0,'12345678A',6,'Q9645721A');
+INSERT INTO Liburua VALUES (9782482486314,'SQL manual (III)','1998-09-13', 'Ingelesa',0,1,'45678901D',6,'Q9645721A');
+INSERT INTO Liburua VALUES (9788484386377,'Ikerkuntza operatiboari begirada praktikoa ematen','2017-06-12', 'Euskera',0,0,NULL,3,'Q4818011B');
 
-INSERT INTO Kolekzioa VALUES('12345678A', 'Nire Kolekzioa');
-INSERT INTO Kolekzioa VALUES('12345678A', 'Nire bigarren');
-INSERT INTO Kolekzioa VALUES('12345678A', 'Nire hirugarren');
-INSERT INTO Kolekzioa VALUES('45678901A', 'Nire');
+INSERT INTO Kolekzioa VALUES('12345678A', 'Klasikoak');
+INSERT INTO Kolekzioa VALUES('12345678A', 'SQL Kolekzioa');
+INSERT INTO Kolekzioa VALUES('12345678A', 'Hurrengo kurtsorako');
+INSERT INTO Kolekzioa VALUES('45678901D', 'SQL Kolekzioa');
+INSERT INTO Kolekzioa VALUES('34567890C', 'EHU liburuak');
 
-INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Nire Kolekzioa', 13579);
-INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Nire Kolekzioa', 45464);
-INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Nire bigarren', 45468);
-INSERT INTO Kolekzio_Liburua VALUES('45678901A', 'Nire', 45468);
+INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Klasikoak', 13579);
+INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'Klasikoak', 13575);
+INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'SQL Kolekzioa', 9782482486312);
+INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'SQL Kolekzioa', 9782482486313);
+INSERT INTO Kolekzio_Liburua VALUES('12345678A', 'SQL Kolekzioa', 9782482486314);
+INSERT INTO Kolekzio_Liburua VALUES('45678901D', 'SQL Kolekzioa', 9782482486314);
+INSERT INTO Kolekzio_Liburua VALUES('34567890C', 'EHU liburuak', 9783484812874);
+INSERT INTO Kolekzio_Liburua VALUES('34567890C', 'EHU liburuak', 9788484386377);

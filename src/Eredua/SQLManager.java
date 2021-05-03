@@ -656,8 +656,6 @@ public class SQLManager {
         ArrayList<LiburuKolekzio> lista = new ArrayList<>();
         System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
         try{
-            //TODO revisar este bien
-
             String esaldia = """
                 SELECT x.kol_izena, SUM(x.guztira)
                 FROM (
@@ -672,25 +670,26 @@ public class SQLManager {
                 GROUP BY x.kol_izena
                 """;
 
-            String esaldiaDefoult =  esaldia + " HAVING SUM(x.guztira) BETWEEN ? AND ? ORDER BY x.kol_izena";
-            PreparedStatement statement = konexioa.prepareStatement(esaldiaDefoult);
+            if (pBehe != -1 && pGoi == -1) {
+                esaldia += " HAVING ? <= SUM(x.guztira)";
+            } else if (pBehe == -1 && pGoi != -1) {
+                esaldia += " HAVING SUM(x.guztira) <= ?";
+            } else if (pBehe != -1 && pGoi != -1) {
+                esaldia += " HAVING SUM(x.guztira) BETWEEN ? AND ?";
+            }
+            esaldia += " ORDER BY x.kol_izena";
+
+            PreparedStatement statement = konexioa.prepareStatement(esaldia);
             statement.setString(1, pNAN);
             statement.setString(2, pNAN);
-            statement.setInt(3, pBehe);
-            statement.setInt(4, pGoi);
 
             if (pBehe != -1 && pGoi == -1) {
-                esaldia += " HAVING ? <= SUM(x.guztira) ORDER BY x.kol_izena";
-                statement = konexioa.prepareStatement(esaldia);
-                statement.setString(1, pNAN);
-                statement.setString(2, pNAN);
                 statement.setInt(3, pBehe);
             } else if (pBehe == -1 && pGoi != -1) {
-                esaldia += " HAVING SUM(x.guztira) <= ? ORDER BY x.kol_izena";
-                statement = konexioa.prepareStatement(esaldia);
-                statement.setString(1, pNAN);
-                statement.setString(2, pNAN);
                 statement.setInt(3, pGoi);
+            } else if (pBehe != -1 && pGoi != -1) {
+                statement.setInt(3, pBehe);
+                statement.setInt(4, pGoi);
             }
             ResultSet results = statement.executeQuery();
             System.out.println(statement);
