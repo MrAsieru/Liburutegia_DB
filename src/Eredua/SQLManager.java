@@ -41,7 +41,7 @@ public class SQLManager {
 
     public ErabiltzaileMota checkLogin(String pNan, String pPasahitza) {
         ErabiltzaileMota erab = null;
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
             SELECT liburuzaina_da
@@ -69,7 +69,7 @@ public class SQLManager {
     }
 
     public void aldatuPasahitza(String pNAN, String pPasahitza) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
                 UPDATE Erabiltzailea
@@ -89,7 +89,7 @@ public class SQLManager {
 
     public ArrayList<Liburua> getKatalogoa(String pNan) {
         ArrayList<Liburua> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -124,7 +124,7 @@ public class SQLManager {
 
     public ArrayList<Liburua> getKatalogoa(String pNan, String pIzena, String pDataBehe, String pDataGoi, String pLengoaia, boolean pEskuragarri) {
         ArrayList<Liburua> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
                 SELECT L.isbn, L.izena, L.argitaratze_data, L.lengoaia, A.izena, L.mailegatuta, L.erreserbatuta, L.erab_nan
@@ -199,7 +199,7 @@ public class SQLManager {
 
     public Erabiltzailea getErabiltzailea(String pNan) {
         Erabiltzailea erab = null;
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
                 SELECT izena, abizena
@@ -226,7 +226,7 @@ public class SQLManager {
     /**Liburuzaina**/
     public ArrayList<Erabiltzailea> getErabiltzaileak() {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -252,7 +252,7 @@ public class SQLManager {
 
     public ArrayList<Erabiltzailea> getErabiltzaileak(String pNan, String pIzena, String pAbizena) {
         ArrayList<Erabiltzailea> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
                 SELECT nan, izena, abizena, jaiotze_data, generoa
@@ -286,7 +286,7 @@ public class SQLManager {
 
     public ArrayList<Liburua> getLiburuak() {
         ArrayList<Liburua> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -314,7 +314,7 @@ public class SQLManager {
 
     public Liburua getLiburuaMailegatzeko(long pISBN) {
         Liburua liburua = null;
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
                 SELECT mailegatuta, erreserbatuta, erab_nan
@@ -341,7 +341,7 @@ public class SQLManager {
     }
     public ArrayList<Mailegua> getMaileguak() {
         ArrayList<Mailegua> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -366,7 +366,7 @@ public class SQLManager {
     }
     public ArrayList<Idazlea> getIdazleak() {
         ArrayList<Idazlea> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -391,7 +391,7 @@ public class SQLManager {
     }
     public ArrayList<Argitaletxea> getArgitaletxeak() {
         ArrayList<Argitaletxea> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             Statement statement = konexioa.createStatement();
             ResultSet results = statement.executeQuery("""
@@ -415,7 +415,7 @@ public class SQLManager {
     }
 
     public void addLiburu(Liburua pLiburua) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
                 INSERT INTO Liburua
@@ -438,7 +438,7 @@ public class SQLManager {
     }
 
     public void removeLiburu(long ISBN) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             DELETE FROM Liburua
@@ -457,7 +457,7 @@ public class SQLManager {
     }
 
     public void addErabiltzaileArrunta(Erabiltzailea pErabiltzaile, String pPasahitza) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
             INSERT INTO Erabiltzailea (nan, izena, abizena, jaiotze_data, generoa, liburuzaina_da, pasahitza)
@@ -479,7 +479,7 @@ public class SQLManager {
     }
 
     public void removeErabiltzaile(String pNAN) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             DELETE FROM Erabiltzailea
@@ -496,7 +496,7 @@ public class SQLManager {
     }
     
     public void addAutorea(Idazlea pIdz) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String kontsulta = """
             INSERT INTO Idazlea 
@@ -517,7 +517,7 @@ public class SQLManager {
     }
 
     public void removeAutorea(String pIdazleZenbakia) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             DELETE FROM Idazlea 
@@ -534,7 +534,7 @@ public class SQLManager {
     }
 
     public void addArgitaletxea(Argitaletxea pArgitaletxea) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         if (pArgitaletxea.ifk.equals("")) throw new SQLException("IFK ez da balioduna");
         try{
             String esaldia = """
@@ -554,7 +554,7 @@ public class SQLManager {
     }
 
     public void removeArgitaletxea(String pIFK) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             DELETE FROM Argitaletxea 
@@ -571,16 +571,17 @@ public class SQLManager {
     }
 
     public void addMailegua(String pNAN, long pISBN) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
                     UPDATE Liburua 
                     SET mailegatuta=1, erreserbatuta=0, erab_nan=?
                     WHERE isbn=? AND 
-                        mailegatuta=0 AND
-                        (erreserbatuta=0 OR
-                            (erreserbatuta=1 AND
-                            erab_nan=?))
+                        (mailegatuta=0 AND
+                            (erreserbatuta=0 OR
+                                (erreserbatuta=1 AND
+                                erab_nan=?)) OR 
+                            erab_nan IS NULL)                            
                     """;
             PreparedStatement statement = konexioa.prepareStatement(esaldia);
             statement.setString(1, pNAN);
@@ -595,7 +596,7 @@ public class SQLManager {
     }
 
     public void removeMailegua(long pISBN) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             UPDATE Liburua 
@@ -615,7 +616,7 @@ public class SQLManager {
     /**Erabiltzaile Arrunta**/
 
     public void sortuKolekzioa(String pNAN, String pIzena) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             INSERT INTO Kolekzioa 
@@ -633,7 +634,7 @@ public class SQLManager {
     }
 
     public void removeKolekzioa(String pNAN, String pKolekzioIzena) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             DELETE FROM Kolekzioa 
@@ -654,7 +655,7 @@ public class SQLManager {
     }
     public ArrayList<LiburuKolekzio> getKolekzioak(String pNAN, int pBehe, int pGoi) {
         ArrayList<LiburuKolekzio> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
                 SELECT x.kol_izena, SUM(x.guztira)
@@ -708,7 +709,7 @@ public class SQLManager {
     }
     public ArrayList<Liburua> getKolekziokoLiburuak(String pNAN, String pKolekzioa) {
         ArrayList<Liburua> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
                 SELECT L.isbn, L.izena, L.erreserbatuta, L.mailegatuta, L.erab_nan
@@ -741,7 +742,7 @@ public class SQLManager {
     }
 
     public void addLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
                         INSERT INTO Kolekzio_Liburua 
@@ -760,7 +761,7 @@ public class SQLManager {
     }
 
     public void removeLiburuakKolekziora(String pNAN, String pKolekzioIzena, long pISBN) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             DELETE FROM Kolekzio_Liburua 
@@ -779,14 +780,15 @@ public class SQLManager {
     }
 
     public void liburuaErreserbatu(String pNAN, long pIsbn) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
 
         String esaldia = """
                 UPDATE Liburua
-                SET erreserbatuta=1, erab_nan=?
-                WHERE (isbn=? AND 
-                    mailegatuta=0 AND 
-                    erreserbatuta=0)
+                SET erreserbatuta=1, mailegatuta=0, erab_nan=?
+                WHERE isbn=? AND 
+                    ((mailegatuta=0 AND 
+                        erreserbatuta=0) OR 
+                        erab_nan IS NULL)
                 """;
         PreparedStatement statement = konexioa.prepareStatement(esaldia);
         statement.setString(1, pNAN);
@@ -797,7 +799,7 @@ public class SQLManager {
 
     public ArrayList<String> getErabiltzaileInformazioa(String pNAN) throws SQLException {
         ArrayList<String> lista = new ArrayList<>();
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             String esaldia = """
             SELECT nan, izena, abizena, generoa, jaiotze_data
@@ -824,7 +826,7 @@ public class SQLManager {
     }
 
     public void erabiltzaileInformazioaEguneratu(String pNAN, String pIzena, String pAbizena, String pPasahitza, String pGeneroa, String pJaioData) throws SQLException {
-        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()) + "\n");
+        System.out.println("[Modeloa.SQLManager] Metodo hau ejekutatuko dugu: " + getMetodoIzena(Thread.currentThread().getStackTrace()));
         try{
             if (pIzena != null) {
                 String esaldia = """
