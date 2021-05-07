@@ -1464,7 +1464,7 @@ public class LiburuzainaFrame extends JFrame implements Observer {
 				public void actionPerformed(ActionEvent e) {
 					System.out.println("[Kontrolatzailea]: (Erabiltzaileak panela) btnErabEzabatu klikatuta");
 					if (tblErab.getSelectedRow() >= 0) {
-						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("NAN: %s duen %s %s erabiltzailea ezabatu nahi duzu?", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 1), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 2)), "Argitaletxea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("NAN: %s duen %s %s erabiltzailea ezabatu nahi duzu?", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 1), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 2)), "Erabiltzailea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 						if (aukera == 0) {
 							System.out.println(String.format("[Kontrolatzailea]: (Erabiltzailea ezabatu Pop-Up) erabiltzailea kentzeko klikatu. NAN:%s, Izena:%s, Abizena:%s", (String) tblErab.getValueAt(tblErab.getSelectedRow(), 0), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 1), (String) tblErab.getValueAt(tblErab.getSelectedRow(), 2)));
 							Liburuzaina.getInstantzia().removeErabiltzailea((String) tblErab.getValueAt(tblErab.getSelectedRow(), 0));

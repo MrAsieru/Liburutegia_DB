@@ -662,7 +662,7 @@ public class ErabiltzaileFrame extends JFrame implements Observer {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					if (tblKat.getSelectedRow() >= 0) {
-						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("ISBN: %d duen %s liburua erreserbatu nahi duzu?", (long) tblKat.getValueAt(tblKat.getSelectedRow(), 0), (String) tblKat.getValueAt(tblKat.getSelectedRow(), 1)), "Idazlea ezabatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+						int aukera = JOptionPane.showConfirmDialog(contentPane, String.format("ISBN: %d duen %s liburua erreserbatu nahi duzu?", (long) tblKat.getValueAt(tblKat.getSelectedRow(), 0), (String) tblKat.getValueAt(tblKat.getSelectedRow(), 1)), "Liburua erreserbatu", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 						if (aukera == 0) {
 							System.out.println(String.format("[Kontrolatzailea]: (Liburua erreserbatu Pop-Up) erreserbatzeko klikatu. ISBN:%d, Izena:%s", (long) tblKat.getValueAt(tblKat.getSelectedRow(), 0), (String) tblKat.getValueAt(tblKat.getSelectedRow(), 1)));
 							ErabiltzaileArrunta.getInstantzia().liburuaErreserbatu((long) tblKat.getValueAt(tblKat.getSelectedRow(), 0));
