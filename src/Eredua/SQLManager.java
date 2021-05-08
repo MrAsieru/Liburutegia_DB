@@ -74,7 +74,7 @@ public class SQLManager {
             String kontsulta = """
                 UPDATE Erabiltzailea
                 SET pasahitza=?
-                WHERE nan=?;
+                WHERE nan=? AND liburuzaina_da=0;
                 """;
             PreparedStatement statement = konexioa.prepareStatement(kontsulta);
             statement.setString(1, pPasahitza);
